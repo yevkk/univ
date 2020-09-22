@@ -6,13 +6,19 @@
 const char M_INDEX_FILENAME[] = "index_m.ind";
 const char M_DATA_FILENAME[] = "data_m.fl";
 const char S_DATA_FILENAME[] = "data_s.fl";
+const char M_GC_FILENAME[] = "gc_m.fl";
+const char S_GC_FILENAME[] = "gc_s.fl";
 const unsigned int INDEX_INITIAL_SIZE = 32;
 
 void load() {
     FILE *m_data_file = fopen(M_DATA_FILENAME, "ab");
     FILE *s_data_file = fopen(S_DATA_FILENAME, "ab");
+    FILE *m_gc_file = fopen(M_GC_FILENAME, "ab");
+    FILE *s_gc_file = fopen(S_GC_FILENAME, "ab");
     fclose(m_data_file);
     fclose(s_data_file);
+    fclose(m_gc_file);
+    fclose(s_gc_file);
 
     mIndex.size = 0;
     mIndex.capacity = INDEX_INITIAL_SIZE;
