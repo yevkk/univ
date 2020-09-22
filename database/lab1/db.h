@@ -21,14 +21,18 @@ struct IndexItem {
 
 struct IndexMeta  {
     unsigned int size;
+    unsigned int max_id;
 };
 
 struct {
     struct IndexItem *data;
     unsigned int capacity;
     unsigned int size;
+    unsigned int max_id;
 } mIndex;
 
 void load();
+
+void insertM(struct Account* data);
 
 #endif //LAB_DB_H
