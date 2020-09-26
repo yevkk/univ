@@ -12,21 +12,22 @@ const char S_GC_FILENAME[] = "gc_s.fl";
 const unsigned int INDEX_INITIAL_SIZE = 32;
 
 void load() {
+    struct DataMeta m_meta = {0, 0};
+    struct DataMeta s_meta = {0, 0};
+
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
     if (m_data_file == NULL) {
-        fclose(m_data_file);
         m_data_file = fopen(M_DATA_FILENAME, "ab");
-        unsigned int tmp = 0;
-        fwrite(&tmp, sizeof(tmp), 1, m_data_file);
+        fwrite(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
+    } else {
+        fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
     }
     fclose(m_data_file);
 
     FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
     if (s_data_file == NULL) {
-        fclose(s_data_file);
         s_data_file = fopen(S_DATA_FILENAME, "ab");
-        unsigned int tmp = 0;
-        fwrite(&tmp, sizeof(tmp), 1, s_data_file);
+        fwrite(&s_meta, sizeof(s_meta), 1, s_data_file);
     }
     fclose(s_data_file);
 
@@ -35,49 +36,47 @@ void load() {
     fclose(m_gc_file);
     fclose(s_gc_file);
 
-    mIndex.size = 0;
-    mIndex.capacity = INDEX_INITIAL_SIZE;
-    mIndex.data = (struct IndexItem *) malloc(mIndex.capacity);
+    m_index.max_id = m_meta.max_id;
+    m_index.size = m_meta.size;
+    int tmp;
+    for (tmp = 2; tmp < m_meta.size; tmp *= 2);
+    m_index.capacity = (tmp > INDEX_INITIAL_SIZE) ? tmp : INDEX_INITIAL_SIZE;
+    m_index.data = (struct IndexItem *) malloc(m_index.capacity);
 
     FILE *m_index_file = fopen(M_INDEX_FILENAME, "rb");
     if (m_index_file == NULL) {
-        fclose(m_index_file);
         m_index_file = fopen(M_INDEX_FILENAME, "ab");
-        mIndex.size = 0;
-        mIndex.max_id = 0;
-        mIndex.capacity = INDEX_INITIAL_SIZE;
-        mIndex.data = (struct IndexItem *) malloc(mIndex.capacity);
     } else {
-        struct IndexMeta meta;
-        fread(&meta, sizeof(struct IndexMeta), 1, m_index_file);
-
-        mIndex.max_id = meta.max_id;
-        mIndex.size = meta.size;
-        int tmp;
-        for (tmp = 2; tmp < meta.size; tmp *= 2);
-        mIndex.capacity = (tmp > INDEX_INITIAL_SIZE) ? tmp : INDEX_INITIAL_SIZE;
-        mIndex.data = (struct IndexItem *) malloc(mIndex.capacity);
-
-        for (unsigned int i = 0; i < mIndex.size; i++) {
-            fread(mIndex.data + i, sizeof(struct IndexItem), 1, m_index_file);
+        for (unsigned int i = 0; i < m_index.size; i++) {
+            fread(m_index.data + i, sizeof(struct IndexItem), 1, m_index_file);
         }
     }
     fclose(m_index_file);
 }
 
-void insertM(struct Account *account_ptr) {
-    if (!account_ptr) return;
-
-    account_ptr->id = ++mIndex.max_id;
-    unsigned int m_size = mIndex.size;
-
-    FILE *m_data_file = fopen(M_DATA_FILENAME, "r+");
-
-    fseek(m_data_file, 0, SEEK_END);
-    fwrite(account_ptr, sizeof(struct Account), 1, m_data_file);
-
-    struct IndexItem newIndexItem = {account_ptr->id, m_size};
-    //TODO: capacity overflow
-    mIndex.data[mIndex.size] = newIndexItem;
-    mIndex.size++;
-}
+//void insertM(const char nickname[32], const char full_name[32], const char country[32]) {
+//    struct Account account = {};
+//    account.id = ++mIndex.max_id;
+//    *account.nickname = *nickname;
+//    *account.full_name = *full_name;
+//    *account.country = *country;
+//
+//    FILE *m_data_file = fopen(M_DATA_FILENAME, "r+");
+//    fseek(m_data_file, 0, SEEK_END);
+//    fwrite(&account, sizeof(struct Account), 1, m_data_file);
+//    int tmp  = -1;
+//    fwrite(&tmp, sizeof(tmp), 1, m_data_file);
+//
+//    unsigned int m_size;
+//    //TODO: read meta from m_data
+//    struct IndexItem newIndexItem = {account.id, m_size};
+//    //TODO: capacity overflow
+//    mIndex.data[mIndex.size] = newIndexItem;
+//    mIndex.size++;
+//
+//    fseek(m_data_file, 0, SEEK_SET);
+//    struct DataMeta meta = {m_size + 1, mIndex.max_id};
+//    fwrite(&meta, sizeof(struct DataMeta), 1, m_data_file);
+//
+//    fclose(m_data_file);
+//}

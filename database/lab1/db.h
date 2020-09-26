@@ -2,26 +2,26 @@
 #define LAB_DB_H
 
 struct Account {
-    unsigned int id;
+    unsigned id;
     char nickname[32];
-    char full_name[32];
+    char fullname[32];
     char country[32];
 };
 
 struct Post {
-    unsigned int id;
+    unsigned id;
     char title[32];
     float pulse;
 };
 
 struct IndexItem {
-    unsigned int id;
-    unsigned int record_number;
+    unsigned id;
+    unsigned record_no;
 };
 
-struct IndexMeta  {
-    unsigned int size;
-    unsigned int max_id;
+struct DataMeta  {
+    unsigned size;
+    unsigned max_id;
 };
 
 struct {
@@ -29,10 +29,10 @@ struct {
     unsigned int capacity;
     unsigned int size;
     unsigned int max_id;
-} mIndex;
+} m_index;
 
 void load();
 
-void insertM(struct Account* data);
+//void insertM(const nickname[32], char fullname[32], char country[32]);
 
 #endif //LAB_DB_H
