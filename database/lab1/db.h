@@ -1,6 +1,8 @@
 #ifndef LAB_DB_H
 #define LAB_DB_H
 
+#include <stdbool.h>
+
 struct Account {
     unsigned id;
     char nickname[32];
@@ -33,6 +35,6 @@ struct {
 
 void load();
 
-//void insertM(const nickname[32], char fullname[32], char country[32]);
+void insert_m(const char nickname[32], const char fullname[32], const char country[32]);
 
 #endif //LAB_DB_H
