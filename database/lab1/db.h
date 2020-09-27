@@ -38,6 +38,10 @@ void load();
 
 void save_index();
 
+int get_m_record_no(unsigned id);
+
+struct Account *get_m(unsigned id);
+
 int insert_m(const char nickname[32], const char fullname[32], const char country[32]);
 
 void ut_m (bool print_deleted);

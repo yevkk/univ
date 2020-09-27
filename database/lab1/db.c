@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 const char M_INDEX_FILENAME[] = "index_m.ind";
 const char M_DATA_FILENAME[] = "data_m.fl";
@@ -51,6 +52,41 @@ void save_index() {
     }
 
     fclose(m_index_file);
+}
+
+int get_m_record_no(unsigned id) {
+    unsigned left = 0;
+    unsigned right = m_index.size - 1;
+
+    while (left <= right) {
+        unsigned mid = (left + right) / 2;
+        if (m_index.data[mid].id > id) {
+            right = mid - 1;
+        } else if (m_index.data[mid].id < id) {
+            left = mid + 1;
+        } else {
+            return (int) m_index.data[mid].record_no;
+        }
+    }
+
+    return -1;
+}
+
+struct Account *get_m(unsigned id) {
+    int record_no = get_m_record_no(id);
+
+    if (record_no != -1) {
+        struct Account *account = malloc(sizeof(struct Account));
+        FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
+        fseek(m_data_file,
+              sizeof(struct DataMeta) + (record_no - 1) * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+              SEEK_SET
+        );
+        fread(account, sizeof(struct Account), 1, m_data_file);
+        return account;
+    } else {
+        return NULL;
+    }
 }
 
 int insert_m(const char nickname[32], const char fullname[32], const char country[32]) {
