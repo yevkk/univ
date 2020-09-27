@@ -160,9 +160,7 @@ struct Account *get_m(unsigned id) {
     }
 }
 
-struct Post *get_s(unsigned id) {
-    int record_no = get_s_record_no(id);
-
+struct Post *get_s_at_line(int record_no) {
     if (record_no != -1) {
         struct Post *post = malloc(sizeof(struct Post));
         FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
@@ -179,21 +177,12 @@ struct Post *get_s(unsigned id) {
     }
 }
 
-struct Post *get_s_of_m(unsigned m_id, unsigned id) {
-    int record_no = get_s_of_m_record_no(m_id, id);
+struct Post *get_s(unsigned id) {
+    return get_s_at_line(get_s_record_no(id));
+}
 
-    if (record_no != -1) {
-        struct Post *post = malloc(sizeof(struct Post));
-        FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
-        fseek(s_data_file,
-              sizeof(struct DataMeta) + (record_no - 1) * (sizeof(struct Post) + sizeof(bool) + sizeof(int)),
-              SEEK_SET
-        );
-        fread(post, sizeof(struct Account), 1, s_data_file);
-        return post;
-    } else {
-        return NULL;
-    }
+struct Post *get_s_of_m(unsigned m_id, unsigned id) {
+    return get_s_at_line(get_s_of_m_record_no(m_id, id));
 }
 
 int insert_m(const char nickname[32], const char fullname[32], const char country[32]) {

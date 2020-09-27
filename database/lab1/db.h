@@ -46,6 +46,8 @@ int get_s_of_m_record_no(unsigned m_id, unsigned id);
 
 struct Account *get_m(unsigned id);
 
+struct Post *get_s_at_line(int record_no);
+
 struct Post *get_s(unsigned id);
 
 struct Post *get_s_of_m(unsigned m_id, unsigned id);
