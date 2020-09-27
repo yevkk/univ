@@ -44,6 +44,10 @@ struct Account *get_m(unsigned id);
 
 int insert_m(const char nickname[32], const char fullname[32], const char country[32]);
 
+int insert_s(unsigned m_id, const char title[32], float pulse);
+
 void ut_m (bool print_deleted);
+
+void ut_s (bool print_deleted);
 
 #endif //LAB_DB_H

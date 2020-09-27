@@ -55,6 +55,10 @@ void save_index() {
 }
 
 int get_m_record_no(unsigned id) {
+    if (m_index.size == 0) {
+        return -1;
+    }
+
     unsigned left = 0;
     unsigned right = m_index.size - 1;
 
@@ -125,11 +129,72 @@ int insert_m(const char nickname[32], const char fullname[32], const char countr
     return 0;
 }
 
+int insert_s(unsigned m_id, const char title[32], float pulse) {
+    unsigned m_record_no = get_m_record_no(m_id);
+    if (m_record_no == -1) {
+        return 1;
+    }
+
+    FILE *s_data_file = fopen(S_DATA_FILENAME, "rb+");
+
+    struct DataMeta s_meta;
+    fseek(s_data_file, 0, SEEK_SET);
+    fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
+    s_meta.size++;
+    s_meta.max_id++;
+    fseek(s_data_file, 0, SEEK_SET);
+    fwrite(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
+
+    struct Post post;
+    post.id = s_meta.max_id;
+    strcpy(post.title, title);
+    post.pulse = pulse;
+
+    fseek(s_data_file, 0, SEEK_END);
+    fwrite(&post, sizeof(struct Post), 1, s_data_file);
+    bool valid = true;
+    fwrite(&valid, sizeof(bool), 1, s_data_file);
+    int next_s_record_no = -1;
+    fwrite(&next_s_record_no, sizeof(int), 1, s_data_file);
+
+
+    FILE *m_data_file = fopen(M_DATA_FILENAME, "rb+");
+    fseek(m_data_file,
+          sizeof(struct DataMeta) + (m_record_no) * (sizeof(struct Account) + sizeof(bool)) +
+          (m_record_no - 1) * sizeof(int),
+          SEEK_SET
+    );
+    fread(&next_s_record_no, sizeof(int), 1, m_data_file);
+    if (next_s_record_no == -1) {
+        fseek(m_data_file, (long) -sizeof(int), SEEK_CUR);
+        fwrite(&s_meta.size, sizeof(int), 1, m_data_file);
+    } else {
+        while (next_s_record_no != -1) {
+            int s_record_no = next_s_record_no;
+            fseek(s_data_file,
+                  sizeof(struct DataMeta) + (s_record_no) * (sizeof(struct Post) + sizeof(bool)) +
+                  (s_record_no - 1) * sizeof(int),
+                  SEEK_SET
+            );
+            fread(&next_s_record_no, sizeof(int), 1, s_data_file);
+        }
+        fseek(s_data_file, (long) -sizeof(int), SEEK_CUR);
+        fwrite(&s_meta.size, sizeof(int), 1, s_data_file);
+    }
+
+    fclose(m_data_file);
+    fclose(s_data_file);
+
+    return 0;
+}
+
 void ut_m(bool print_deleted) {
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
 
     struct DataMeta m_meta;
     fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
+    printf("SIZE (with removed): %d\n", m_meta.size);
+    printf("MAX ID: %d \n", m_meta.max_id);
 
     for (unsigned i = 0; i < m_meta.size; i++) {
         struct Account account;
@@ -153,4 +218,35 @@ void ut_m(bool print_deleted) {
     }
 
     fclose(m_data_file);
+}
+
+void ut_s(bool print_deleted) {
+    FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
+
+    struct DataMeta s_meta;
+    fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
+    printf("SIZE (with removed): %d\n", s_meta.size);
+    printf("MAX ID: %d \n", s_meta.max_id);
+
+    for (unsigned i = 0; i < s_meta.size; i++) {
+        struct Post post;
+        int next_s_record_no;
+        bool valid;
+        fread(&post, sizeof(struct Post), 1, s_data_file);
+        fread(&valid, sizeof(bool), 1, s_data_file);
+        fread(&next_s_record_no, sizeof(int), 1, s_data_file);
+
+        if (valid || print_deleted) {
+            printf("%d)\n", i + 1);
+            printf("\t id: %d \n", post.id);
+            printf("\t title: %s \n", post.title);
+            printf("\t pulse: %f \n", post.pulse);
+            printf("\t [next s record no.: %d] \n", next_s_record_no);
+            if (print_deleted) {
+                printf("\t [state: %s] \n", (valid) ? "valid" : "deleted");
+            }
+        }
+    }
+
+    fclose(s_data_file);
 }
