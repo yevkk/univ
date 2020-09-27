@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define INDEX_MAX_SIZE 32
+
 struct Account {
     unsigned id;
     char nickname[32];
@@ -26,15 +28,18 @@ struct DataMeta  {
     unsigned max_id;
 };
 
-struct {
-    struct IndexItem *data;
-    unsigned int capacity;
+struct MIndex{
+    struct IndexItem data[INDEX_MAX_SIZE];
     unsigned int size;
     unsigned int max_id;
 } m_index;
 
 void load();
 
-void insert_m(const char nickname[32], const char fullname[32], const char country[32]);
+void save_index();
+
+int insert_m(const char nickname[32], const char fullname[32], const char country[32]);
+
+void ut_m (bool print_deleted);
 
 #endif //LAB_DB_H

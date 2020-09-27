@@ -3,13 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 const char M_INDEX_FILENAME[] = "index_m.ind";
 const char M_DATA_FILENAME[] = "data_m.fl";
 const char S_DATA_FILENAME[] = "data_s.fl";
-const char M_GC_FILENAME[] = "gc_m.fl";
-const char S_GC_FILENAME[] = "gc_s.fl";
-const unsigned INDEX_INITIAL_SIZE = 32;
 
 void load() {
     struct DataMeta m_meta = {0, 0};
@@ -31,30 +29,35 @@ void load() {
     }
     fclose(s_data_file);
 
-    FILE *m_gc_file = fopen(M_GC_FILENAME, "ab");
-    fclose(m_gc_file);
-    FILE *s_gc_file = fopen(S_GC_FILENAME, "ab");
-    fclose(s_gc_file);
-
     m_index.max_id = m_meta.max_id;
     m_index.size = m_meta.size;
-    int tmp;
-    for (tmp = 2; tmp < m_meta.size; tmp *= 2);
-    m_index.capacity = (tmp > INDEX_INITIAL_SIZE) ? tmp : INDEX_INITIAL_SIZE;
-    m_index.data = (struct IndexItem *) malloc(m_index.capacity);
 
-    FILE *m_index_file = fopen(M_INDEX_FILENAME, "rb");
+    FILE *m_index_file = fopen("index_m.ind", "rb");
     if (m_index_file == NULL) {
-        m_index_file = fopen(M_INDEX_FILENAME, "ab");
+        m_index_file = fopen("index_m.ind", "ab");
     } else {
-        for (unsigned int i = 0; i < m_index.size; i++) {
+        for (unsigned i = 0; i < m_index.size; i++) {
             fread(m_index.data + i, sizeof(struct IndexItem), 1, m_index_file);
         }
     }
     fclose(m_index_file);
 }
 
-void insert_m(const char nickname[32], const char fullname[32], const char country[32]) {
+void save_index() {
+    FILE *m_index_file = fopen("index_m.ind", "wb");
+
+    for (unsigned i = 0; i < m_index.size; i++) {
+        fwrite(m_index.data + i, sizeof(struct IndexItem), 1, m_index_file);
+    }
+
+    fclose(m_index_file);
+}
+
+int insert_m(const char nickname[32], const char fullname[32], const char country[32]) {
+    if (m_index.size == INDEX_MAX_SIZE) {
+        return 1;
+    }
+
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb+");
 
     struct DataMeta m_meta;
@@ -65,30 +68,53 @@ void insert_m(const char nickname[32], const char fullname[32], const char count
     fseek(m_data_file, 0, SEEK_SET);
     fwrite(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
 
-    struct Account account = {m_index.max_id, *nickname, *fullname, *country};
+    struct Account account;
+    account.id = m_index.max_id;
+    strcpy(account.nickname, nickname);
+    strcpy(account.fullname, fullname);
+    strcpy(account.country, country);
+
     fseek(m_data_file, 0, SEEK_END);
     fwrite(&account, sizeof(struct Account), 1, m_data_file);
-    int tmp  = -1;
-    fwrite(&tmp, sizeof(int), 1, m_data_file);
+    bool valid = true;
+    fwrite(&valid, sizeof(bool), 1, m_data_file);
+    int s_record_no = -1;
+    fwrite(&s_record_no, sizeof(int), 1, m_data_file);
 
-    FILE* m_gc_file = fopen(M_GC_FILENAME, "ab");
-    bool gc_tmp = true;
-    fwrite(&(gc_tmp), sizeof(bool), 1, m_gc_file);
-    fclose(m_gc_file);
+    fclose(m_data_file);
 
     struct IndexItem newIndexItem = {account.id, m_meta.size};
-    if (m_index.size == m_index.capacity) {
-        struct IndexItem *new_data;
-        m_index.capacity *= 2;
-        new_data = (struct IndexItem *) malloc(m_index.capacity);
-        for (unsigned i = 0; i < m_index.size; i++) {
-            new_data[i] = m_index.data[i];
-        }
-        free(m_index.data);
-        m_index.data = new_data;
-    }
     m_index.data[m_index.size++] = newIndexItem;
+
+    return 0;
+}
+
+void ut_m(bool print_deleted) {
+    FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
+
+    struct DataMeta m_meta;
+    fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
+
+    for (unsigned i = 0; i < m_meta.size; i++) {
+        struct Account account;
+        int s_record_no;
+        bool valid;
+        fread(&account, sizeof(struct Account), 1, m_data_file);
+        fread(&valid, sizeof(bool), 1, m_data_file);
+        fread(&s_record_no, sizeof(int), 1, m_data_file);
+
+        if (valid || print_deleted) {
+            printf("%d)\n", i + 1);
+            printf("\t id: %d \n", account.id);
+            printf("\t nickname: %s \n", account.nickname);
+            printf("\t full_name: %s \n", account.fullname);
+            printf("\t country: %s \n", account.country);
+            printf("\t [first s record no.: %d] \n", s_record_no);
+            if (print_deleted) {
+                printf("\t [state: %s] \n", (valid) ? "valid" : "deleted");
+            }
+        }
+    }
 
     fclose(m_data_file);
 }
-
