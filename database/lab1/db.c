@@ -76,52 +76,35 @@ int get_m_record_no(unsigned id) {
     return -1;
 }
 
-struct Account *get_m(unsigned id) {
-    int record_no = get_m_record_no(id);
-
-    if (record_no != -1) {
-        struct Account *account = malloc(sizeof(struct Account));
-        FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
-        fseek(m_data_file,
-              sizeof(struct DataMeta) + (record_no - 1) * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
-              SEEK_SET
-        );
-        fread(account, sizeof(struct Account), 1, m_data_file);
-        return account;
-    } else {
-        return NULL;
-    }
-}
-
-struct Post *get_s(unsigned id) {
+int get_s_record_no(unsigned id) {
     FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
     struct DataMeta s_meta;
     fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
 
     if (id > s_meta.max_id) {
-        return NULL;
+        return -1;
     }
 
-    for (int i = 0; i < s_meta.size; i++) {
+    for (int i = 1; i <= s_meta.size; i++) {
         struct Post *post = malloc(sizeof(struct Post));
         bool valid;
         fread(post, sizeof(struct Post), 1, s_data_file);
         fread(&valid, sizeof(bool), 1, s_data_file);
         if (post->id == id) {
-            return (valid) ? post : NULL;
+            return (valid) ? i : -1;
         }
         fseek(s_data_file, sizeof(int), SEEK_CUR);
     }
 
     fclose(s_data_file);
 
-    return NULL;
+    return -1;
 }
 
-struct Post *get_s_of_m(unsigned m_id, unsigned id) {
+int get_s_of_m_record_no(unsigned m_id, unsigned id) {
     unsigned m_record_no = get_m_record_no(m_id);
     if (m_record_no == -1) {
-        return NULL;
+        return -1;
     }
 
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
@@ -145,14 +128,68 @@ struct Post *get_s_of_m(unsigned m_id, unsigned id) {
         fread(post, sizeof(struct Post), 1, s_data_file);
 
         if (post->id == id) {
-            return post;
+            return s_record_no;
         }
 
         fseek(s_data_file, sizeof(bool), SEEK_CUR);
         fread(&s_record_no, sizeof(int), 1, s_data_file);
     }
 
-    return NULL;
+    fclose(m_data_file);
+    fclose(s_data_file);
+
+    return -1;
+}
+
+struct Account *get_m(unsigned id) {
+    int record_no = get_m_record_no(id);
+
+    if (record_no != -1) {
+        struct Account *account = malloc(sizeof(struct Account));
+        FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
+        fseek(m_data_file,
+              sizeof(struct DataMeta) + (record_no - 1) * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+              SEEK_SET
+        );
+        fread(account, sizeof(struct Account), 1, m_data_file);
+        return account;
+    } else {
+        return NULL;
+    }
+}
+
+struct Post *get_s(unsigned id) {
+    int record_no = get_s_record_no(id);
+
+    if (record_no != -1) {
+        struct Post *post = malloc(sizeof(struct Post));
+        FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
+        fseek(s_data_file,
+              sizeof(struct DataMeta) + (record_no - 1) * (sizeof(struct Post) + sizeof(bool) + sizeof(int)),
+              SEEK_SET
+        );
+        fread(post, sizeof(struct Account), 1, s_data_file);
+        return post;
+    } else {
+        return NULL;
+    }
+}
+
+struct Post *get_s_of_m(unsigned m_id, unsigned id) {
+    int record_no = get_s_of_m_record_no(m_id, id);
+
+    if (record_no != -1) {
+        struct Post *post = malloc(sizeof(struct Post));
+        FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
+        fseek(s_data_file,
+              sizeof(struct DataMeta) + (record_no - 1) * (sizeof(struct Post) + sizeof(bool) + sizeof(int)),
+              SEEK_SET
+        );
+        fread(post, sizeof(struct Account), 1, s_data_file);
+        return post;
+    } else {
+        return NULL;
+    }
 }
 
 int insert_m(const char nickname[32], const char fullname[32], const char country[32]) {

@@ -40,6 +40,10 @@ void save_index();
 
 int get_m_record_no(unsigned id);
 
+int get_s_record_no(unsigned id);
+
+int get_s_of_m_record_no(unsigned m_id, unsigned id);
+
 struct Account *get_m(unsigned id);
 
 struct Post *get_s(unsigned id);
