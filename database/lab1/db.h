@@ -42,6 +42,10 @@ int get_m_record_no(unsigned id);
 
 struct Account *get_m(unsigned id);
 
+struct Post *get_s(unsigned id);
+
+struct Post *get_s_of_m(unsigned m_id, unsigned id);
+
 int insert_m(const char nickname[32], const char fullname[32], const char country[32]);
 
 int insert_s(unsigned m_id, const char title[32], float pulse);
