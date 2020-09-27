@@ -54,6 +54,8 @@ int insert_m(const char nickname[32], const char fullname[32], const char countr
 
 int insert_s(unsigned m_id, const char title[32], float pulse);
 
+int update_m(unsigned id, const char nickname[32], const char fullname[32], const char country[32]);
+
 void ut_m (bool print_deleted);
 
 void ut_s (bool print_deleted);

@@ -152,6 +152,8 @@ struct Account *get_m(unsigned id) {
               SEEK_SET
         );
         fread(account, sizeof(struct Account), 1, m_data_file);
+        fclose(m_data_file);
+
         return account;
     } else {
         return NULL;
@@ -169,6 +171,8 @@ struct Post *get_s(unsigned id) {
               SEEK_SET
         );
         fread(post, sizeof(struct Account), 1, s_data_file);
+        fclose(s_data_file);
+
         return post;
     } else {
         return NULL;
@@ -283,6 +287,32 @@ int insert_s(unsigned m_id, const char title[32], float pulse) {
 
     fclose(m_data_file);
     fclose(s_data_file);
+
+    return 0;
+}
+
+int update_m(unsigned id, const char nickname[32], const char fullname[32], const char country[32]) {
+    int record_no = get_m_record_no(id);
+
+    if (record_no == -1) {
+        return 1;
+    }
+
+    struct Account account;
+    FILE *m_data_file = fopen(M_DATA_FILENAME, "rb+");
+    fseek(m_data_file,
+          sizeof(struct DataMeta) + (record_no - 1) * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+          SEEK_SET
+    );
+    fread(&account, sizeof(struct Account), 1, m_data_file);
+
+    strcpy(account.nickname, nickname);
+    strcpy(account.fullname, fullname);
+    strcpy(account.country, country);
+
+    fseek(m_data_file, (long) -sizeof(struct Account), SEEK_CUR);
+    fwrite(&account, sizeof(struct Account), 1, m_data_file);
+    fclose(m_data_file);
 
     return 0;
 }
