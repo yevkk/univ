@@ -23,12 +23,12 @@ struct IndexItem {
     unsigned record_no;
 };
 
-struct DataMeta  {
+struct DataMeta {
     unsigned size;
     unsigned max_id;
 };
 
-struct MIndex{
+struct MIndex {
     struct IndexItem data[INDEX_MAX_SIZE];
     unsigned int size;
     unsigned int max_id;
@@ -58,8 +58,20 @@ int insert_s(unsigned m_id, const char title[32], float pulse);
 
 int update_m(unsigned id, const char nickname[32], const char fullname[32], const char country[32]);
 
-void ut_m (bool print_deleted);
+int update_s_at_line(int record_no, const char title[32], float pulse);
 
-void ut_s (bool print_deleted);
+int update_s(unsigned id, const char title[32], float pulse);
+
+int update_s_of_m(unsigned m_id, unsigned id, const char title[32], float pulse);
+
+unsigned size_m(bool count_deleted);
+
+unsigned size_s(bool count_deleted);
+
+int size_s_of_m(unsigned m_id);
+
+void ut_m(bool print_deleted);
+
+void ut_s(bool print_deleted);
 
 #endif //LAB_DB_H
