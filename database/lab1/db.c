@@ -197,7 +197,10 @@ int insert_m(const char nickname[32], const char fullname[32], const char countr
     struct DataMeta m_meta;
     fseek(m_data_file, 0, SEEK_SET);
     fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
-    m_meta.size++;
+    if (m_meta.size_valid == m_meta.size) {
+        m_meta.size++;
+    }
+    m_meta.size_valid++;
     m_index.max_id = ++m_meta.max_id;
     fseek(m_data_file, 0, SEEK_SET);
     fwrite(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
@@ -208,7 +211,10 @@ int insert_m(const char nickname[32], const char fullname[32], const char countr
     strcpy(account.fullname, fullname);
     strcpy(account.country, country);
 
-    fseek(m_data_file, 0, SEEK_END);
+    fseek(m_data_file,
+          sizeof(struct DataMeta) + (m_meta.size_valid - 1) * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+          SEEK_SET
+    );
     fwrite(&account, sizeof(struct Account), 1, m_data_file);
     bool valid = true;
     fwrite(&valid, sizeof(bool), 1, m_data_file);
@@ -217,7 +223,7 @@ int insert_m(const char nickname[32], const char fullname[32], const char countr
 
     fclose(m_data_file);
 
-    struct IndexItem newIndexItem = {account.id, m_meta.size};
+    struct IndexItem newIndexItem = {account.id, m_meta.size_valid};
     m_index.data[m_index.size++] = newIndexItem;
 
     return 0;
@@ -234,7 +240,10 @@ int insert_s(unsigned m_id, const char title[32], float pulse) {
     struct DataMeta s_meta;
     fseek(s_data_file, 0, SEEK_SET);
     fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
-    s_meta.size++;
+    if (s_meta.size_valid == s_meta.size) {
+        s_meta.size++;
+    }
+    s_meta.size_valid++;
     s_meta.max_id++;
     fseek(s_data_file, 0, SEEK_SET);
     fwrite(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
@@ -244,7 +253,9 @@ int insert_s(unsigned m_id, const char title[32], float pulse) {
     strcpy(post.title, title);
     post.pulse = pulse;
 
-    fseek(s_data_file, 0, SEEK_END);
+    fseek(s_data_file,
+          sizeof(struct DataMeta) + (s_meta.size_valid - 1) * (sizeof(struct Post) + sizeof(bool) + sizeof(int)),
+          SEEK_SET);
     fwrite(&post, sizeof(struct Post), 1, s_data_file);
     bool valid = true;
     fwrite(&valid, sizeof(bool), 1, s_data_file);
@@ -261,7 +272,7 @@ int insert_s(unsigned m_id, const char title[32], float pulse) {
     fread(&next_s_record_no, sizeof(int), 1, m_data_file);
     if (next_s_record_no == -1) {
         fseek(m_data_file, (long) -sizeof(int), SEEK_CUR);
-        fwrite(&s_meta.size, sizeof(int), 1, m_data_file);
+        fwrite(&s_meta.size_valid, sizeof(int), 1, m_data_file);
     } else {
         while (next_s_record_no != -1) {
             int s_record_no = next_s_record_no;
@@ -273,7 +284,7 @@ int insert_s(unsigned m_id, const char title[32], float pulse) {
             fread(&next_s_record_no, sizeof(int), 1, s_data_file);
         }
         fseek(s_data_file, (long) -sizeof(int), SEEK_CUR);
-        fwrite(&s_meta.size, sizeof(int), 1, s_data_file);
+        fwrite(&s_meta.size_valid, sizeof(int), 1, s_data_file);
     }
 
     fclose(m_data_file);
