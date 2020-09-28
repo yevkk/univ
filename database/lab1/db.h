@@ -25,6 +25,7 @@ struct IndexItem {
 
 struct DataMeta {
     unsigned size;
+    unsigned size_valid;
     unsigned max_id;
 };
 
@@ -64,14 +65,14 @@ int update_s(unsigned id, const char title[32], float pulse);
 
 int update_s_of_m(unsigned m_id, unsigned id, const char title[32], float pulse);
 
-unsigned size_m(bool count_deleted);
+unsigned size_m();
 
-unsigned size_s(bool count_deleted);
+unsigned size_s();
 
 int size_s_of_m(unsigned m_id);
 
-void ut_m(bool print_deleted);
+void ut_m(bool print_removed);
 
-void ut_s(bool print_deleted);
+void ut_s(bool print_removed);
 
 #endif //LAB_DB_H

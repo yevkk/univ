@@ -11,8 +11,8 @@ const char M_DATA_FILENAME[] = "data_m.fl";
 const char S_DATA_FILENAME[] = "data_s.fl";
 
 void load() {
-    struct DataMeta m_meta = {0, 0};
-    struct DataMeta s_meta = {0, 0};
+    struct DataMeta m_meta = {0, 0, 0};
+    struct DataMeta s_meta = {0, 0, 0};
 
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
     if (m_data_file == NULL) {
@@ -31,7 +31,7 @@ void load() {
     fclose(s_data_file);
 
     m_index.max_id = m_meta.max_id;
-    m_index.size = m_meta.size;
+    m_index.size = m_meta.size_valid;
 
     FILE *m_index_file = fopen("index_m.ind", "rb");
     if (m_index_file == NULL) {
@@ -86,7 +86,7 @@ int get_s_record_no(unsigned id) {
         return -1;
     }
 
-    for (int i = 1; i <= s_meta.size; i++) {
+    for (int i = 1; i <= s_meta.size_valid; i++) {
         struct Post *post = malloc(sizeof(struct Post));
         bool valid;
         fread(post, sizeof(struct Post), 1, s_data_file);
@@ -339,19 +339,14 @@ int update_s_of_m(unsigned m_id, unsigned id, const char title[32], float pulse)
     return update_s_at_line(get_s_of_m_record_no(m_id, id), title, pulse);
 }
 
-unsigned size_m(bool count_deleted) {
+unsigned size_m() {
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
 
     struct DataMeta m_meta;
     fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
 
-    if (count_deleted) {
-        fclose(m_data_file);
-        return m_meta.size;
-    }
-
     unsigned res = 0;
-    for (unsigned i = 0; i < m_meta.size; i++) {
+    for (unsigned i = 0; i < m_meta.size_valid; i++) {
         struct Account account;
         bool valid;
         fread(&account, sizeof(struct Account), 1, m_data_file);
@@ -367,19 +362,14 @@ unsigned size_m(bool count_deleted) {
     return res;
 }
 
-unsigned size_s(bool count_deleted) {
+unsigned size_s() {
     FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
 
     struct DataMeta s_meta;
     fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
 
-    if (count_deleted) {
-        fclose(s_data_file);
-        return s_meta.size;
-    }
-
     unsigned res = 0;
-    for (unsigned i = 0; i < s_meta.size; i++) {
+    for (unsigned i = 0; i < s_meta.size_valid; i++) {
         struct Post post;
         bool valid;
         fread(&post, sizeof(struct Post), 1, s_data_file);
@@ -430,15 +420,16 @@ int size_s_of_m(unsigned m_id) {
     return res;
 }
 
-void ut_m(bool print_deleted) {
+void ut_m(bool print_removed) {
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
 
     struct DataMeta m_meta;
     fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
-    printf("SIZE (with removed): %d\n", m_meta.size);
+    printf("TOTAL NUMBER OF RECORDS IN FILE: %d\n", m_meta.size);
+    printf("SIZE OF VALID BLOCK: %d\n", m_meta.size_valid);
     printf("MAX ID: %d \n", m_meta.max_id);
 
-    for (unsigned i = 0; i < m_meta.size; i++) {
+    for (unsigned i = 0; i < m_meta.size_valid; i++) {
         struct Account account;
         int s_record_no;
         bool valid;
@@ -446,14 +437,14 @@ void ut_m(bool print_deleted) {
         fread(&valid, sizeof(bool), 1, m_data_file);
         fread(&s_record_no, sizeof(int), 1, m_data_file);
 
-        if (valid || print_deleted) {
+        if (valid || print_removed) {
             printf("%d)\n", i + 1);
             printf("\t id: %d \n", account.id);
             printf("\t nickname: %s \n", account.nickname);
             printf("\t full_name: %s \n", account.fullname);
             printf("\t country: %s \n", account.country);
             printf("\t [first s record no.: %d] \n", s_record_no);
-            if (print_deleted) {
+            if (print_removed) {
                 printf("\t [state: %s] \n", (valid) ? "valid" : "deleted");
             }
         }
@@ -462,15 +453,16 @@ void ut_m(bool print_deleted) {
     fclose(m_data_file);
 }
 
-void ut_s(bool print_deleted) {
+void ut_s(bool print_removed) {
     FILE *s_data_file = fopen(S_DATA_FILENAME, "rb");
 
     struct DataMeta s_meta;
     fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
-    printf("SIZE (with removed): %d\n", s_meta.size);
+    printf("TOTAL NUMBER OF RECORDS IN FILE: %d\n", s_meta.size);
+    printf("SIZE OF VALID BLOCK: %d\n", s_meta.size_valid);
     printf("MAX ID: %d \n", s_meta.max_id);
 
-    for (unsigned i = 0; i < s_meta.size; i++) {
+    for (unsigned i = 0; i < s_meta.size_valid; i++) {
         struct Post post;
         int next_s_record_no;
         bool valid;
@@ -478,13 +470,13 @@ void ut_s(bool print_deleted) {
         fread(&valid, sizeof(bool), 1, s_data_file);
         fread(&next_s_record_no, sizeof(int), 1, s_data_file);
 
-        if (valid || print_deleted) {
+        if (valid || print_removed) {
             printf("%d)\n", i + 1);
             printf("\t id: %d \n", post.id);
             printf("\t title: %s \n", post.title);
             printf("\t pulse: %f \n", post.pulse);
             printf("\t [next s record no.: %d] \n", next_s_record_no);
-            if (print_deleted) {
+            if (print_removed) {
                 printf("\t [state: %s] \n", (valid) ? "valid" : "deleted");
             }
         }
