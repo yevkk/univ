@@ -3,6 +3,6 @@ project(lab C)
 
 set(CMAKE_C_STANDARD 11)
 
-set(SRC_LIST db.c db.h console_interface.cpp)
+set(SRC_LIST db.c db.h console_interface.c)
 
 add_executable(lab main.c ${SRC_LIST})
