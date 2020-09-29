@@ -675,16 +675,19 @@ void defragment_m() {
         fread(&valid, sizeof(bool), 1, m_data_file);
         fread(&next_s_record_no, sizeof(int), 1, m_data_file);
 
-        if (valid && curr_size_valid != i) {
-            fseek(m_data_file,
-                  sizeof(struct DataMeta) +
-                  curr_size_valid * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
-                  SEEK_SET
-            );
-            fwrite(account, sizeof(struct Account), 1, m_data_file);
-            fwrite(&valid, sizeof(bool), 1, m_data_file);
-            fwrite(&next_s_record_no, sizeof(int), 1, m_data_file);
+        if (valid) {
             curr_size_valid++;
+
+            if (curr_size_valid - 1 != i) {
+                fseek(m_data_file,
+                      sizeof(struct DataMeta) +
+                      curr_size_valid * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+                      SEEK_SET
+                );
+                fwrite(account, sizeof(struct Account), 1, m_data_file);
+                fwrite(&valid, sizeof(bool), 1, m_data_file);
+                fwrite(&next_s_record_no, sizeof(int), 1, m_data_file);
+            }
         }
     }
 
@@ -698,3 +701,4 @@ void defragment_m() {
         m_index.data[i].record_no = i + 1;
     }
 }
+
