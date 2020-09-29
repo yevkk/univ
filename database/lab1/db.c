@@ -65,9 +65,17 @@ int get_m_record_no(unsigned id) {
     while (left <= right) {
         unsigned mid = (left + right) / 2;
         if (m_index.data[mid].id > id) {
-            right = mid - 1;
+            if (mid != 0) {
+                right = mid - 1;
+            } else {
+                break;
+            }
         } else if (m_index.data[mid].id < id) {
-            left = mid + 1;
+            if (mid != m_index.size - 1) {
+                left = mid + 1;
+            } else {
+                break;
+            }
         } else {
             return (int) m_index.data[mid].record_no;
         }
@@ -230,7 +238,7 @@ int insert_m(const char nickname[32], const char fullname[32], const char countr
 }
 
 int insert_s(unsigned m_id, const char title[32], float pulse) {
-    unsigned m_record_no = get_m_record_no(m_id);
+    int m_record_no = get_m_record_no(m_id);
     if (m_record_no == -1) {
         return 1;
     }
@@ -367,9 +375,17 @@ int del_m(unsigned id) {
     while (left <= right) {
         unsigned mid = (left + right) / 2;
         if (m_index.data[mid].id > id) {
-            right = mid - 1;
+            if (mid != 0) {
+                right = mid - 1;
+            } else {
+                break;
+            }
         } else if (m_index.data[mid].id < id) {
-            left = mid + 1;
+            if (mid != m_index.size - 1) {
+                left = mid + 1;
+            } else {
+                break;
+            }
         } else {
             record_no = (int) m_index.data[mid].record_no;
             m_index_no = mid;
@@ -637,4 +653,48 @@ void ut_s(bool print_removed) {
     }
 
     fclose(s_data_file);
+}
+
+void defragment_m() {
+    FILE *m_data_file = fopen(M_DATA_FILENAME, "rb+");
+
+    struct DataMeta m_meta;
+    fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
+
+    struct Account *account = malloc(sizeof(struct Account));
+    bool valid;
+    int next_s_record_no;
+
+    unsigned curr_size_valid = 0;
+    for (unsigned i = 0; i < m_meta.size_valid; i++) {
+        fseek(m_data_file,
+              sizeof(struct DataMeta) + i * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+              SEEK_SET
+        );
+        fread(account, sizeof(struct Account), 1, m_data_file);
+        fread(&valid, sizeof(bool), 1, m_data_file);
+        fread(&next_s_record_no, sizeof(int), 1, m_data_file);
+
+        if (valid && curr_size_valid != i) {
+            fseek(m_data_file,
+                  sizeof(struct DataMeta) +
+                  curr_size_valid * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+                  SEEK_SET
+            );
+            fwrite(account, sizeof(struct Account), 1, m_data_file);
+            fwrite(&valid, sizeof(bool), 1, m_data_file);
+            fwrite(&next_s_record_no, sizeof(int), 1, m_data_file);
+            curr_size_valid++;
+        }
+    }
+
+    m_meta.size_valid = curr_size_valid;
+    fseek(m_data_file, 0, SEEK_SET);
+    fwrite(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
+
+    fclose(m_data_file);
+
+    for (unsigned i = 0; i < m_index.size; i++) {
+        m_index.data[i].record_no = i + 1;
+    }
 }
