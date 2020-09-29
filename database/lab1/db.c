@@ -416,7 +416,7 @@ int del_m(unsigned id) {
     fclose(s_data_file);
 
     for (unsigned i = m_index_no; i < m_index.size - 1; i++) {
-        m_index.data[i] = m_index.data[i+1];
+        m_index.data[i] = m_index.data[i + 1];
     }
     m_index.size--;
 
@@ -424,7 +424,65 @@ int del_m(unsigned id) {
 }
 
 int del_s_at_line(int record_no) {
-    //TODO: implement this
+    if (record_no == -1) {
+        return 1;
+    }
+
+    bool valid;
+    int floating_s_record_no;
+    int next_s_record_no;
+
+    FILE *s_data_file = fopen(S_DATA_FILENAME, "rb+");
+    fseek(s_data_file,
+          sizeof(struct DataMeta) + (record_no) * sizeof(struct Post) +
+          (record_no - 1) * (sizeof(bool) + sizeof(int)),
+          SEEK_SET
+    );
+    fread(&valid, sizeof(bool), 1, s_data_file);
+    if (!valid) {
+        return 1;
+    }
+    fseek(s_data_file,
+          sizeof(struct DataMeta) + (record_no) * sizeof(struct Post) +
+          (record_no - 1) * (sizeof(bool) + sizeof(int)),
+          SEEK_SET
+    );
+    valid = false;
+    fwrite(&valid, sizeof(bool), 1, s_data_file);
+    fread(&floating_s_record_no, sizeof(int), 1, s_data_file);
+
+    fseek(s_data_file, 0, SEEK_SET);
+    struct DataMeta s_meta;
+    fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
+    for (int i = 0; i < s_meta.size_valid; i++) {
+        fseek(s_data_file, sizeof(struct Post), SEEK_CUR);
+        fread(&valid, sizeof(bool), 1, s_data_file);
+        fread(&next_s_record_no, sizeof(int), 1, s_data_file);
+        if ((next_s_record_no == record_no) && valid) {
+            fseek(s_data_file, (long) -sizeof(int), SEEK_CUR);
+            fwrite(&floating_s_record_no, sizeof(int), 1, s_data_file);
+            fclose(s_data_file);
+            return 0;
+        }
+    }
+
+    fclose(s_data_file);
+
+    FILE *m_data_file = fopen(M_DATA_FILENAME, "rb+");
+    struct DataMeta m_meta;
+    fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
+    for (int i = 0; i < m_meta.size_valid; i++) {
+        fseek(m_data_file, sizeof(struct Account) + sizeof(bool), SEEK_CUR);
+        fread(&next_s_record_no, sizeof(int), 1, m_data_file);
+        if (next_s_record_no == record_no) {
+            fseek(m_data_file, (long) -sizeof(int), SEEK_CUR);
+            fwrite(&floating_s_record_no, sizeof(int), 1, m_data_file);
+            fclose(m_data_file);
+            return 0;
+        }
+    }
+
+    return 0;
 }
 
 int del_s(unsigned id) {
