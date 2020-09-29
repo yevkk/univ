@@ -5,6 +5,8 @@
 
 #define INDEX_MAX_SIZE 32
 
+void console_interface();
+
 struct Account {
     unsigned id;
     char nickname[32];
@@ -35,9 +37,11 @@ struct MIndex {
     unsigned int max_id;
 } m_index;
 
-void load();
+void load_db();
 
 void save_index();
+
+void onclose_db();
 
 int get_m_record_no(unsigned id);
 

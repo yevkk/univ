@@ -10,7 +10,7 @@ const char M_INDEX_FILENAME[] = "index_m.ind";
 const char M_DATA_FILENAME[] = "data_m.fl";
 const char S_DATA_FILENAME[] = "data_s.fl";
 
-void load() {
+void load_db() {
     struct DataMeta m_meta = {0, 0, 0};
     struct DataMeta s_meta = {0, 0, 0};
 
@@ -53,6 +53,12 @@ void save_index() {
 
     fclose(m_index_file);
 }
+
+void onclose_db(){
+    defragment_m();
+    defragment_s();
+    save_index();
+};
 
 int get_m_record_no(unsigned id) {
     if (m_index.size == 0) {
@@ -738,7 +744,7 @@ void defragment_s() {
                 fwrite(&valid, sizeof(bool), 1, s_data_file);
                 fwrite(&next_s_record_no, sizeof(int), 1, s_data_file);
             }
-            
+
             bool flag = false;
             fseek(s_data_file, sizeof(struct DataMeta), SEEK_SET);
             for (unsigned j = 0; j < i; j++) {
