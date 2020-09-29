@@ -681,7 +681,7 @@ void defragment_m() {
             if (curr_size_valid - 1 != i) {
                 fseek(m_data_file,
                       sizeof(struct DataMeta) +
-                      curr_size_valid * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
+                      (curr_size_valid - 1) * (sizeof(struct Account) + sizeof(bool) + sizeof(int)),
                       SEEK_SET
                 );
                 fwrite(account, sizeof(struct Account), 1, m_data_file);
@@ -702,3 +702,77 @@ void defragment_m() {
     }
 }
 
+void defragment_s() {
+    FILE *s_data_file = fopen(S_DATA_FILENAME, "rb+");
+    struct DataMeta s_meta;
+    fread(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
+
+    FILE *m_data_file = fopen(M_DATA_FILENAME, "rb+");
+    struct DataMeta m_meta;
+    fread(&m_meta, sizeof(struct DataMeta), 1, m_data_file);
+
+    struct Post *post = malloc(sizeof(struct Post));
+    bool valid;
+    int next_s_record_no;
+
+    unsigned curr_size_valid = 0;
+    for (unsigned i = 0; i < s_meta.size_valid; i++) {
+        fseek(s_data_file,
+              sizeof(struct DataMeta) + i * (sizeof(struct Post) + sizeof(bool) + sizeof(int)),
+              SEEK_SET
+        );
+        fread(post, sizeof(struct Post), 1, s_data_file);
+        fread(&valid, sizeof(bool), 1, s_data_file);
+        fread(&next_s_record_no, sizeof(int), 1, s_data_file);
+
+        if (valid) {
+            curr_size_valid++;
+
+            if (curr_size_valid - 1 != i) {
+                fseek(s_data_file,
+                      sizeof(struct DataMeta) +
+                      (curr_size_valid - 1) * (sizeof(struct Post) + sizeof(bool) + sizeof(int)),
+                      SEEK_SET
+                );
+                fwrite(post, sizeof(struct Post), 1, s_data_file);
+                fwrite(&valid, sizeof(bool), 1, s_data_file);
+                fwrite(&next_s_record_no, sizeof(int), 1, s_data_file);
+            }
+            
+            bool flag = false;
+            fseek(s_data_file, sizeof(struct DataMeta), SEEK_SET);
+            for (unsigned j = 0; j < i; j++) {
+                fseek(s_data_file, sizeof(struct Post) + sizeof(bool), SEEK_CUR);
+                fread(&next_s_record_no, sizeof(int), 1, s_data_file);
+                if (next_s_record_no == i + 1) {
+                    fseek(s_data_file, (long) -sizeof(int), SEEK_CUR);
+                    fwrite(&curr_size_valid, sizeof(int), 1, s_data_file);
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (flag) {
+                continue;
+            }
+
+            fseek(m_data_file, sizeof(struct DataMeta), SEEK_SET);
+            for (unsigned j = 0; j < m_meta.size_valid; j++) {
+                fseek(m_data_file, sizeof(struct Account) + sizeof(bool), SEEK_CUR);
+                fread(&next_s_record_no, sizeof(int), 1, m_data_file);
+                if (next_s_record_no == i + 1) {
+                    fseek(m_data_file, (long) -sizeof(int), SEEK_CUR);
+                    fwrite(&curr_size_valid, sizeof(int), 1, m_data_file);
+                    break;
+                }
+            }
+        }
+    }
+
+    s_meta.size_valid = curr_size_valid;
+    fseek(s_data_file, 0, SEEK_SET);
+    fwrite(&s_meta, sizeof(struct DataMeta), 1, s_data_file);
+
+    fclose(m_data_file);
+    fclose(s_data_file);
+}

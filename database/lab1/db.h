@@ -85,4 +85,6 @@ void ut_s(bool print_removed);
 
 void defragment_m();
 
+void defragment_s();
+
 #endif //LAB_DB_H
