@@ -65,6 +65,14 @@ int update_s(unsigned id, const char title[32], float pulse);
 
 int update_s_of_m(unsigned m_id, unsigned id, const char title[32], float pulse);
 
+int del_m(unsigned id);
+
+int del_s_at_line(int record_no);
+
+int del_s(unsigned id);
+
+int del_s_of_m(unsigned m_id, unsigned id);
+
 unsigned size_m();
 
 unsigned size_s();

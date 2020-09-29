@@ -350,6 +350,91 @@ int update_s_of_m(unsigned m_id, unsigned id, const char title[32], float pulse)
     return update_s_at_line(get_s_of_m_record_no(m_id, id), title, pulse);
 }
 
+int del_m(unsigned id) {
+    if (m_index.size == 0) {
+        return 1;
+    }
+
+    int record_no = -1;
+    int s_record_no;
+    unsigned m_index_no;
+    bool valid = false;
+
+    //using algorithm from get_m_record_no with modified result return
+    unsigned left = 0;
+    unsigned right = m_index.size - 1;
+
+    while (left <= right) {
+        unsigned mid = (left + right) / 2;
+        if (m_index.data[mid].id > id) {
+            right = mid - 1;
+        } else if (m_index.data[mid].id < id) {
+            left = mid + 1;
+        } else {
+            record_no = (int) m_index.data[mid].record_no;
+            m_index_no = mid;
+            break;
+        }
+    }
+    //
+
+    if (record_no == -1) {
+        return 1;
+    }
+
+    FILE *m_data_file = fopen(M_DATA_FILENAME, "rb+");
+    fseek(m_data_file,
+          sizeof(struct DataMeta) + (record_no) * sizeof(struct Account) +
+          (record_no - 1) * (sizeof(bool) + sizeof(int)),
+          SEEK_SET
+    );
+    fwrite(&valid, sizeof(bool), 1, m_data_file);
+    fseek(m_data_file,
+          sizeof(struct DataMeta) + (record_no) * (sizeof(struct Account) + sizeof(bool)) +
+          (record_no - 1) * (sizeof(int)),
+          SEEK_SET
+    );
+    fread(&s_record_no, sizeof(int), 1, m_data_file);
+
+    FILE *s_data_file = fopen(S_DATA_FILENAME, "rb+");
+    while (s_record_no != -1) {
+        fseek(s_data_file,
+              sizeof(struct DataMeta) + (s_record_no) * sizeof(struct Post) +
+              (s_record_no - 1) * (sizeof(bool) + sizeof(int)),
+              SEEK_SET
+        );
+        fwrite(&valid, sizeof(bool), 1, s_data_file);
+        fseek(s_data_file,
+              sizeof(struct DataMeta) + (s_record_no) * (sizeof(struct Post) + sizeof(bool)) +
+              (s_record_no - 1) * sizeof(int),
+              SEEK_SET
+        );
+        fread(&s_record_no, sizeof(int), 1, s_data_file);
+    }
+
+    fclose(m_data_file);
+    fclose(s_data_file);
+
+    for (unsigned i = m_index_no; i < m_index.size - 1; i++) {
+        m_index.data[i] = m_index.data[i+1];
+    }
+    m_index.size--;
+
+    return 0;
+}
+
+int del_s_at_line(int record_no) {
+    //TODO: implement this
+}
+
+int del_s(unsigned id) {
+    return del_s_at_line(get_s_record_no(id));
+}
+
+int del_s_of_m(unsigned m_id, unsigned id) {
+    return del_s_at_line(get_s_of_m_record_no(m_id, id));
+}
+
 unsigned size_m() {
     FILE *m_data_file = fopen(M_DATA_FILENAME, "rb");
 
