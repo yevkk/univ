@@ -3,6 +3,8 @@
 #include <stdio.h>
 
 int main() {
+    load_db();
+
     insert_m("NICKNAME 1", "FULL NAME 1", "COUNTRY 1");
     insert_m("NICKNAME 2", "FULL NAME 2", "COUNTRY 2");
     insert_m("NICKNAME 3", "FULL NAME 3", "COUNTRY 3");
@@ -58,5 +60,6 @@ int main() {
     ut_s(true);
     printf("=====\n=====\n");
 
+    onclose_db();
     return 0;
 }
