@@ -42,14 +42,32 @@ namespace spos::lab1 {
         return {listen_socket, port_str};
     }
 
+    PROCESS_INFORMATION Manager::_runWorker(const std::string& command_line) {
+        STARTUPINFO startup_info;
+        PROCESS_INFORMATION process_info;
+
+        ZeroMemory(&startup_info, sizeof(startup_info));
+        startup_info.cb = sizeof(startup_info);
+        ZeroMemory(&process_info, sizeof(process_info));
+
+        char * command_line_c = new char [command_line.size() + 1];
+        std::copy(command_line.cbegin(), command_line.cend(), command_line_c);
+        CreateProcess("worker.exe", command_line_c,
+                      nullptr, nullptr, false, 0, nullptr, nullptr,
+                      &startup_info, &process_info
+        );
+
+        return process_info;
+    }
+
     Manager::RunExitCode Manager::run() {
         WSADATA wsa_data;
         if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
             return WSA_STARTUP_FAILED;
         }
 
-        auto [f_socket, f_port] = _connectSocket();
-        auto [g_socket, g_port] = _connectSocket();
+        auto[f_socket, f_port] = _connectSocket();
+        auto[g_socket, g_port] = _connectSocket();
         _f_listen_socket = f_socket;
         _f_port = f_port;
         _g_listen_socket = g_socket;

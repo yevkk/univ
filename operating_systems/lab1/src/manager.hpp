@@ -26,6 +26,8 @@ namespace spos::lab1 {
     private:
         static std::pair<SOCKET, std::string> _connectSocket();
 
+        static PROCESS_INFORMATION _runWorker(const std::string& command_line);
+
         //TODO: short circuit check : check if value is null-value for op
         //TODO: evaluate : takes to arguments, returns result of op
         //TODO: async wait for result : checks sockets for results, if one is ready do check of short-circuit
@@ -33,6 +35,8 @@ namespace spos::lab1 {
 
         int _x_arg;
         std::string _op_name;
+        PROCESS_INFORMATION _f_process_info;
+        PROCESS_INFORMATION _g_process_info;
         SOCKET _f_listen_socket;
         SOCKET _g_listen_socket;
         std::string _f_port;
