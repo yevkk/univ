@@ -27,7 +27,7 @@ namespace spos::lab1 {
     private:
         static std::pair<SOCKET, std::string> _connectSocket();
 
-        static PROCESS_INFORMATION _runWorker(const std::string& command_line);
+        static std::optional<PROCESS_INFORMATION> _runWorker(const std::string& command_line);
 
         static std::optional<std::string> _getFunctionResult(SOCKET listen_socket);
 

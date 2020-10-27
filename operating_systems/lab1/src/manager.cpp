@@ -39,7 +39,7 @@ namespace spos::lab1 {
         return {listen_socket, port_str};
     }
 
-    PROCESS_INFORMATION Manager::_runWorker(const std::string &command_line) {
+    std::optional<PROCESS_INFORMATION> Manager::_runWorker(const std::string &command_line) {
         STARTUPINFO startup_info;
         PROCESS_INFORMATION process_info;
 
@@ -49,10 +49,12 @@ namespace spos::lab1 {
 
         char *command_line_c = new char[command_line.size() + 1];
         std::copy(command_line.cbegin(), command_line.cend(), command_line_c);
-        CreateProcess("worker.exe", command_line_c,
-                      nullptr, nullptr, false, 0, nullptr, nullptr,
-                      &startup_info, &process_info
-        );
+        if (!CreateProcess("worker.exe", command_line_c,
+                           nullptr, nullptr, false, 0, nullptr, nullptr,
+                           &startup_info, &process_info)
+                ) {
+            return std::nullopt;
+        }
 
         return process_info;
     }
