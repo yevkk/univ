@@ -5,7 +5,7 @@
 #include <any>
 
 namespace spos::lab1::utils {
-    SOCKET ConnectIPv4Socket(const char *ip, const char *port) {
+    SOCKET connectIPv4Socket(const char *ip, const char *port) {
         WSADATA wsa_data;
         int e_result;
 
@@ -51,7 +51,7 @@ namespace spos::lab1::utils {
         return connect_socket;
     }
 
-    int DisconnectSocket(SOCKET socket_arg) {
+    int disconnectSocket(SOCKET socket_arg) {
         if (shutdown(socket_arg, SD_SEND) == SOCKET_ERROR) {
             closesocket(socket_arg);
             WSACleanup();
@@ -96,7 +96,7 @@ argv:
 int main(int argc, char *argv[]) {
     using namespace spos::lab1;
 
-    SOCKET connect_socket = utils::ConnectIPv4Socket(argv[4], argv[5]);
+    SOCKET connect_socket = utils::connectIPv4Socket(argv[4], argv[5]);
     if (connect_socket == INVALID_SOCKET) {
         WSACleanup();
         return 1;
@@ -128,5 +128,5 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    return utils::DisconnectSocket(connect_socket);
+    return utils::disconnectSocket(connect_socket);
 }
