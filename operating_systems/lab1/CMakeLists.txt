@@ -19,9 +19,9 @@ add_library(${LIB_NAME} INTERFACE)
 target_sources(${LIB_NAME} INTERFACE ${SRC_LIST})
 
 add_executable(manager main.cpp)
-target_link_libraries(manager PRIVATE ${DEMO_LIB_NAME})
-target_link_libraries(manager PRIVATE ${LIB_NAME})
+target_link_libraries(manager PRIVATE ${LIB_NAME} ws2_32)
 
 add_executable(worker ${SRC_DIR}/worker.cpp)
+target_link_libraries(worker PRIVATE ${DEMO_LIB_NAME} ws2_32)
 
 add_dependencies(manager worker)
