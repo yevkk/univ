@@ -71,6 +71,7 @@ namespace spos::lab1::utils {
             case demo::OR:
                 return demo::f_func<demo::OR>(arg);
         }
+        return nullptr;
     }
 
     std::any gWrapper(demo::op_group operation, int arg) {
@@ -80,6 +81,7 @@ namespace spos::lab1::utils {
             case demo::OR:
                 return demo::g_func<demo::OR>(arg);
         }
+        return nullptr;
     }
 } //namespace spos::lab1::utils
 
