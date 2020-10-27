@@ -15,14 +15,16 @@ namespace spos::lab1 {
 
     class Manager {
     public:
-        enum RunExitCode {SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR};
+        enum RunExitCode {
+            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR
+        };
 
         Manager(std::string op_name, int x_arg);
 
         RunExitCode run();
 
     private:
-        static SOCKET _connectSocket();
+        static std::pair<SOCKET, std::string> _connectSocket();
 
         //TODO: short circuit check : check if value is null-value for op
         //TODO: evaluate : takes to arguments, returns result of op
@@ -33,6 +35,8 @@ namespace spos::lab1 {
         std::string _op_name;
         SOCKET _f_listen_socket;
         SOCKET _g_listen_socket;
+        std::string _f_port;
+        std::string _g_port;
     };
 
 } //namespace spos::lab1
