@@ -19,21 +19,18 @@ namespace spos::lab1 {
         hints.ai_flags = AI_PASSIVE;
 
         if (getaddrinfo(nullptr, port_str.c_str(), &hints, &ai_ptr)) {
-            WSACleanup();
             return {INVALID_SOCKET, ""};
         }
 
         SOCKET listen_socket = socket(ai_ptr->ai_family, ai_ptr->ai_socktype, ai_ptr->ai_protocol);
         if (listen_socket == INVALID_SOCKET) {
             freeaddrinfo(ai_ptr);
-            WSACleanup();
             return {INVALID_SOCKET, ""};
         }
 
         if (bind(listen_socket, ai_ptr->ai_addr, (int) ai_ptr->ai_addrlen) == SOCKET_ERROR) {
             freeaddrinfo(ai_ptr);
             closesocket(listen_socket);
-            WSACleanup();
             return {INVALID_SOCKET, ""};
         }
 
@@ -74,6 +71,7 @@ namespace spos::lab1 {
         _g_port = g_port;
 
         if (_f_listen_socket == INVALID_SOCKET || _g_listen_socket == INVALID_SOCKET) {
+            WSACleanup();
             return SOCKET_CONNECTION_ERROR;
         }
 
