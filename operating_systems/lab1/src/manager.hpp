@@ -10,6 +10,7 @@
 #include <ws2tcpip.h>
 
 #include <string>
+#include <optional>
 
 namespace spos::lab1 {
 
@@ -27,6 +28,8 @@ namespace spos::lab1 {
         static std::pair<SOCKET, std::string> _connectSocket();
 
         static PROCESS_INFORMATION _runWorker(const std::string& command_line);
+
+        static std::optional<std::string> _getFunctionResult(SOCKET listen_socket);
 
         //TODO: short circuit check : check if value is null-value for op
         //TODO: evaluate : takes to arguments, returns result of op

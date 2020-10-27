@@ -39,7 +39,7 @@ namespace spos::lab1 {
         return {listen_socket, port_str};
     }
 
-    PROCESS_INFORMATION Manager::_runWorker(const std::string& command_line) {
+    PROCESS_INFORMATION Manager::_runWorker(const std::string &command_line) {
         STARTUPINFO startup_info;
         PROCESS_INFORMATION process_info;
 
@@ -47,7 +47,7 @@ namespace spos::lab1 {
         startup_info.cb = sizeof(startup_info);
         ZeroMemory(&process_info, sizeof(process_info));
 
-        char * command_line_c = new char [command_line.size() + 1];
+        char *command_line_c = new char[command_line.size() + 1];
         std::copy(command_line.cbegin(), command_line.cend(), command_line_c);
         CreateProcess("worker.exe", command_line_c,
                       nullptr, nullptr, false, 0, nullptr, nullptr,
@@ -55,6 +55,32 @@ namespace spos::lab1 {
         );
 
         return process_info;
+    }
+
+    std::optional<std::string> Manager::_getFunctionResult(SOCKET listen_socket) {
+        if (listen(listen_socket, SOMAXCONN) == SOCKET_ERROR) {
+            closesocket(listen_socket);
+            return std::nullopt;
+        }
+
+        SOCKET client_socket = accept(listen_socket, nullptr, nullptr);
+        if (client_socket == INVALID_SOCKET) {
+            closesocket(listen_socket);
+            return std::nullopt;
+        }
+
+        char recv_buf[16];
+        if (recv(client_socket, recv_buf, sizeof(recv_buf), 0) < 0) {
+            closesocket(client_socket);
+            return std::nullopt;
+        }
+
+        if (shutdown(client_socket, SD_SEND) == SOCKET_ERROR) {
+            closesocket(client_socket);
+            return std::nullopt;
+        }
+
+        return recv_buf;
     }
 
     Manager::RunExitCode Manager::run() {
