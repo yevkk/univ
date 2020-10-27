@@ -25,11 +25,11 @@ namespace spos::lab1 {
         RunExitCode run();
 
     private:
-        static std::pair<SOCKET, std::string> _connectSocket();
+        static auto _connectSocket() -> std::pair<SOCKET, std::string>;
 
-        static std::optional<PROCESS_INFORMATION> _runWorker(const std::string& command_line);
+        static auto _runWorker(const std::string& command_line) -> std::optional<PROCESS_INFORMATION>;
 
-        static std::optional<std::string> _getFunctionResult(SOCKET listen_socket);
+        static auto _getFunctionResult(SOCKET listen_socket) -> std::optional<std::string>;
 
         //TODO: short circuit check : check if value is null-value for op
         //TODO: evaluate : takes to arguments, returns result of op
