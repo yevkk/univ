@@ -64,7 +64,25 @@ namespace spos::lab1::utils {
         return 0;
     }
 
-} //namespace spos::lab1
+    std::any fWrapper(demo::op_group operation, int arg) {
+        switch (operation) {
+            case demo::AND:
+                return demo::f_func<demo::AND>(arg);
+            case demo::OR:
+                return demo::f_func<demo::OR>(arg);
+        }
+    }
+
+    std::any gWrapper(demo::op_group operation, int arg) {
+        switch (operation) {
+            case demo::AND:
+                return demo::g_func<demo::AND>(arg);
+            case demo::OR:
+                return demo::g_func<demo::OR>(arg);
+        }
+    }
+} //namespace spos::lab1::utils
+
 
 /*
 argv:
@@ -94,13 +112,13 @@ int main(int argc, char *argv[]) {
 
     std::any result;
     if (!strcmp(argv[1], "f")) {
-        result = demo::f_func<demo::AND>(std::strtol(argv[2], nullptr, 10));
+        result = utils::fWrapper(operation, std::strtol(argv[2], nullptr, 10));
     } else if (!strcmp(argv[1], "g")) {
-        result = demo::g_func<demo::AND>(std::strtol(argv[2], nullptr, 10));
+        result = utils::gWrapper(operation, std::strtol(argv[2], nullptr, 10));
     }
 
     const char * send_buf;
-    if (!strcmp(argv[0], "AND") || !strcmp(argv[1], "OR")) {
+    if (operation == demo::AND || operation == demo::OR) {
         send_buf = std::to_string(std::any_cast<bool>(result)).c_str();
     }
 
