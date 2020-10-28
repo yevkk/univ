@@ -1,6 +1,8 @@
 #include "manager.hpp"
 
 #include <string>
+#include <future>
+//#include <iostream>
 
 namespace spos::lab1 {
     Manager::Manager(std::string op_name, int x_arg) :
@@ -47,9 +49,7 @@ namespace spos::lab1 {
         startup_info.cb = sizeof(startup_info);
         ZeroMemory(&process_info, sizeof(process_info));
 
-        char *command_line_c = new char[command_line.size() + 1];
-        std::copy(command_line.cbegin(), command_line.cend(), command_line_c);
-        if (!CreateProcess("worker.exe", command_line_c,
+        if (!CreateProcess("worker.exe", (char *) command_line.c_str(),
                            nullptr, nullptr, false, 0, nullptr, nullptr,
                            &startup_info, &process_info)
                 ) {
@@ -94,14 +94,36 @@ namespace spos::lab1 {
         auto[f_socket, f_port] = _connectSocket();
         auto[g_socket, g_port] = _connectSocket();
         _f_listen_socket = f_socket;
-        _f_port = f_port;
         _g_listen_socket = g_socket;
-        _g_port = g_port;
 
         if (_f_listen_socket == INVALID_SOCKET || _g_listen_socket == INVALID_SOCKET) {
             WSACleanup();
             return SOCKET_CONNECTION_ERROR;
         }
+
+        auto f_future = std::async(std::launch::async, _getFunctionResult, _f_listen_socket);
+        auto g_future = std::async(std::launch::async, _getFunctionResult, _g_listen_socket);
+
+        _f_process_info = _runWorker(" " + _op_name + " f " + std::to_string(_x_arg) + " 127.0.0.1 " + f_port);
+        _g_process_info = _runWorker(" " + _op_name + " g " + std::to_string(_x_arg) + " 127.0.0.1 " + g_port);
+
+        if (!_f_process_info.has_value() || !_g_process_info.has_value()) {
+            WSACleanup();
+            return PROCESS_CREATION_FAILED;
+        }
+
+//        while (!f_future.valid() || !g_future.valid()) {
+//        }
+
+
+//        std::cout << "\n f: " << std::stoi(f_future.get().value()) << std::endl;
+//        std::cout << "\n g: " << std::stoi(g_future.get().value()) << std::endl;
+
+
+        CloseHandle(_f_process_info.value().hProcess);
+        CloseHandle(_f_process_info.value().hThread);
+        CloseHandle(_g_process_info.value().hProcess);
+        CloseHandle(_g_process_info.value().hThread);
 
         return SUCCESS;
     }

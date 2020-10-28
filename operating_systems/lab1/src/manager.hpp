@@ -17,7 +17,7 @@ namespace spos::lab1 {
     class Manager {
     public:
         enum RunExitCode {
-            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR
+            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED
         };
 
         Manager(std::string op_name, int x_arg);
@@ -27,7 +27,7 @@ namespace spos::lab1 {
     private:
         static auto _connectSocket() -> std::pair<SOCKET, std::string>;
 
-        static auto _runWorker(const std::string& command_line) -> std::optional<PROCESS_INFORMATION>;
+        static auto _runWorker(const std::string &command_line) -> std::optional<PROCESS_INFORMATION>;
 
         static auto _getFunctionResult(SOCKET listen_socket) -> std::optional<std::string>;
 
@@ -38,12 +38,10 @@ namespace spos::lab1 {
 
         int _x_arg;
         std::string _op_name;
-        PROCESS_INFORMATION _f_process_info;
-        PROCESS_INFORMATION _g_process_info;
+        std::optional<PROCESS_INFORMATION> _f_process_info;
+        std::optional<PROCESS_INFORMATION> _g_process_info;
         SOCKET _f_listen_socket;
         SOCKET _g_listen_socket;
-        std::string _f_port;
-        std::string _g_port;
     };
 
 } //namespace spos::lab1
