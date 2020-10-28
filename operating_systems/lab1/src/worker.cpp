@@ -89,7 +89,7 @@ namespace spos::lab1::utils {
 /*
 argv:
     [1]operation_name
-    [2]function_descriptor
+    [2]function_id
     [3]x_argument,
     [4]ip
     [5]port
@@ -106,17 +106,17 @@ int main(int argc, char *argv[]) {
 
     demo::op_group operation;
 
-    if (!strcmp(argv[0], "AND")) {
+    if (!strcmp(argv[1], "AND")) {
         operation = demo::AND;
     } else if (!strcmp(argv[1], "OR")) {
         operation = demo::OR;
     }
 
     std::any result;
-    if (!strcmp(argv[1], "f")) {
-        result = utils::fWrapper(operation, std::strtol(argv[2], nullptr, 10));
-    } else if (!strcmp(argv[1], "g")) {
-        result = utils::gWrapper(operation, std::strtol(argv[2], nullptr, 10));
+    if (!strcmp(argv[2], "f")) {
+        result = utils::fWrapper(operation, std::strtol(argv[3], nullptr, 10));
+    } else if (!strcmp(argv[2], "g")) {
+        result = utils::gWrapper(operation, std::strtol(argv[3], nullptr, 10));
     }
 
     const char * send_buf;
