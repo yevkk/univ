@@ -1,8 +1,10 @@
 #include "manager.hpp"
 
+#include <vector>
 #include <string>
+#include <algorithm>
 #include <future>
-//#include <iostream>
+#include <iostream>
 
 namespace spos::lab1 {
     Manager::Manager(std::string op_name, int x_arg) :
@@ -104,6 +106,10 @@ namespace spos::lab1 {
         auto f_future = std::async(std::launch::async, _getFunctionResult, _f_listen_socket);
         auto g_future = std::async(std::launch::async, _getFunctionResult, _g_listen_socket);
 
+        std::vector<std::future<OptionalString>> func_futures;
+        func_futures.push_back(std::move(f_future));
+        func_futures.push_back(std::move(g_future));
+
         _f_process_info = _runWorker(" " + _op_name + " f " + std::to_string(_x_arg) + " 127.0.0.1 " + f_port);
         _g_process_info = _runWorker(" " + _op_name + " g " + std::to_string(_x_arg) + " 127.0.0.1 " + g_port);
 
@@ -112,18 +118,27 @@ namespace spos::lab1 {
             return PROCESS_CREATION_FAILED;
         }
 
-//        while (!f_future.valid() || !g_future.valid()) {
-//        }
+        std::vector<OptionalString> func_results(func_futures.size(), std::nullopt);
+        while (!func_futures.empty()) {
+            const auto ready_future_it = std::find_if(
+                    func_futures.begin(),
+                    func_futures.end(),
+                    [](auto &fut) { return fut.wait_for(std::chrono::seconds(0)) == std::future_status::ready; });
 
 
-//        std::cout << "\n f: " << std::stoi(f_future.get().value()) << std::endl;
-//        std::cout << "\n g: " << std::stoi(g_future.get().value()) << std::endl;
-
+            if (ready_future_it != func_futures.end()) {
+                func_results[std::distance(func_futures.begin(), ready_future_it)] = (*ready_future_it).get().value();
+                std::cout << "res_no: " << std::distance(func_futures.begin(), ready_future_it) << std::endl;
+                func_futures.erase(ready_future_it);
+            }
+        }
 
         CloseHandle(_f_process_info.value().hProcess);
         CloseHandle(_f_process_info.value().hThread);
         CloseHandle(_g_process_info.value().hProcess);
         CloseHandle(_g_process_info.value().hThread);
+
+        WSACleanup();
 
         return SUCCESS;
     }
