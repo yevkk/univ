@@ -9,6 +9,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#include <vector>
 #include <string>
 #include <optional>
 
@@ -39,10 +40,8 @@ namespace spos::lab1 {
 
         int _x_arg;
         std::string _op_name;
-        std::optional<PROCESS_INFORMATION> _f_process_info;
-        std::optional<PROCESS_INFORMATION> _g_process_info;
-        SOCKET _f_listen_socket;
-        SOCKET _g_listen_socket;
+        std::vector<std::optional<PROCESS_INFORMATION>> _process_info;
+        std::vector<SOCKET> _listen_sockets;
     };
 
 } //namespace spos::lab1

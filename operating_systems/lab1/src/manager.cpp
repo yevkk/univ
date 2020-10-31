@@ -96,26 +96,37 @@ namespace spos::lab1 {
         auto[f_socket, f_port] = _connectSocket();
         auto[g_socket, g_port] = _connectSocket();
 
-        _f_listen_socket = f_socket;
-        _g_listen_socket = g_socket;
+        _listen_sockets = {
+                f_socket,
+                g_socket
+        };
 
-        if (_f_listen_socket == INVALID_SOCKET || _g_listen_socket == INVALID_SOCKET) {
+        if (std::find_if(_listen_sockets.cbegin(),
+                         _listen_sockets.cend(),
+                         [](auto &sock) { return sock == INVALID_SOCKET; })
+            != _listen_sockets.cend()) {
             WSACleanup();
             return SOCKET_CONNECTION_ERROR;
         }
 
-        auto f_future = std::async(std::launch::async, _getFunctionResult, _f_listen_socket);
-        auto g_future = std::async(std::launch::async, _getFunctionResult, _g_listen_socket);
-
-        std::vector<std::pair<std::future<OptionalString>, std::size_t>> func_futures;
         std::size_t counter = 0;
+        auto f_future = std::async(std::launch::async, _getFunctionResult, _listen_sockets[counter++]);
+        auto g_future = std::async(std::launch::async, _getFunctionResult, _listen_sockets[counter++]);
+
+        counter = 0;
+        std::vector<std::pair<std::future<OptionalString>, std::size_t>> func_futures;
         func_futures.emplace_back(std::move(f_future), counter++);
         func_futures.emplace_back(std::move(g_future), counter++);
 
-        _f_process_info = _runWorker(" " + _op_name + " f " + std::to_string(_x_arg) + " 127.0.0.1 " + f_port);
-        _g_process_info = _runWorker(" " + _op_name + " g " + std::to_string(_x_arg) + " 127.0.0.1 " + g_port);
+        _process_info = {
+                _runWorker(" " + _op_name + " f " + std::to_string(_x_arg) + " 127.0.0.1 " + f_port),
+                _runWorker(" " + _op_name + " g " + std::to_string(_x_arg) + " 127.0.0.1 " + g_port)
+        };
 
-        if (!_f_process_info.has_value() || !_g_process_info.has_value()) {
+        if (std::find_if(_process_info.cbegin(),
+                         _process_info.cend(),
+                         [](auto &pi) { return !pi.has_value(); })
+            != _process_info.cend()) {
             WSACleanup();
             return PROCESS_CREATION_FAILED;
         }
@@ -132,13 +143,10 @@ namespace spos::lab1 {
                 func_results[ready_future_it->second] = ready_future_it->first.get().value();
                 std::cout << "res_no: " << ready_future_it->second << std::endl;
                 func_futures.erase(ready_future_it);
+                CloseHandle(_process_info[ready_future_it->second].value().hProcess);
+                CloseHandle(_process_info[ready_future_it->second].value().hThread);
             }
         }
-
-        CloseHandle(_f_process_info.value().hProcess);
-        CloseHandle(_f_process_info.value().hThread);
-        CloseHandle(_g_process_info.value().hProcess);
-        CloseHandle(_g_process_info.value().hThread);
 
         WSACleanup();
 
