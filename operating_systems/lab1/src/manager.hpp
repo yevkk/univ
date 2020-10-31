@@ -19,19 +19,16 @@ namespace spos::lab1 {
 
     class Manager {
     public:
-        enum RunExitCode {
-            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
-        };
-
         Manager(std::string op_name, int x_arg);
 
-        RunExitCode run();
-
-        template<typename OStream>
-        OStream &printResult(OStream &os);
+        void run();
 
     private:
         using OptionalString = std::optional<std::string>;
+
+        enum RunExitCode {
+            SUCCESS, SUCCESS_SC, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
+        };
 
         static auto _connectSocket() -> std::pair<SOCKET, std::string>;
 
@@ -47,6 +44,11 @@ namespace spos::lab1 {
 
         void _terminateUnfinished();
 
+        RunExitCode _run();
+
+        template<typename OStream>
+        OStream &_printResult(OStream &os);
+
         int _x_arg;
         std::string _op_name;
         std::vector<std::optional<PROCESS_INFORMATION>> _process_info;
@@ -57,7 +59,7 @@ namespace spos::lab1 {
     };
 
     template<typename OStream>
-    inline OStream &Manager::printResult(OStream &os) {
+    inline OStream &Manager::_printResult(OStream &os) {
         if ((_op_name == "AND" || _op_name == "OR") && bool_result_ptr) {
             os << std::boolalpha << *bool_result_ptr;
         }

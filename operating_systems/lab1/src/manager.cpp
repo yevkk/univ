@@ -143,7 +143,7 @@ namespace spos::lab1 {
         }
     }
 
-    Manager::RunExitCode Manager::run() {
+    Manager::RunExitCode Manager::_run() {
         std::atomic<bool> done = false;
         auto start_ts = system_clock::now();
 
@@ -263,5 +263,28 @@ namespace spos::lab1 {
         _process_info.clear();
         _listen_sockets.clear();
         return SUCCESS;
+    }
+
+    void Manager::run() {
+        auto exit_code = _run();
+
+        switch(exit_code) {
+            case SUCCESS:
+                std::cout << "[RESULT] ";
+                _printResult(std::cout);
+                break;
+            case WSA_STARTUP_FAILED:
+                std::cout << "[INFO] Unsuccessful start of using Winsock DLL\n";
+                break;
+            case SOCKET_CONNECTION_ERROR:
+                std::cout << "[INFO] Sockets connection failed\n";
+                break;
+            case PROCESS_CREATION_FAILED:
+                std::cout << "[INFO] Process creation failed\n";
+                break;
+            case TERMINATED:
+                std::cout << "[INFO] Calculation terminated\n";
+                break;
+        }
     }
 }
