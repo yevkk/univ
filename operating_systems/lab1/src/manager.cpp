@@ -201,11 +201,25 @@ namespace spos::lab1 {
         }
 
         _sub_results = decltype(_sub_results)(func_futures.size(), std::nullopt);
+        auto next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
         while (!func_futures.empty()) {
             if (keyboard_listener.wait_for(0s) == std::future_status::ready) {
                 _terminateUnfinished();
                 WSACleanup();
                 return TERMINATED;
+            }
+
+            if (system_clock::now() > next_prompt_ts) {
+                std::cout << "Enter 0 to terminate: ";
+                int input;
+                std::cin >> input;
+                if (input == 0) {
+                    done = true;
+                    _terminateUnfinished();
+                    WSACleanup();
+                    return TERMINATED;
+                }
+                next_prompt_ts += PROMPT_PERIOD;
             }
 
             const auto ready_future_it = std::find_if(
