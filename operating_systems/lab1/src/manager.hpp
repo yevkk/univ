@@ -43,10 +43,6 @@ namespace spos::lab1 {
 
         void _terminateUnfinished();
 
-
-        //TODO: short circuit check : check if value is null-value for op
-        //TODO: evaluate : takes to arguments, returns result of op
-
         int _x_arg;
         std::string _op_name;
         std::vector<std::optional<PROCESS_INFORMATION>> _process_info;

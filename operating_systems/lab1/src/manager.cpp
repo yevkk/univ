@@ -122,6 +122,22 @@ namespace spos::lab1 {
         }
     }
 
+    void Manager::_resultEvaluate() {
+        if (_op_name == "AND") {
+            bool result = true;
+            for (const auto &item : _sub_results) {
+                result = result && item;
+            }
+            bool_result_ptr = std::make_unique<bool>(result);
+        } else if (_op_name == "OR") {
+            bool result = false;
+            for (const auto &item : _sub_results) {
+                result = result || item;
+            }
+            bool_result_ptr = std::make_unique<bool>(result);
+        }
+    }
+
     Manager::RunExitCode Manager::run() {
         WSADATA wsa_data;
         if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
@@ -190,7 +206,7 @@ namespace spos::lab1 {
             }
         }
 
-
+        _resultEvaluate();
 
         WSACleanup();
 
