@@ -101,7 +101,7 @@ namespace spos::lab1 {
 
             int exit_code;
             TerminateProcess(
-                    _process_info[i].value().hProcess,
+                    OpenProcess(PROCESS_ALL_ACCESS, FALSE, _process_info[i].value().dwProcessId),
                     exit_code
             );
             CloseHandle(_process_info[i].value().hProcess);

@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
     Manager mgr{op_name, x_arg};
     mgr.run();
 
+    std::this_thread::sleep_for(1s);
     std::cout << "Press Enter to close\n";
     while (true) {
         std::this_thread::sleep_for(50ms);
