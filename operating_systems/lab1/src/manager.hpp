@@ -13,6 +13,7 @@
 #include <string>
 #include <optional>
 #include <memory>
+#include <iostream>
 
 namespace spos::lab1 {
 
@@ -26,6 +27,9 @@ namespace spos::lab1 {
 
         RunExitCode run();
 
+        template<typename OStream>
+        OStream &printResult(OStream &os);
+
     private:
         using OptionalString = std::optional<std::string>;
 
@@ -35,7 +39,7 @@ namespace spos::lab1 {
 
         static auto _getFunctionResult(SOCKET listen_socket) -> OptionalString;
 
-        auto _shortCircuitCheck(const std::string& value_str) -> bool;
+        auto _shortCircuitCheck(const std::string &value_str) -> bool;
 
         void _shortCircuitEvaluate();
 
@@ -51,6 +55,15 @@ namespace spos::lab1 {
 
         std::unique_ptr<bool> bool_result_ptr;
     };
+
+    template<typename OStream>
+    inline OStream &Manager::printResult(OStream &os) {
+        if ((_op_name == "AND" || _op_name == "OR") && bool_result_ptr) {
+            os << std::boolalpha << *bool_result_ptr;
+        }
+
+        return os;
+    }
 
 } //namespace spos::lab1
 
