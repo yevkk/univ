@@ -13,7 +13,10 @@
 #include <string>
 #include <optional>
 #include <memory>
+#include <chrono>
 #include <iostream>
+
+using namespace std::chrono;
 
 namespace spos::lab1 {
 
@@ -45,6 +48,8 @@ namespace spos::lab1 {
         void _terminateUnfinished();
 
         RunExitCode _run();
+
+        void _exitRun(decltype(system_clock::now()) start_ts);
 
         template<typename OStream>
         OStream &_printResult(OStream &os);

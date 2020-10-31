@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <thread>
 
 bool is_number(const std::string &s) {
     return !s.empty() &&
@@ -35,6 +36,18 @@ int main(int argc, char *argv[]) {
         }
         std::cout << "\n";
         std::cin >> op_name;
+    }
+
+    using namespace spos::lab1;
+    Manager mgr{op_name, x_arg};
+    mgr.run();
+
+    std::cout << "Press Enter to close\n";
+    while (true) {
+        std::this_thread::sleep_for(50ms);
+        if (GetKeyState(VK_RETURN) & 0x8000) {
+            break;
+        }
     }
 
     return 0;

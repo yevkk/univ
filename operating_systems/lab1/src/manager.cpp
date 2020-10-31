@@ -204,16 +204,16 @@ namespace spos::lab1 {
         _sub_results = decltype(_sub_results)(func_futures.size(), std::nullopt);
         bool prompt_enabled = true;
         auto next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
+
         while (!func_futures.empty()) {
             if (keyboard_listener.wait_for(0s) == std::future_status::ready) {
                 _terminateUnfinished();
-                WSACleanup();
+                _exitRun(start_ts);
                 return TERMINATED;
             }
 
             if (system_clock::now() > next_prompt_ts && prompt_enabled) {
-                std::cout << "[INFO] Time elapsed: " << duration_cast<seconds>(system_clock::now() - start_ts).count()
-                          << "s\n";
+                std::cout << "[TIME] " << duration_cast<seconds>(system_clock::now() - start_ts).count() << "s\n";
                 std::cout << "Choose Option:\n \ta) continue\n \tb) continue without prompt\n \tc) stop\n";
                 char input = ' ';
                 while (input != 'a' && input != 'b' && input != 'c') {
@@ -225,9 +225,6 @@ namespace spos::lab1 {
                         prompt_enabled = false;
                     } else if (input == 'c') {
                         done = true;
-                        _terminateUnfinished();
-                        WSACleanup();
-                        return TERMINATED;
                     }
                 }
                 next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
@@ -246,7 +243,7 @@ namespace spos::lab1 {
                     done = true;
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
-                    WSACleanup();
+                    _exitRun(start_ts);
                     return SUCCESS;
                 }
 
@@ -259,18 +256,32 @@ namespace spos::lab1 {
         done = true;
         _resultEvaluate();
 
-        WSACleanup();
-        _process_info.clear();
-        _listen_sockets.clear();
+        _exitRun(start_ts);
         return SUCCESS;
     }
 
+    void Manager::_exitRun(decltype(system_clock::now()) start_ts) {
+        std::cout << "[TIME] " << duration_cast<seconds>(system_clock::now() - start_ts).count() << "s\n";
+        WSACleanup();
+        _process_info.clear();
+        _listen_sockets.clear();
+    }
+
     void Manager::run() {
+        std::cout << "[INFO] argument: " << _x_arg << ", operation: " << _op_name << "\n";
+
         auto exit_code = _run();
 
-        switch(exit_code) {
+        switch (exit_code) {
             case SUCCESS:
                 std::cout << "[RESULT] ";
+                _printResult(std::cout);
+                std::cout << "\n";
+                break;
+            case SUCCESS_SC:
+                std::cout << "[INFO] Short-circuit case\n";
+                std::cout << "[RESULT] ";
+                std::cout << "\n";
                 _printResult(std::cout);
                 break;
             case WSA_STARTUP_FAILED:
