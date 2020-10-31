@@ -12,7 +12,7 @@ bool is_number(const std::string &s) {
 }
 
 int main(int argc, char *argv[]) {
-    const std::vector op_names{"AND", "OR"};
+    const std::vector op_names{"AND", "OR", "MIN"};
 
     int x_arg;
     std::string op_name;

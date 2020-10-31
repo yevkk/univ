@@ -113,7 +113,8 @@ namespace spos::lab1 {
 
     bool Manager::_shortCircuitCheck(const std::string &value_str) {
         if ((_op_name == "AND" && std::stoi(value_str) == 0) ||
-            (_op_name == "OR" && std::stoi(value_str) == 1)) {
+            (_op_name == "OR" && std::stoi(value_str) == 1) ||
+            (_op_name == "MIN" && std::stoi(value_str) == 0)) {
             return true;
         }
         return false;
@@ -124,6 +125,8 @@ namespace spos::lab1 {
             bool_result_ptr = std::make_unique<bool>(false);
         } else if (_op_name == "OR") {
             bool_result_ptr = std::make_unique<bool>(true);
+        } else if (_op_name == "MIN") {
+            int_result_ptr = std::make_unique<int>(0);
         }
     }
 
@@ -131,15 +134,24 @@ namespace spos::lab1 {
         if (_op_name == "AND") {
             bool result = true;
             for (const auto &item : _sub_results) {
-                result = result && item;
+                result = result && std::stoi(item.value());
             }
             bool_result_ptr = std::make_unique<bool>(result);
         } else if (_op_name == "OR") {
             bool result = false;
             for (const auto &item : _sub_results) {
-                result = result || item;
+                result = result || std::stoi(item.value());
             }
             bool_result_ptr = std::make_unique<bool>(result);
+        } else if (_op_name == "MIN") {
+            int result = INT_MAX;
+            for (const auto &item : _sub_results) {
+                int int_item = std::stoi(item.value());
+                if (int_item < result) {
+                    result = int_item;
+                }
+            }
+            int_result_ptr = std::make_unique<int>(result);
         }
     }
 
@@ -244,7 +256,7 @@ namespace spos::lab1 {
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
                     _exitRun(start_ts);
-                    return SUCCESS;
+                    return SUCCESS_SC;
                 }
 
                 _sub_results[ready_future_it->second] = result_str;
@@ -281,8 +293,8 @@ namespace spos::lab1 {
             case SUCCESS_SC:
                 std::cout << "[INFO] Short-circuit case\n";
                 std::cout << "[RESULT] ";
-                std::cout << "\n";
                 _printResult(std::cout);
+                std::cout << "\n";
                 break;
             case WSA_STARTUP_FAILED:
                 std::cout << "[INFO] Unsuccessful start of using Winsock DLL\n";

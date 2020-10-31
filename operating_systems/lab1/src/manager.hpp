@@ -61,12 +61,15 @@ namespace spos::lab1 {
         std::vector<OptionalString> _sub_results;
 
         std::unique_ptr<bool> bool_result_ptr;
+        std::unique_ptr<int> int_result_ptr;
     };
 
     template<typename OStream>
     inline OStream &Manager::_printResult(OStream &os) {
         if ((_op_name == "AND" || _op_name == "OR") && bool_result_ptr) {
             os << std::boolalpha << *bool_result_ptr;
+        } else if (_op_name == "MIN") {
+            os << *int_result_ptr;
         }
 
         return os;

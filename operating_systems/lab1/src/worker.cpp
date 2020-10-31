@@ -70,6 +70,8 @@ namespace spos::lab1::utils {
                 return demo::f_func<demo::AND>(arg);
             case demo::OR:
                 return demo::f_func<demo::OR>(arg);
+            case demo::INT:
+                return demo::f_func<demo::INT>(arg);
         }
         return nullptr;
     }
@@ -80,6 +82,8 @@ namespace spos::lab1::utils {
                 return demo::g_func<demo::AND>(arg);
             case demo::OR:
                 return demo::g_func<demo::OR>(arg);
+            case demo::INT:
+                return demo::g_func<demo::INT>(arg);
         }
         return nullptr;
     }
@@ -110,6 +114,8 @@ int main(int argc, char *argv[]) {
         operation = demo::AND;
     } else if (!strcmp(argv[1], "OR")) {
         operation = demo::OR;
+    } else if (!strcmp(argv[1], "MIN")) {
+        operation = demo::INT;
     }
 
     std::any result;
@@ -119,9 +125,11 @@ int main(int argc, char *argv[]) {
         result = utils::gWrapper(operation, std::strtol(argv[3], nullptr, 10));
     }
 
-    const char * send_buf;
+    const char *send_buf;
     if (operation == demo::AND || operation == demo::OR) {
         send_buf = std::to_string(std::any_cast<bool>(result)).c_str();
+    } else if (operation == demo::INT) {
+        send_buf = std::to_string(std::any_cast<int>(result)).c_str();
     }
 
     if (send(connect_socket, send_buf, (int) strlen(send_buf), 0) == SOCKET_ERROR) {
