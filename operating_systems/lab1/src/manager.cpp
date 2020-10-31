@@ -84,7 +84,26 @@ namespace spos::lab1 {
             return std::nullopt;
         }
 
+        closesocket(listen_socket);
         return recv_buf;
+    }
+
+    void Manager::_terminateUnfinished() {
+        for (std::size_t i = 0; i < _sub_results.size(); i++) {
+            if (_sub_results[i] != std::nullopt) {
+                continue;
+            }
+
+            int exit_code;
+            TerminateProcess(
+                    _process_info[i].value().hProcess,
+                    exit_code
+            );
+            CloseHandle(_process_info[i].value().hProcess);
+            CloseHandle(_process_info[i].value().hThread);
+
+            send(_listen_sockets[i], " ", (int) strlen(" "), 0);
+        }
     }
 
     Manager::RunExitCode Manager::run() {
@@ -131,7 +150,7 @@ namespace spos::lab1 {
             return PROCESS_CREATION_FAILED;
         }
 
-        std::vector<OptionalString> func_results(func_futures.size(), std::nullopt);
+        _sub_results = decltype(_sub_results)(func_futures.size(), std::nullopt);
         while (!func_futures.empty()) {
             const auto ready_future_it = std::find_if(
                     func_futures.begin(),
@@ -140,7 +159,7 @@ namespace spos::lab1 {
 
 
             if (ready_future_it != func_futures.end()) {
-                func_results[ready_future_it->second] = ready_future_it->first.get().value();
+                _sub_results[ready_future_it->second] = ready_future_it->first.get().value();
                 std::cout << "res_no: " << ready_future_it->second << std::endl;
                 func_futures.erase(ready_future_it);
                 CloseHandle(_process_info[ready_future_it->second].value().hProcess);

@@ -34,6 +34,7 @@ namespace spos::lab1 {
 
         static auto _getFunctionResult(SOCKET listen_socket) -> OptionalString;
 
+        void _terminateUnfinished();
         //TODO: short circuit check : check if value is null-value for op
         //TODO: evaluate : takes to arguments, returns result of op
         //TODO: exit process
@@ -42,6 +43,7 @@ namespace spos::lab1 {
         std::string _op_name;
         std::vector<std::optional<PROCESS_INFORMATION>> _process_info;
         std::vector<SOCKET> _listen_sockets;
+        std::vector<OptionalString> _sub_results;
     };
 
 } //namespace spos::lab1
