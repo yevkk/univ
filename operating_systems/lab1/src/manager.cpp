@@ -95,6 +95,7 @@ namespace spos::lab1 {
 
         auto[f_socket, f_port] = _connectSocket();
         auto[g_socket, g_port] = _connectSocket();
+
         _f_listen_socket = f_socket;
         _g_listen_socket = g_socket;
 
@@ -106,9 +107,10 @@ namespace spos::lab1 {
         auto f_future = std::async(std::launch::async, _getFunctionResult, _f_listen_socket);
         auto g_future = std::async(std::launch::async, _getFunctionResult, _g_listen_socket);
 
-        std::vector<std::future<OptionalString>> func_futures;
-        func_futures.push_back(std::move(f_future));
-        func_futures.push_back(std::move(g_future));
+        std::vector<std::pair<std::future<OptionalString>, std::size_t>> func_futures;
+        std::size_t counter = 0;
+        func_futures.emplace_back(std::move(f_future), counter++);
+        func_futures.emplace_back(std::move(g_future), counter++);
 
         _f_process_info = _runWorker(" " + _op_name + " f " + std::to_string(_x_arg) + " 127.0.0.1 " + f_port);
         _g_process_info = _runWorker(" " + _op_name + " g " + std::to_string(_x_arg) + " 127.0.0.1 " + g_port);
@@ -123,12 +125,12 @@ namespace spos::lab1 {
             const auto ready_future_it = std::find_if(
                     func_futures.begin(),
                     func_futures.end(),
-                    [](auto &fut) { return fut.wait_for(std::chrono::seconds(0)) == std::future_status::ready; });
+                    [](auto &fut) { return fut.first.wait_for(std::chrono::seconds(0)) == std::future_status::ready; });
 
 
             if (ready_future_it != func_futures.end()) {
-                func_results[std::distance(func_futures.begin(), ready_future_it)] = (*ready_future_it).get().value();
-                std::cout << "res_no: " << std::distance(func_futures.begin(), ready_future_it) << std::endl;
+                func_results[ready_future_it->second] = ready_future_it->first.get().value();
+                std::cout << "res_no: " << ready_future_it->second << std::endl;
                 func_futures.erase(ready_future_it);
             }
         }
