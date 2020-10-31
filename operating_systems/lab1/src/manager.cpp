@@ -220,6 +220,7 @@ namespace spos::lab1 {
                     return TERMINATED;
                 }
                 next_prompt_ts += PROMPT_PERIOD;
+                next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
             }
 
             const auto ready_future_it = std::find_if(
