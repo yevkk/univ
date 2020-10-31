@@ -20,7 +20,7 @@ namespace spos::lab1 {
     class Manager {
     public:
         enum RunExitCode {
-            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED
+            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
         };
 
         Manager(std::string op_name, int x_arg);

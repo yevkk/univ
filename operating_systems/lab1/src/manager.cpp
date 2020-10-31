@@ -4,9 +4,14 @@
 #include <string>
 #include <algorithm>
 #include <future>
+#include <chrono>
 #include <iostream>
 
+using namespace std::chrono;
+
 namespace spos::lab1 {
+    const auto PROMPT_PERIOD = 10s;
+
     Manager::Manager(std::string op_name, int x_arg) :
             _x_arg{x_arg}, _op_name{std::move(op_name)} {}
 
@@ -139,6 +144,19 @@ namespace spos::lab1 {
     }
 
     Manager::RunExitCode Manager::run() {
+        std::atomic<bool> done = false;
+
+        auto keyboard_listener = std::async(std::launch::async,
+                              [&done]() {
+                                  while (true) {
+                                      std::this_thread::sleep_for(50ms);
+                                      if (done || (GetKeyState(VK_ESCAPE) & 0x8000)) {
+                                          break;
+                                      }
+                                  }
+                              }
+        );
+
         WSADATA wsa_data;
         if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
             return WSA_STARTUP_FAILED;
@@ -184,16 +202,23 @@ namespace spos::lab1 {
 
         _sub_results = decltype(_sub_results)(func_futures.size(), std::nullopt);
         while (!func_futures.empty()) {
+            if (keyboard_listener.wait_for(0s) == std::future_status::ready) {
+                _terminateUnfinished();
+                WSACleanup();
+                return TERMINATED;
+            }
+
             const auto ready_future_it = std::find_if(
                     func_futures.begin(),
                     func_futures.end(),
-                    [](auto &fut) { return fut.first.wait_for(std::chrono::seconds(0)) == std::future_status::ready; });
+                    [](auto &fut) { return fut.first.wait_for(0s) == std::future_status::ready; });
 
 
             if (ready_future_it != func_futures.end()) {
                 std::string result_str = ready_future_it->first.get().value();
 
                 if (_shortCircuitCheck(result_str)) {
+                    done = true;
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
                     WSACleanup();
@@ -206,10 +231,12 @@ namespace spos::lab1 {
                 CloseHandle(_process_info[ready_future_it->second].value().hThread);
             }
         }
-
+        done = true;
         _resultEvaluate();
 
         WSACleanup();
+        _process_info.clear();
+        _listen_sockets.clear();
         return SUCCESS;
     }
 }
