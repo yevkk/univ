@@ -116,9 +116,9 @@ namespace spos::lab1 {
 
     void Manager::_shortCircuitEvaluate() {
         if (_op_name == "AND") {
-            bool_result_ptr = std::make_unique<bool>(true);
-        } else if (_op_name == "OR") {
             bool_result_ptr = std::make_unique<bool>(false);
+        } else if (_op_name == "OR") {
+            bool_result_ptr = std::make_unique<bool>(true);
         }
     }
 
@@ -196,7 +196,8 @@ namespace spos::lab1 {
                 if (_shortCircuitCheck(result_str)) {
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
-                    break;
+                    WSACleanup();
+                    return SUCCESS;
                 }
 
                 _sub_results[ready_future_it->second] = result_str;
@@ -209,7 +210,6 @@ namespace spos::lab1 {
         _resultEvaluate();
 
         WSACleanup();
-
         return SUCCESS;
     }
 }
