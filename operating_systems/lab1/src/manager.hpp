@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <memory>
 
 namespace spos::lab1 {
 
@@ -34,16 +35,25 @@ namespace spos::lab1 {
 
         static auto _getFunctionResult(SOCKET listen_socket) -> OptionalString;
 
+        auto _shortCircuitCheck(const std::string& value_str) -> bool;
+
+        void _shortCircuitEvaluate();
+
+        void _resultEvaluate();
+
         void _terminateUnfinished();
+
+
         //TODO: short circuit check : check if value is null-value for op
         //TODO: evaluate : takes to arguments, returns result of op
-        //TODO: exit process
 
         int _x_arg;
         std::string _op_name;
         std::vector<std::optional<PROCESS_INFORMATION>> _process_info;
         std::vector<SOCKET> _listen_sockets;
         std::vector<OptionalString> _sub_results;
+
+        std::unique_ptr<bool> bool_result_ptr;
     };
 
 } //namespace spos::lab1

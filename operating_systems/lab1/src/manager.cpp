@@ -106,6 +106,22 @@ namespace spos::lab1 {
         }
     }
 
+    bool Manager::_shortCircuitCheck(const std::string &value_str) {
+        if ((_op_name == "AND" && std::stoi(value_str) == 0) ||
+            (_op_name == "OR" && std::stoi(value_str) == 1)) {
+            return true;
+        }
+        return false;
+    }
+
+    void Manager::_shortCircuitEvaluate() {
+        if (_op_name == "AND") {
+            bool_result_ptr = std::make_unique<bool>(true);
+        } else if (_op_name == "OR") {
+            bool_result_ptr = std::make_unique<bool>(false);
+        }
+    }
+
     Manager::RunExitCode Manager::run() {
         WSADATA wsa_data;
         if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
@@ -159,13 +175,22 @@ namespace spos::lab1 {
 
 
             if (ready_future_it != func_futures.end()) {
-                _sub_results[ready_future_it->second] = ready_future_it->first.get().value();
-                std::cout << "res_no: " << ready_future_it->second << std::endl;
+                std::string result_str = ready_future_it->first.get().value();
+
+                if (_shortCircuitCheck(result_str)) {
+                    _terminateUnfinished();
+                    _shortCircuitEvaluate();
+                    break;
+                }
+
+                _sub_results[ready_future_it->second] = result_str;
                 func_futures.erase(ready_future_it);
                 CloseHandle(_process_info[ready_future_it->second].value().hProcess);
                 CloseHandle(_process_info[ready_future_it->second].value().hThread);
             }
         }
+
+
 
         WSACleanup();
 
