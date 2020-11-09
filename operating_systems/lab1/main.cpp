@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <vector>
 #include <string>
-#include <thread>
 
 bool is_number(const std::string &s) {
     return !s.empty() &&
@@ -14,39 +13,35 @@ bool is_number(const std::string &s) {
 int main(int argc, char *argv[]) {
     const std::vector op_names{"AND", "OR", "MIN"};
 
-    int x_arg;
-    std::string op_name;
-
-    if (argc < 2) {
-        std::cout << "Input argument:\n";
-        std::cin >> x_arg;
-    } else {
-        x_arg = is_number(argv[1]) ? std::stoi(argv[1]) : 0;
-    }
-
-    if (argc >= 3) {
-        op_name = argv[2];
-    }
-
-    while (std::find(op_names.cbegin(), op_names.cend(), op_name) == op_names.cend()) {
-        std::cout << "Input valid binary operation name\n";
-        std::cout << "Options: ";
-        for (const auto &item : op_names) {
-            std::cout << item << " ";
-        }
-        std::cout << "\n";
-        std::cin >> op_name;
-    }
-
-    using namespace spos::lab1;
-    Manager mgr{op_name, x_arg};
-    mgr.run();
-
-    std::this_thread::sleep_for(1s);
-    std::cout << "Press Enter to close\n";
     while (true) {
-        std::this_thread::sleep_for(50ms);
-        if (GetKeyState(VK_RETURN) & 0x8000) {
+        int x_arg;
+        std::string x_arg_str;
+        std::cout << "Enter argument:\n";
+        std::cout << "(Non-numerical input considered as 0)\n";
+        std::cin >> x_arg_str;
+        x_arg = is_number(x_arg_str) ? std::stoi(x_arg_str) : 0;
+
+
+        std::string op_name;
+        while (std::find(op_names.cbegin(), op_names.cend(), op_name) == op_names.cend()) {
+            std::cout << "Enter valid binary operation name\n";
+            std::cout << "(Options: ";
+            for (const auto &item : op_names) {
+                std::cout << item << " ";
+            }
+            std::cout << ")\n";
+            std::cin >> op_name;
+        }
+
+        spos::lab1::Manager mgr{op_name, x_arg};
+        mgr.run();
+
+        std::cout << "Choose Option:\n \ta) continue\n \tb) stop\n";
+        char input = ' ';
+        while (input != 'a' && input != 'b') {
+            std::cin >> input;
+        }
+        if (input == 'b') {
             break;
         }
     }
