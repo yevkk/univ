@@ -145,7 +145,7 @@ namespace spos::lab1 {
                     std::accumulate(_sub_results.begin(),
                                     _sub_results.end(),
                                     false,
-                                    [](bool res, OptionalString item) { return res && std::stoi(item.value()); }
+                                    [](bool res, OptionalString item) { return res || std::stoi(item.value()); }
                     )
             );
         } else if (_op_name == "MIN") {
