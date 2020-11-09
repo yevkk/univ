@@ -11,13 +11,14 @@ add_library(${DEMO_LIB_NAME} INTERFACE)
 target_include_directories(${DEMO_LIB_NAME} INTERFACE demolib)
 
 set(SRC_LIST
-        ${SRC_DIR}/manager.cpp
         ${SRC_DIR}/manager.hpp
+        ${SRC_DIR}/manager.hxx
         ${SRC_DIR}/config.hpp
         )
 
 set(LIB_NAME ${PROJECT_NAME}core)
-add_library(${LIB_NAME} STATIC ${SRC_LIST})
+add_library(${LIB_NAME} INTERFACE)
+target_sources(${LIB_NAME} INTERFACE ${SRC_LIST})
 
 add_executable(manager main.cpp)
 target_link_libraries(manager PRIVATE ${LIB_NAME} ws2_32)
