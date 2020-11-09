@@ -15,8 +15,6 @@
 using namespace std::chrono;
 
 namespace spos::lab1 {
-    const auto PROMPT_PERIOD = 10s;
-
     template<CancellationType CT>
     Manager<CT>::Manager(std::string op_name, int x_arg) :
             _x_arg{x_arg}, _op_name{std::move(op_name)}, _ready{false} {}
@@ -226,6 +224,7 @@ namespace spos::lab1 {
                 std::string result_str = ready_future_it->first.get().value();
 
                 if (_shortCircuitCheck(result_str)) {
+                    _ready = true;
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
                     _exitRun();
@@ -238,10 +237,56 @@ namespace spos::lab1 {
                 CloseHandle(_process_info[ready_future_it->second].value().hThread);
             }
         }
+        _ready = true;
         _resultEvaluate();
 
         _exitRun();
         return SUCCESS;
+    }
+
+    template<CancellationType CT>
+    bool Manager<CT>::_cancellation(decltype(system_clock::now()) start_ts) {}
+
+    template<>
+    bool Manager<CancellationType::KEYBOARD>::_cancellation(decltype(system_clock::now()) start_ts) {
+        while (true) {
+            std::this_thread::sleep_for(100ms);
+            if (_ready || (GetKeyState(VK_ESCAPE) & 0x8000)) {
+                break;
+            }
+        }
+
+        return true;
+    }
+
+    template<>
+    bool Manager<CancellationType::PROMPT>::_cancellation(decltype(system_clock::now()) start_ts) {
+        const auto PROMPT_PERIOD = 10s;
+
+        auto next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
+        while (true) {
+            std::this_thread::sleep_for(1000ms);
+            if (_ready) {
+                return true;
+            }
+            if (system_clock::now() > next_prompt_ts) {
+                std::cout << "[TIME] " << duration_cast<seconds>(system_clock::now() - start_ts).count() << "s\n";
+                std::cout << "Choose Option:\n \ta) continue\n \tb) continue without prompt\n \tc) stop\n";
+                char input = ' ';
+                while (input != 'a' && input != 'b' && input != 'c') {
+                    std::cin >> input;
+                    if (input == 'a') {
+                        std::cout << "[INFO] Continued\n";
+                        next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
+                    } else if (input == 'b') {
+                        std::cout << "[INFO] Prompt disabled\n";
+                        return false;
+                    } else if (input == 'c') {
+                        return true;
+                    }
+                }
+            }
+        }
     }
 
     template<CancellationType CT>

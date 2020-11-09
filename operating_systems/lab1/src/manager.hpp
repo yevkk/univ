@@ -51,6 +51,8 @@ namespace spos::lab1 {
 
         void _terminateUnfinished();
 
+        bool _cancellation(decltype(system_clock::now()) start_ts);
+
         RunExitCode _run();
 
         void _exitRun();
