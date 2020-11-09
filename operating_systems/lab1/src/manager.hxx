@@ -187,7 +187,7 @@ namespace spos::lab1 {
                          _listen_sockets.cend(),
                          [](auto &sock) { return sock == INVALID_SOCKET; })
             != _listen_sockets.cend()) {
-            WSACleanup();
+            _exitRun();
             return SOCKET_CONNECTION_ERROR;
         }
 
@@ -209,7 +209,7 @@ namespace spos::lab1 {
                          _process_info.cend(),
                          [](auto &pi) { return !pi.has_value(); })
             != _process_info.cend()) {
-            WSACleanup();
+            _exitRun();
             return PROCESS_CREATION_FAILED;
         }
 
@@ -228,7 +228,7 @@ namespace spos::lab1 {
                 if (_shortCircuitCheck(result_str)) {
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
-                    _exitRun(start_ts);
+                    _exitRun();
                     return SUCCESS;
                 }
 
@@ -240,13 +240,12 @@ namespace spos::lab1 {
         }
         _resultEvaluate();
 
-        _exitRun(start_ts);
+        _exitRun();
         return SUCCESS;
     }
 
     template<CancellationType CT>
-    void Manager<CT>::_exitRun(decltype(system_clock::now()) start_ts) {
-        std::cout << "[TIME] " << duration_cast<seconds>(system_clock::now() - start_ts).count() << "s\n";
+    void Manager<CT>::_exitRun() {
         WSACleanup();
         _process_info.clear();
         _listen_sockets.clear();

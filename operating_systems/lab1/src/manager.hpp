@@ -53,7 +53,7 @@ namespace spos::lab1 {
 
         RunExitCode _run();
 
-        void _exitRun(decltype(system_clock::now()) start_ts);
+        void _exitRun();
 
         template<typename OStream>
         OStream &_printResult(OStream &os);
