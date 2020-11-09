@@ -13,6 +13,7 @@ target_include_directories(${DEMO_LIB_NAME} INTERFACE demolib)
 set(SRC_LIST
         ${SRC_DIR}/manager.cpp
         ${SRC_DIR}/manager.hpp
+        ${SRC_DIR}/config.hpp
         )
 
 set(LIB_NAME ${PROJECT_NAME}core)

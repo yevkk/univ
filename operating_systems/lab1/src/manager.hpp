@@ -33,7 +33,7 @@ namespace spos::lab1 {
             SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
         };
 
-        static auto _connectSocket() -> std::pair<SOCKET, std::string>;
+        static auto _connectSocket(const std::string &port) -> SOCKET;
 
         static auto _runWorker(const std::string &command_line) -> std::optional<PROCESS_INFORMATION>;
 

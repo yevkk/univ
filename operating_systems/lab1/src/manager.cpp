@@ -1,4 +1,5 @@
 #include "manager.hpp"
+#include "config.hpp"
 
 #include <vector>
 #include <string>
@@ -16,10 +17,7 @@ namespace spos::lab1 {
     Manager::Manager(std::string op_name, int x_arg) :
             _x_arg{x_arg}, _op_name{std::move(op_name)} {}
 
-    std::pair<SOCKET, std::string> Manager::_connectSocket() {
-        static int port = 27015;
-        std::string port_str = std::to_string(port++);
-
+    SOCKET Manager::_connectSocket(const std::string &port) {
         addrinfo *ai_ptr, hints;
 
         ZeroMemory(&hints, sizeof(hints));
@@ -28,25 +26,25 @@ namespace spos::lab1 {
         hints.ai_protocol = IPPROTO_TCP;
         hints.ai_flags = AI_PASSIVE;
 
-        if (getaddrinfo(nullptr, port_str.c_str(), &hints, &ai_ptr)) {
-            return {INVALID_SOCKET, ""};
+        if (getaddrinfo(nullptr, port.c_str(), &hints, &ai_ptr)) {
+            return INVALID_SOCKET;
         }
 
         SOCKET listen_socket = socket(ai_ptr->ai_family, ai_ptr->ai_socktype, ai_ptr->ai_protocol);
         if (listen_socket == INVALID_SOCKET) {
             freeaddrinfo(ai_ptr);
-            return {INVALID_SOCKET, ""};
+            return INVALID_SOCKET;
         }
 
         if (bind(listen_socket, ai_ptr->ai_addr, (int) ai_ptr->ai_addrlen) == SOCKET_ERROR) {
             freeaddrinfo(ai_ptr);
             closesocket(listen_socket);
-            return {INVALID_SOCKET, ""};
+            return INVALID_SOCKET;
         }
 
         freeaddrinfo(ai_ptr);
 
-        return {listen_socket, port_str};
+        return listen_socket;
     }
 
     std::optional<PROCESS_INFORMATION> Manager::_runWorker(const std::string &command_line) {
@@ -179,12 +177,9 @@ namespace spos::lab1 {
             return WSA_STARTUP_FAILED;
         }
 
-        auto[f_socket, f_port] = _connectSocket();
-        auto[g_socket, g_port] = _connectSocket();
-
         _listen_sockets = {
-                f_socket,
-                g_socket
+                _connectSocket(config::port_f),
+                _connectSocket(config::port_g)
         };
 
         if (std::find_if(_listen_sockets.cbegin(),
@@ -205,8 +200,8 @@ namespace spos::lab1 {
         func_futures.emplace_back(std::move(g_future), counter++);
 
         _process_info = {
-                _runWorker(" " + _op_name + " f " + std::to_string(_x_arg) + " 127.0.0.1 " + f_port),
-                _runWorker(" " + _op_name + " g " + std::to_string(_x_arg) + " 127.0.0.1 " + g_port)
+                _runWorker(" " + _op_name + " f " + std::to_string(_x_arg)),
+                _runWorker(" " + _op_name + " g " + std::to_string(_x_arg))
         };
 
         if (std::find_if(_process_info.cbegin(),
