@@ -21,7 +21,9 @@ using namespace std::chrono;
 
 namespace spos::lab1 {
 
-    enum class CancellationType {KEYBOARD, PROMPT};
+    enum class CancellationType {
+        KEYBOARD, PROMPT
+    };
 
     template<CancellationType CT = CancellationType::KEYBOARD>
     class Manager {
@@ -34,7 +36,13 @@ namespace spos::lab1 {
         using OptionalString = std::optional<std::string>;
 
         enum RunExitCode {
-            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
+            SUCCESS,
+            WSA_STARTUP_FAILED,
+            SOCKET_CONNECTION_ERROR,
+            PROCESS_CREATION_FAILED,
+            TERMINATED,
+            TERMINATED_F_HANGS,
+            TERMINATED_G_HANGS
         };
 
         static auto _connectSocket(const std::string &port) -> SOCKET;

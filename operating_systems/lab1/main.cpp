@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
             std::cin >> op_name;
         }
 
-        spos::lab1::Manager mgr{op_name, x_arg};
+        spos::lab1::Manager<spos::lab1::CancellationType::PROMPT> mgr{op_name, x_arg};
         mgr.run();
 
         std::cout << "\nChoose Option:\n \ta) continue\n \tb) stop\n";

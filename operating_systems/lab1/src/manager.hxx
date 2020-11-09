@@ -171,6 +171,10 @@ namespace spos::lab1 {
         _ready = false;
         auto start_ts = system_clock::now();
 
+        auto cancellation_listener = std::async(std::launch::async,
+                                                [this, start_ts = start_ts]() { return _cancellation(start_ts); }
+        );
+
         WSADATA wsa_data;
         if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
             return WSA_STARTUP_FAILED;
@@ -214,6 +218,10 @@ namespace spos::lab1 {
         _sub_results = decltype(_sub_results)(func_futures.size(), std::nullopt);
 
         while (!func_futures.empty()) {
+            if (cancellation_listener.wait_for(0s) == std::future_status::ready && cancellation_listener.get()) {
+                break;
+            }
+
             const auto ready_future_it = std::find_if(
                     func_futures.begin(),
                     func_futures.end(),
@@ -237,6 +245,24 @@ namespace spos::lab1 {
                 CloseHandle(_process_info[ready_future_it->second].value().hThread);
             }
         }
+
+        if (!func_futures.empty()) {
+            _terminateUnfinished();
+            _exitRun();
+
+            if (!_sub_results[0].has_value()) {
+                if (!_sub_results[1].has_value()) {
+                    return TERMINATED;
+                } else {
+                    return TERMINATED_F_HANGS;
+                }
+            } else {
+                if (!_sub_results[1].has_value()) {
+                    return TERMINATED_G_HANGS;
+                }
+            }
+        }
+
         _ready = true;
         _resultEvaluate();
 
@@ -245,7 +271,7 @@ namespace spos::lab1 {
     }
 
     template<CancellationType CT>
-    bool Manager<CT>::_cancellation(decltype(system_clock::now()) start_ts) {}
+    bool Manager<CT>::_cancellation(decltype(system_clock::now()) start_ts) { return true; }
 
     template<>
     bool Manager<CancellationType::KEYBOARD>::_cancellation(decltype(system_clock::now()) start_ts) {
@@ -261,7 +287,7 @@ namespace spos::lab1 {
 
     template<>
     bool Manager<CancellationType::PROMPT>::_cancellation(decltype(system_clock::now()) start_ts) {
-        const auto PROMPT_PERIOD = 10s;
+        const auto PROMPT_PERIOD = 5s;
 
         auto next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
         while (true) {
@@ -319,6 +345,12 @@ namespace spos::lab1 {
                 break;
             case TERMINATED:
                 std::cout << "[INFO] Calculation terminated\n";
+                break;
+            case TERMINATED_F_HANGS:
+                std::cout << "[INFO] Calculation terminated (f hangs)\n";
+                break;
+            case TERMINATED_G_HANGS:
+                std::cout << "[INFO] Calculation terminated (g hangs)\n";
                 break;
         }
     }
