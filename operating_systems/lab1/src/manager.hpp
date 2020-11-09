@@ -30,7 +30,7 @@ namespace spos::lab1 {
         using OptionalString = std::optional<std::string>;
 
         enum RunExitCode {
-            SUCCESS, SUCCESS_SC, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
+            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
         };
 
         static auto _connectSocket() -> std::pair<SOCKET, std::string>;
