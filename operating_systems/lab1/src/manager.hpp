@@ -14,12 +14,18 @@
 #include <optional>
 #include <memory>
 #include <chrono>
+#include <atomic>
 #include <iostream>
 
 using namespace std::chrono;
 
 namespace spos::lab1 {
 
+    enum class CancellationType {
+        KEYBOARD, PROMPT
+    };
+
+    template<CancellationType CT = CancellationType::KEYBOARD>
     class Manager {
     public:
         Manager(std::string op_name, int x_arg);
@@ -30,10 +36,16 @@ namespace spos::lab1 {
         using OptionalString = std::optional<std::string>;
 
         enum RunExitCode {
-            SUCCESS, WSA_STARTUP_FAILED, SOCKET_CONNECTION_ERROR, PROCESS_CREATION_FAILED, TERMINATED
+            SUCCESS,
+            WSA_STARTUP_FAILED,
+            SOCKET_CONNECTION_ERROR,
+            PROCESS_CREATION_FAILED,
+            TERMINATED,
+            TERMINATED_F_HANGS,
+            TERMINATED_G_HANGS
         };
 
-        static auto _connectSocket() -> std::pair<SOCKET, std::string>;
+        static auto _connectSocket(const std::string &port) -> SOCKET;
 
         static auto _runWorker(const std::string &command_line) -> std::optional<PROCESS_INFORMATION>;
 
@@ -47,9 +59,11 @@ namespace spos::lab1 {
 
         void _terminateUnfinished();
 
+        bool _cancellation(decltype(system_clock::now()) start_ts);
+
         RunExitCode _run();
 
-        void _exitRun(decltype(system_clock::now()) start_ts);
+        void _exitRun();
 
         template<typename OStream>
         OStream &_printResult(OStream &os);
@@ -62,10 +76,13 @@ namespace spos::lab1 {
 
         std::unique_ptr<bool> bool_result_ptr;
         std::unique_ptr<int> int_result_ptr;
+
+        std::atomic<bool> _ready;
     };
 
+    template<CancellationType CT>
     template<typename OStream>
-    inline OStream &Manager::_printResult(OStream &os) {
+    inline OStream &Manager<CT>::_printResult(OStream &os) {
         if ((_op_name == "AND" || _op_name == "OR") && bool_result_ptr) {
             os << std::boolalpha << *bool_result_ptr;
         } else if (_op_name == "MIN") {
@@ -76,5 +93,7 @@ namespace spos::lab1 {
     }
 
 } //namespace spos::lab1
+
+#include "manager.hxx"
 
 #endif //LAB_MANAGER_HPP
