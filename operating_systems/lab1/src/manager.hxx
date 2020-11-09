@@ -1,3 +1,6 @@
+#ifndef LAB_MANAGER_HXX
+#define LAB_MANAGER_HXX
+
 #include "manager.hpp"
 #include "config.hpp"
 
@@ -14,10 +17,12 @@ using namespace std::chrono;
 namespace spos::lab1 {
     const auto PROMPT_PERIOD = 10s;
 
-    Manager::Manager(std::string op_name, int x_arg) :
-            _x_arg{x_arg}, _op_name{std::move(op_name)} {}
+    template<CancellationType CT>
+    Manager<CT>::Manager(std::string op_name, int x_arg) :
+            _x_arg{x_arg}, _op_name{std::move(op_name)}, _ready{false} {}
 
-    SOCKET Manager::_connectSocket(const std::string &port) {
+    template<CancellationType CT>
+    SOCKET Manager<CT>::_connectSocket(const std::string &port) {
         addrinfo *ai_ptr, hints;
 
         ZeroMemory(&hints, sizeof(hints));
@@ -47,7 +52,8 @@ namespace spos::lab1 {
         return listen_socket;
     }
 
-    std::optional<PROCESS_INFORMATION> Manager::_runWorker(const std::string &command_line) {
+    template<CancellationType CT>
+    std::optional<PROCESS_INFORMATION> Manager<CT>::_runWorker(const std::string &command_line) {
         STARTUPINFO startup_info;
         PROCESS_INFORMATION process_info;
 
@@ -65,7 +71,8 @@ namespace spos::lab1 {
         return process_info;
     }
 
-    std::optional<std::string> Manager::_getFunctionResult(SOCKET listen_socket) {
+    template<CancellationType CT>
+    std::optional<std::string> Manager<CT>::_getFunctionResult(SOCKET listen_socket) {
         if (listen(listen_socket, SOMAXCONN) == SOCKET_ERROR) {
             closesocket(listen_socket);
             return std::nullopt;
@@ -92,7 +99,8 @@ namespace spos::lab1 {
         return recv_buf;
     }
 
-    void Manager::_terminateUnfinished() {
+    template<CancellationType CT>
+    void Manager<CT>::_terminateUnfinished() {
         for (std::size_t i = 0; i < _sub_results.size(); i++) {
             if (_sub_results[i] != std::nullopt) {
                 continue;
@@ -110,7 +118,8 @@ namespace spos::lab1 {
         }
     }
 
-    bool Manager::_shortCircuitCheck(const std::string &value_str) {
+    template<CancellationType CT>
+    bool Manager<CT>::_shortCircuitCheck(const std::string &value_str) {
         if ((_op_name == "AND" && std::stoi(value_str) == 0) ||
             (_op_name == "OR" && std::stoi(value_str) == 1) ||
             (_op_name == "MIN" && std::stoi(value_str) == 0)) {
@@ -119,7 +128,8 @@ namespace spos::lab1 {
         return false;
     }
 
-    void Manager::_shortCircuitEvaluate() {
+    template<CancellationType CT>
+    void Manager<CT>::_shortCircuitEvaluate() {
         if (_op_name == "AND") {
             bool_result_ptr = std::make_unique<bool>(false);
         } else if (_op_name == "OR") {
@@ -129,7 +139,8 @@ namespace spos::lab1 {
         }
     }
 
-    void Manager::_resultEvaluate() {
+    template<CancellationType CT>
+    void Manager<CT>::_resultEvaluate() {
         if (_op_name == "AND") {
             bool_result_ptr = std::make_unique<bool>(
                     std::accumulate(_sub_results.begin(),
@@ -157,20 +168,10 @@ namespace spos::lab1 {
         }
     }
 
-    Manager::RunExitCode Manager::_run() {
-        std::atomic<bool> done = false;
+    template<CancellationType CT>
+    typename Manager<CT>::RunExitCode Manager<CT>::_run() {
+        _ready = false;
         auto start_ts = system_clock::now();
-
-        auto keyboard_listener = std::async(std::launch::async,
-                                            [&done]() {
-                                                while (true) {
-                                                    std::this_thread::sleep_for(50ms);
-                                                    if (done || (GetKeyState(VK_ESCAPE) & 0x8000)) {
-                                                        break;
-                                                    }
-                                                }
-                                            }
-        );
 
         WSADATA wsa_data;
         if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
@@ -213,34 +214,8 @@ namespace spos::lab1 {
         }
 
         _sub_results = decltype(_sub_results)(func_futures.size(), std::nullopt);
-        bool prompt_enabled = true;
-        auto next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
 
         while (!func_futures.empty()) {
-            if (keyboard_listener.wait_for(0s) == std::future_status::ready) {
-                _terminateUnfinished();
-                _exitRun(start_ts);
-                return TERMINATED;
-            }
-
-            if (system_clock::now() > next_prompt_ts && prompt_enabled) {
-                std::cout << "[TIME] " << duration_cast<seconds>(system_clock::now() - start_ts).count() << "s\n";
-                std::cout << "Choose Option:\n \ta) continue\n \tb) continue without prompt\n \tc) stop\n";
-                char input = ' ';
-                while (input != 'a' && input != 'b' && input != 'c') {
-                    std::cin >> input;
-                    if (input == 'a') {
-                        std::cout << "[INFO] Continued\n";
-                    } else if (input == 'b') {
-                        std::cout << "[INFO] Prompt disabled\n";
-                        prompt_enabled = false;
-                    } else if (input == 'c') {
-                        done = true;
-                    }
-                }
-                next_prompt_ts = system_clock::now() + PROMPT_PERIOD;
-            }
-
             const auto ready_future_it = std::find_if(
                     func_futures.begin(),
                     func_futures.end(),
@@ -251,7 +226,6 @@ namespace spos::lab1 {
                 std::string result_str = ready_future_it->first.get().value();
 
                 if (_shortCircuitCheck(result_str)) {
-                    done = true;
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
                     _exitRun(start_ts);
@@ -264,21 +238,22 @@ namespace spos::lab1 {
                 CloseHandle(_process_info[ready_future_it->second].value().hThread);
             }
         }
-        done = true;
         _resultEvaluate();
 
         _exitRun(start_ts);
         return SUCCESS;
     }
 
-    void Manager::_exitRun(decltype(system_clock::now()) start_ts) {
+    template<CancellationType CT>
+    void Manager<CT>::_exitRun(decltype(system_clock::now()) start_ts) {
         std::cout << "[TIME] " << duration_cast<seconds>(system_clock::now() - start_ts).count() << "s\n";
         WSACleanup();
         _process_info.clear();
         _listen_sockets.clear();
     }
 
-    void Manager::run() {
+    template<CancellationType CT>
+    void Manager<CT>::run() {
         std::cout << "[INFO] argument: " << _x_arg << ", operation: " << _op_name << "\n";
 
         auto exit_code = _run();
@@ -304,3 +279,5 @@ namespace spos::lab1 {
         }
     }
 }
+
+#endif //LAB_MANAGER_HXX

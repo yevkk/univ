@@ -14,12 +14,16 @@
 #include <optional>
 #include <memory>
 #include <chrono>
+#include <atomic>
 #include <iostream>
 
 using namespace std::chrono;
 
 namespace spos::lab1 {
 
+    enum class CancellationType {KEYBOARD, PROMPT};
+
+    template<CancellationType CT = CancellationType::KEYBOARD>
     class Manager {
     public:
         Manager(std::string op_name, int x_arg);
@@ -62,10 +66,13 @@ namespace spos::lab1 {
 
         std::unique_ptr<bool> bool_result_ptr;
         std::unique_ptr<int> int_result_ptr;
+
+        std::atomic<bool> _ready;
     };
 
+    template<CancellationType CT>
     template<typename OStream>
-    inline OStream &Manager::_printResult(OStream &os) {
+    inline OStream &Manager<CT>::_printResult(OStream &os) {
         if ((_op_name == "AND" || _op_name == "OR") && bool_result_ptr) {
             os << std::boolalpha << *bool_result_ptr;
         } else if (_op_name == "MIN") {
@@ -76,5 +83,7 @@ namespace spos::lab1 {
     }
 
 } //namespace spos::lab1
+
+#include "manager.hxx"
 
 #endif //LAB_MANAGER_HPP
