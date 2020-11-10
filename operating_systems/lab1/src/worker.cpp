@@ -101,7 +101,7 @@ argv:
 int main(int argc, char *argv[]) {
     using namespace spos::lab1;
 
-    SOCKET connect_socket = utils::connectIPv4Socket(config::ip, strcmp(argv[2], "f") ? config::port_f : config::port_g);
+    SOCKET connect_socket = utils::connectIPv4Socket(config::ip, strcmp(argv[2], "f") ? config::port_g : config::port_f);
     if (connect_socket == INVALID_SOCKET) {
         WSACleanup();
         return 1;
