@@ -219,7 +219,7 @@ namespace spos::lab1 {
         _sub_results = decltype(_sub_results)(func_futures.size(), std::nullopt);
 
         while (!func_futures.empty()) {
-            if (cancellation_listener.wait_for(0s) == std::future_status::ready && cancellation_listener.get()) {
+            if (cancellation_listener.wait_for(1ms) == std::future_status::ready && cancellation_listener.get()) {
                 break;
             }
 
