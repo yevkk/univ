@@ -76,6 +76,7 @@ namespace spos::lab1 {
 
         std::unique_ptr<bool> bool_result_ptr;
         std::unique_ptr<int> int_result_ptr;
+        int _result_time_s;
 
         std::atomic<bool> _ready;
     };

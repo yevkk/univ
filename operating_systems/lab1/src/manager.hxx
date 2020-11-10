@@ -18,7 +18,7 @@ namespace spos::lab1 {
 
     template<CancellationType CT>
     Manager<CT>::Manager(std::string op_name, int x_arg) :
-            _x_arg{x_arg}, _op_name{std::move(op_name)}, _ready{false} {}
+            _x_arg{x_arg}, _op_name{std::move(op_name)}, _ready{false}, _result_time_s{0} {}
 
     template<CancellationType CT>
     SOCKET Manager<CT>::_connectSocket(const std::string &port) {
@@ -236,6 +236,7 @@ namespace spos::lab1 {
                     _ready = true;
                     _terminateUnfinished();
                     _shortCircuitEvaluate();
+                    _result_time_s = duration_cast<seconds>(system_clock::now() - start_ts).count();
                     _exitRun();
                     return SUCCESS;
                 }
@@ -246,6 +247,7 @@ namespace spos::lab1 {
                 CloseHandle(_process_info[ready_future_it->second].value().hThread);
             }
         }
+        _result_time_s = duration_cast<seconds>(system_clock::now() - start_ts).count();
 
         if (!func_futures.empty()) {
             _terminateUnfinished();
@@ -329,6 +331,7 @@ namespace spos::lab1 {
 
         auto exit_code = _run();
 
+        std::cout << "[TIME] " << _result_time_s << "s\n";
         switch (exit_code) {
             case SUCCESS:
                 std::cout << "[RESULT] ";
