@@ -1,11 +1,12 @@
-#include <demofuncs.hpp>
+#include "demofuncs.hpp"
+#include "config.hpp"
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
 #include <any>
 
 namespace spos::lab1::utils {
-    SOCKET connectIPv4Socket(const char *ip, const char *port) {
+    SOCKET connectIPv4Socket(const std::string &ip, const std::string &port) {
         WSADATA wsa_data;
         int e_result;
 
@@ -21,7 +22,7 @@ namespace spos::lab1::utils {
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
 
-        e_result = getaddrinfo(ip, port, &hints, &ai_ptr);
+        e_result = getaddrinfo(ip.c_str(), port.c_str(), &hints, &ai_ptr);
         if (e_result) {
             WSACleanup();
             return INVALID_SOCKET;
@@ -95,14 +96,12 @@ argv:
     [1]operation_name
     [2]function_id
     [3]x_argument,
-    [4]ip
-    [5]port
 */
 
 int main(int argc, char *argv[]) {
     using namespace spos::lab1;
 
-    SOCKET connect_socket = utils::connectIPv4Socket(argv[4], argv[5]);
+    SOCKET connect_socket = utils::connectIPv4Socket(config::ip, strcmp(argv[2], "f") ? config::port_g : config::port_f);
     if (connect_socket == INVALID_SOCKET) {
         WSACleanup();
         return 1;
