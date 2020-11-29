@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Lab2.Models.Post>
+
+@{
+    ViewData["Title"] = "Posts";
+}
+
+<h1>Posts</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Account_id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Camera_id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lens_id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publish_date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pulse)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Account_id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Camera_id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lens_id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publish_date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pulse)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
