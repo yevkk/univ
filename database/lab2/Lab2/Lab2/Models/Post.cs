@@ -19,6 +19,6 @@ namespace Lab2.Models
         public string Title { get; set; }
         [Range(0, 100)]
         [Required]
-        public double Pulse { get; set; }
+        public int Pulse { get; set; }
     }
 }

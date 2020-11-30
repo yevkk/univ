@@ -4,5 +4,49 @@
 
 <div class="text-center">
     <h1 class="display-4">QUERY</h1>
-    <textarea id="query-textarea"></textarea>
+    <div style="margin-bottom: 10px"></div>
 </div>
+<div class="row">
+    <form asp-action="RunQuery" method="get">
+        <div>
+            <input type="radio" id="queryChoice1" name="query_index" value="1" checked>
+            <label for="queryChoice1">Username and full name of accounts that have at least one post with pulse greater than <i>Number</i></label>
+            <br>
+            <input type="radio" id="contactChoice2" name="query_index" value="2">
+            <label for="contactChoice2">Username and full name of accounts that have pulse greater than <i>Number</i> for all posts</label>
+            <br>
+            <input type="radio" id="contactChoice3" name="query_index" value="3">
+            <label for="contactChoice3">Username and full name of accounts that have at least one post using lens with max focal length greater than <i>Number</i> for mounting type <i>String</i></label>
+            <br>
+            <input type="radio" id="contactChoice4" name="query_index" value="4">
+            <label for="contactChoice4">Camera and lens models used in posts by account with username <i>String</i></label>
+            <br>
+            <input type="radio" id="contactChoice5" name="query_index" value="5">
+            <label for="contactChoice5">Manufacturer and model of lens with same mounting type as in cameras used in posts by account with username <i>String</i> with pulse greater than  <i>Number</i></label>
+            <br>
+            <input type="radio" id="contactChoice6" name="query_index" value="6">
+            <label for="contactChoice6">Username of accounts that use all cameras with mounting type <i>String</i></label>
+            <br>
+            <input type="radio" id="contactChoice7" name="query_index" value="7">
+            <label for="contactChoice7">Username of account that use only lenses that are used by account with username <i>String</i></label>
+            <br>
+            <input type="radio" id="contactChoice8" name="query_index" value="8">
+            <label for="contactChoice8">Manufacturer and model of lens used by at least 2 accounts from country <i>String</i></label>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">String</label>
+                <input class="form-control" name="str" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Number</label>
+                <input type="number" class="form-control" name="num"/>
+            </div>
+        </div>
+        <br>
+        <input type="submit" value="Run" class="btn btn-primary" />
+    </form>
+</div>
+
+<h1 class="display-4">@ViewBag.TestBox</h1>
+

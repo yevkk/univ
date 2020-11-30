@@ -15,5 +15,11 @@ namespace Lab2.Data
         public DbSet<Lens> Lens { get; set; }
         public DbSet<Account> Account { get; set; }
         public DbSet<Post> Post { get; set; }
+
+        public DbSet<QueryResult1> QueryResults1 { get; set;  }
+        public DbSet<QueryResult2> QueryResults2 { get; set; }
+        public DbSet<QueryResult3> QueryResults3 { get; set; }
+
+        public DbSet<QueryResult4> QueryResults4 { get; set; }
     }
 }
