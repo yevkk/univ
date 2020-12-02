@@ -99,6 +99,15 @@ namespace Lab2.Controllers
                                                                str).ToList();
                 ViewData["QueryResult"] = result;
             }
+            else if (query_index == "9")
+            {
+                var result = _context.Account.FromSqlRaw("SELECT * FROM dbo.Account AS X WHERE " +
+                                                               "NOT EXISTS (SELECT * FROM dbo.Mounting AS Y WHERE " +
+                                                               "NOT EXISTS (SELECT * FROM dbo.Post JOIN dbo.Account ON account_id = dbo.Account.id JOIN dbo.Camera ON camera_id = dbo.Camera.id " +
+                                                               "WHERE account_id = X.id AND dbo.Camera.mounting_id = Y.id))",
+                                                               str).ToList();
+                ViewData["QueryResult"] = result;
+            }
 
 
 
