@@ -5,4 +5,9 @@
     <string name="th1LabelText">Thread 1 (goal position: 10)</string>
     <string name="th2LabelText">Thread 2 (goal position: 90)</string>
     <string name="testEditHint">(min 10 symbols)</string>
+    <string name="gotoBBtnText">Go to B</string>
+    <string name="startTh1BtnText">Start 1</string>
+    <string name="startTh2BtnText">Start 2</string>
+    <string name="stopTh1BtnText">Stop 1</string>
+    <string name="stopTh2BtnText">Stop 2</string>
 </resources>
