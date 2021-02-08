@@ -4,9 +4,9 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class ThreadPriorityBarListener implements OnSeekBarChangeListener {
-    Thread thread;
+    private final Thread thread;
 
-    ThreadPriorityBarListener(Thread thread) {
+    public ThreadPriorityBarListener(Thread thread) {
         this.thread = thread;
     }
 

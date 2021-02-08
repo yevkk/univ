@@ -14,13 +14,12 @@ public class PartBActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_part_b);
 
         findViewById(R.id.stopTh1Btn).setEnabled(false);
         findViewById(R.id.stopTh2Btn).setEnabled(false);
 
         semaphore = 1;
-
-        setContentView(R.layout.activity_part_b);
     }
 
     public void onStartTh1BtnClick(View view) {
@@ -32,7 +31,7 @@ public class PartBActivity extends AppCompatActivity {
     }
 
     public void onStopTh1BtnClick(View view) {
-        
+
     }
 
     public void onStopTh2BtnClick(View view) {

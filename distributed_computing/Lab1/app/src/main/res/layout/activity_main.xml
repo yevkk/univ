@@ -6,26 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".a.PartAActivity">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="265dp"
-        android:layout_height="133dp"
-        android:layout_marginTop="64dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/startButtonText"
-        android:inputType="textMultiLine"
-        android:lineSpacingExtra="8sp"
-        android:text="@string/dumbText"
-        android:textColor="#5C6BC0"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/dumbText" />
-
     <SeekBar
         android:id="@+id/th2PriorityBar"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
@@ -93,5 +73,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="327dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="100dp"
+        android:max="100"
+        android:progress="50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
