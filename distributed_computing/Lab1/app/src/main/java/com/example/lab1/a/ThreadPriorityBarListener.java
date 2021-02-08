@@ -3,10 +3,10 @@ package com.example.lab1.a;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class ThPriorityBarListener implements OnSeekBarChangeListener {
+public class ThreadPriorityBarListener implements OnSeekBarChangeListener {
     Thread thread;
 
-    ThPriorityBarListener(Thread thread) {
+    ThreadPriorityBarListener(Thread thread) {
         this.thread = thread;
     }
 

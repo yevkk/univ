@@ -34,11 +34,11 @@ public class PartAActivity extends AppCompatActivity {
 
         SeekBar th1PriorityBar = findViewById(R.id.th1PriorityBar);
         th1PriorityBar.setEnabled(true);
-        th1PriorityBar.setOnSeekBarChangeListener(new ThPriorityBarListener(th1));
+        th1PriorityBar.setOnSeekBarChangeListener(new ThreadPriorityBarListener(th1));
 
         SeekBar th2PriorityBar = findViewById(R.id.th2PriorityBar);
         th2PriorityBar.setEnabled(true);
-        th2PriorityBar.setOnSeekBarChangeListener(new ThPriorityBarListener(th2));
+        th2PriorityBar.setOnSeekBarChangeListener(new ThreadPriorityBarListener(th2));
 
         th1.setPriority(((SeekBar) findViewById(R.id.th1PriorityBar)).getProgress() + 1);
         th2.setPriority(((SeekBar) findViewById(R.id.th2PriorityBar)).getProgress() + 1);
