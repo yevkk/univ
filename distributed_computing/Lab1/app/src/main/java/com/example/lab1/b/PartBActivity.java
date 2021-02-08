@@ -12,8 +12,10 @@ import com.example.lab1.a.PartAActivity;
 import com.example.lab1.a.SeekBarWrapper;
 import com.example.lab1.a.SliderMover;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class PartBActivity extends AppCompatActivity {
-    private int semaphore;
+    private final AtomicInteger semaphore = new AtomicInteger();
     private SliderMover sm1, sm2;
 
     @Override
@@ -25,15 +27,14 @@ public class PartBActivity extends AppCompatActivity {
         findViewById(R.id.stopTh2Btn).setEnabled(false);
         findViewById(R.id.errorMessage).setVisibility(View.INVISIBLE);
 
-        semaphore = 1;
+        semaphore.set(1);
 
         SeekBar seekBar = findViewById(R.id.seekBar);
         seekBar.setProgress(50);
     }
 
     public void onStartTh1BtnClick(View view) {
-        if (semaphore == 1) {
-            semaphore = 0;
+        if (semaphore.compareAndSet(1, 0)) {
 
             SeekBar seekBar = findViewById(R.id.seekBar);
             SeekBarWrapper seekBarWrapper = new SeekBarWrapper(seekBar, seekBar.getMax() / 10, seekBar.getMax() * 9 / 10);
@@ -50,8 +51,7 @@ public class PartBActivity extends AppCompatActivity {
     }
 
     public void onStartTh2BtnClick(View view) {
-        if (semaphore == 1) {
-            semaphore = 0;
+        if (semaphore.compareAndSet(1, 0)) {
 
             SeekBar seekBar = findViewById(R.id.seekBar);
             SeekBarWrapper seekBarWrapper = new SeekBarWrapper(seekBar, seekBar.getMax() / 10, seekBar.getMax() * 9 / 10);
@@ -71,7 +71,7 @@ public class PartBActivity extends AppCompatActivity {
         view.setEnabled(false);
 
         sm1.stop();
-        semaphore = 1;
+        semaphore.set(1);
         findViewById(R.id.startTh1Btn).setEnabled(true);
     }
 
@@ -79,7 +79,7 @@ public class PartBActivity extends AppCompatActivity {
         view.setEnabled(false);
 
         sm2.stop();
-        semaphore = 1;
+        semaphore.set(1);
         findViewById(R.id.startTh2Btn).setEnabled(true);
     }
 
