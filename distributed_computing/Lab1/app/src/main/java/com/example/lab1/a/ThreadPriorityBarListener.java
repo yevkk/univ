@@ -4,17 +4,17 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class ThreadPriorityBarListener implements OnSeekBarChangeListener {
-    private final Thread thread;
+    private final SliderMover sliderMover;
 
-    public ThreadPriorityBarListener(Thread thread) {
-        this.thread = thread;
+    public ThreadPriorityBarListener(SliderMover sliderMover) {
+        this.sliderMover = sliderMover;
     }
 
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (thread != null) {
-            thread.setPriority(seekBar.getProgress() + 1);
+        if (sliderMover.getThread() != null) {
+            sliderMover.getThread().setPriority(seekBar.getProgress() + 1);
         }
     }
 

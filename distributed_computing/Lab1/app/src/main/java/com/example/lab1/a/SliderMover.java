@@ -3,11 +3,11 @@ package com.example.lab1.a;
 public class SliderMover implements Runnable {
     private final SeekBarWrapper editTextWrapper;
     private final SeekBarWrapper.Action action;
-    private Thread thread;
+    private final Thread thread;
     private boolean stop = false;
 
-    public SliderMover(SeekBarWrapper editTextWrapper, SeekBarWrapper.Action action, String name) {
-        this.editTextWrapper = editTextWrapper;
+    public SliderMover(SeekBarWrapper seekBarWrapper, SeekBarWrapper.Action action, String name) {
+        this.editTextWrapper = seekBarWrapper;
         this.action = action;
         thread = new Thread(this, name);
     }

@@ -11,6 +11,8 @@ import com.example.lab1.R;
 import com.example.lab1.b.PartBActivity;
 
 public class PartAActivity extends AppCompatActivity {
+    private SliderMover sm1, sm2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,33 +27,37 @@ public class PartAActivity extends AppCompatActivity {
 
         SeekBar seekBar = findViewById(R.id.seekBar);
         seekBar.setProgress(50);
-        seekBar.setOnSeekBarChangeListener(null);
-
-
 
         SeekBarWrapper seekBarWrapper = new SeekBarWrapper(seekBar, seekBar.getMax() / 10, seekBar.getMax() * 9 / 10);
-        SliderMover th1 = new SliderMover(seekBarWrapper, SeekBarWrapper.Action.DEC, "th1-min");
-        SliderMover th2 = new SliderMover(seekBarWrapper, SeekBarWrapper.Action.INC, "th2-max");
+        SliderMover sm1 = new SliderMover(seekBarWrapper, SeekBarWrapper.Action.DEC, "th1-min");
+        SliderMover sm2 = new SliderMover(seekBarWrapper, SeekBarWrapper.Action.INC, "th2-max");
 
         SeekBar th1PriorityBar = findViewById(R.id.th1PriorityBar);
         th1PriorityBar.setEnabled(true);
-        th1PriorityBar.setOnSeekBarChangeListener(new ThreadPriorityBarListener(th1.getThread()));
+        th1PriorityBar.setOnSeekBarChangeListener(new ThreadPriorityBarListener(sm1));
 
         SeekBar th2PriorityBar = findViewById(R.id.th2PriorityBar);
         th2PriorityBar.setEnabled(true);
-        th2PriorityBar.setOnSeekBarChangeListener(new ThreadPriorityBarListener(th2.getThread()));
+        th2PriorityBar.setOnSeekBarChangeListener(new ThreadPriorityBarListener(sm2));
 
-        th1.getThread().setPriority(((SeekBar) findViewById(R.id.th1PriorityBar)).getProgress() + 1);
-        th2.getThread().setPriority(((SeekBar) findViewById(R.id.th2PriorityBar)).getProgress() + 1);
+        sm1.getThread().setPriority(((SeekBar) findViewById(R.id.th1PriorityBar)).getProgress() + 1);
+        sm2.getThread().setPriority(((SeekBar) findViewById(R.id.th2PriorityBar)).getProgress() + 1);
 
-        th1.getThread().setDaemon(true);
-        th2.getThread().setDaemon(true);
+        sm1.getThread().setDaemon(true);
+        sm2.getThread().setDaemon(true);
 
-        th1.getThread().start();
-        th2.getThread().start();
+        sm1.start();
+        sm2.start();
     }
 
     public void onGotoBBtnClick(View view) {
+        if (sm1 != null) {
+            sm1.stop();
+        }
+        if (sm2 != null) {
+            sm2.stop();
+        }
+
         Intent intent = new Intent(this, PartBActivity.class);
         startActivity(intent);
     }
