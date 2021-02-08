@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Lab1</string>
+    <string name="startButtonText">Start</string>
+    <string name="dumbText">1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</string>
+    <string name="th1LabelText">Thread 1 (goal position: 10)</string>
+    <string name="th2LabelText">Thread 2 (goal position: 90)</string>
+    <string name="testEditHint">(min 10 symbols)</string>
+</resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".a.PartAActivity">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="265dp"
+        android:layout_height="133dp"
+        android:layout_marginTop="64dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/startButtonText"
+        android:inputType="textMultiLine"
+        android:lineSpacingExtra="8sp"
+        android:text="@string/dumbText"
+        android:textColor="#5C6BC0"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/dumbText" />
+
+    <SeekBar
+        android:id="@+id/th2PriorityBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="247dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="32dp"
+        android:max="9"
+        android:progress="4"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/th1PriorityBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="247dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="64dp"
+        android:max="9"
+        android:progress="4"
+        app:layout_constraintBottom_toTopOf="@+id/th2PriorityBarLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/th2PriorityBarLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/th2LabelText"
+        app:layout_constraintBottom_toTopOf="@+id/th2PriorityBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/th1PriorityBarLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/th1LabelText"
+        app:layout_constraintBottom_toTopOf="@+id/th1PriorityBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="122dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="128dp"
+        android:onClick="onStartBtnCLick"
+        android:text="@string/startButtonText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
