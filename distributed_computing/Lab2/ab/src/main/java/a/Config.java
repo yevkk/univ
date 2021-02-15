@@ -1,6 +1,7 @@
 package a;
 
-public class Config {
-    public static final int forestSize = 64;
-    public static final int beePacksNumber = 8;
+public abstract class Config {
+    public static final int forestSizeX = 2048;
+    public static final int forestSizeY = 500000;
+    public static final int squadNumber = 4;
 }
