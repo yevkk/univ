@@ -16,7 +16,7 @@ func (node *CompetitionTreeNode) printNode(level int) {
 	if node.left != nil {
 		node.left.printNode(level - 1)
 	}
-	fmt.Printf("%v%v\n", strings.Repeat("\t\t\t|", level), (node.key).String())
+	fmt.Printf("%v|%v\n", strings.Repeat("|\t\t", level), (node.key).String())
 	if node.right != nil {
 		node.right.printNode(level - 1)
 	}
