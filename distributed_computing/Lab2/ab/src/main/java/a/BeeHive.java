@@ -1,6 +1,5 @@
 package a;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BeeHive {
@@ -8,25 +7,20 @@ public class BeeHive {
     private final int squadNumber;
 
     private class ScanForest implements Runnable {
-        private final int startFrom;
-        private final int blockSize;
         private final AtomicInteger sync;
-        private final AtomicBoolean WinnieWasFound;
 
-        public ScanForest(int startFrom, int blockSize, AtomicInteger sync, AtomicBoolean WinnieWasFound) {
-            this.startFrom = startFrom;
-            this.blockSize = blockSize;
+        public ScanForest(AtomicInteger sync) {
             this.sync = sync;
-            this.WinnieWasFound = WinnieWasFound;
         }
 
         @Override
         public void run() {
-            for (int i = startFrom; i < startFrom + blockSize && !WinnieWasFound.get(); i++) {
-                for (int j = 0; j < forest.sizeY() && !WinnieWasFound.get(); j++) {
-                    if (forest.checkAndEliminateWinnie(i, j)) {
-                        System.out.printf("Winnie was found and eliminated on: (%d, %d)\n", i, j);
-                        WinnieWasFound.set(true);
+            int y;
+            while ((y = sync.decrementAndGet()) >= 0) {
+                for (int x = 0; x < forest.limX(); x++) {
+                    if (forest.checkAndEliminateWinnie(x, y)) {
+                        sync.set(0);
+                        System.out.printf("Winnie was found and eliminated on: (%d, %d)\n", x, y);
                     }
                 }
             }
@@ -40,20 +34,10 @@ public class BeeHive {
     }
 
     public void  eliminateWinnie() {
-        var sync = new AtomicInteger(0);
-        var WinnieWasFound = new AtomicBoolean(false);
-        int unassigned = forest.sizeX();
+        var sync = new AtomicInteger(forest.limY());
         for (int i = 0; i < squadNumber; i++) {
-            var scan = new ScanForest(forest.sizeX() - unassigned, unassigned / (squadNumber - i), sync, WinnieWasFound);
+            var scan = new ScanForest(sync);
             (new Thread(scan, "squad-" + i)).start();
-        }
-
-        while (sync.get() != squadNumber) {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 

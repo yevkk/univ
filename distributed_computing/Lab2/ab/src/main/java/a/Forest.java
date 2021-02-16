@@ -37,11 +37,11 @@ public class Forest {
         }
     }
 
-    public int sizeX() {
+    public int limX() {
         return space.length;
     }
 
-    public int sizeY() {
+    public int limY() {
         return space[0].length;
     }
 
