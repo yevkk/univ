@@ -1,52 +1,61 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type Monk struct {
 	monastery string
 	chi       int
 }
 
-func round(monks []Monk, ch chan Monk) {
+func (m *Monk) String() string {
+	return fmt.Sprintf("%v, %v", m.monastery, m.chi)
+}
+
+func round(monks []*Monk, chValue chan *CompetitionTreeNode) {
 	if len(monks) == 1 {
-		ch <- monks[0]
+		chValue <- &CompetitionTreeNode{nil, nil, monks[0]}
 	} else {
-		chLeft := make(chan Monk)
-		chRight := make(chan Monk)
+		chLeft, chRight := make(chan *CompetitionTreeNode), make(chan *CompetitionTreeNode)
 		go round(monks[:len(monks)/2], chLeft)
-		go round(monks[:len(monks)/2], chRight)
+		go round(monks[len(monks)/2:], chRight)
 
-		monkLeft := <-chLeft
-		monkRight := <-chRight
+		monkLeft, monkRight := <-chLeft, <-chRight
 
-		if monkLeft.chi > monkRight.chi {
-			ch <- monkLeft
+		if monkLeft.key.chi > monkRight.key.chi {
+			chValue <- &CompetitionTreeNode{monkLeft, monkRight, monkLeft.key}
 		} else {
-			ch <- monkRight
+			chValue <- &CompetitionTreeNode{monkLeft, monkRight, monkRight.key}
 		}
+
+		close(chValue)
 	}
 }
 
-func competition(monks []Monk) string {
-	ch := make(chan Monk)
+func competition(monks []*Monk) *CompetitionTreeNode {
+	ch := make(chan *CompetitionTreeNode)
 	go round(createMonks(), ch)
-	return (<-ch).monastery
+	return <-ch
 }
 
-func createMonks() []Monk {
-	return []Monk{
-		{"Guanyin", 15},
+func createMonks() []*Monk {
+	return []*Monk{
+		{"Guanyin", 11},
 		{"Guanyin", 10},
 		{"Guanyin", 12},
 		{"Guanyin", 5},
 		{"Guanyan", 7},
 		{"Guanyan", 14},
-		{"Guanyan", 10},
+		{"Guanyan", 9},
 		{"Guanyan", 8},
+		{"Guanyan", 4},
 	}
 }
 
 func main() {
-	monks := createMonks();
-	fmt.Printf(competition(monks))
+	monks := createMonks()
+	tree := competition(monks)
+	tree.printNode(int(math.Ceil(math.Log2(float64(len(monks))))))
 }
