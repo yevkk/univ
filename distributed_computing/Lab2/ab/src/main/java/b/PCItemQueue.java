@@ -4,7 +4,7 @@ public class PCItemQueue {
     private Item item;
     private boolean valueSet = false;
 
-    synchronized Item get() {
+    synchronized public Item get() {
         while (!valueSet) {
             try {
                 wait();
@@ -18,7 +18,7 @@ public class PCItemQueue {
         return item;
     }
 
-    synchronized void put(Item item) {
+    synchronized public void put(Item item) {
         while(valueSet) {
             try {
                 wait();

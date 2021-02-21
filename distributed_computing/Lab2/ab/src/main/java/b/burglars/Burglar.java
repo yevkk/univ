@@ -1,4 +1,6 @@
-package b;
+package b.burglars;
+
+import b.PCItemQueue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
