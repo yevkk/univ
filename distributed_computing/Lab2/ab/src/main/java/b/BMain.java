@@ -1,63 +1,37 @@
 package b;
 
+import b.burglars.*;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BMain {
+    private static int randomInt(int min, int max) {
+        return (int) (Math.random() * (max - min) + min);
+    }
+
+    private static int fillStorage(Queue<Item> storage) {
+        int res = 0;
+        for (int i = 0; i < Config.storageSize; i++) {
+            int cost = randomInt(Config.minCost, Config.maxCost);
+            res += cost;
+            storage.add(new Item(cost));
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         Queue<Item> storage = new LinkedList<Item>();
-        //Todo: fill storage
+        int sum = fillStorage(storage);
+        System.out.println("Storage is filled with products, total cost: " + sum);
+
         var midpoint = new PCItemQueue();
         var truck = new PCItemQueue();
-        var sync = new AtomicBoolean();
 
-        var Ivanov = new Burglar(midpoint, sync) {
-            private Queue<Item> storage;
-
-            public void setStorage(Queue<Item> storage) {
-                this.storage = storage;
-            }
-
-            @Override
-            public void action() {
-                var item = this.storage.poll();
-                if (item != null) {
-                    this.queue.put(item);
-                } else {
-                    this.sync.set(false);
-                }
-            }
-        };
-        Ivanov.setStorage(storage);
-
-        var Petrov = new Burglar(midpoint, sync) {
-            private PCItemQueue additionalQueue;
-
-            public void setAdditionalQueue(PCItemQueue additionalQueue) {
-                this.additionalQueue = additionalQueue;
-            }
-
-            @Override
-            public void action() {
-                this.additionalQueue.put(this.queue.get());
-            }
-        };
-        Petrov.setAdditionalQueue(truck);
-
-        var Nechiporuk = new Burglar(truck, sync) {
-            private int sum = 0;
-
-            @Override
-            public void action() {
-                sum += this.queue.get().getCost();
-            }
-
-            public int getSum() {
-                return this.sum;
-            }
-        };
-
+        var Ivanov = new FirstBurglar(storage, midpoint);
+        var Petrov = new MidBurglar(midpoint, truck);
+        var Nechiporuk = new LastBurglar(truck);
 
         try {
             Ivanov.getThread().join();
@@ -67,8 +41,9 @@ public class BMain {
             e.printStackTrace();
         }
 
-        System.out.println(Nechiporuk.getSum());
+        System.out.println("Truck is loaded, total cost: " + Nechiporuk.getSum());
     }
+
 
 
 
