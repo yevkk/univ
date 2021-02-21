@@ -7,13 +7,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MidBurglar extends Burglar {
     private PCItemQueue additionalQueue;
 
-    public MidBurglar(PCItemQueue queue, PCItemQueue additionalQueue, AtomicBoolean sync) {
-        super(queue, sync);
+    public MidBurglar(PCItemQueue queue, PCItemQueue additionalQueue) {
+        super(queue);
         this.additionalQueue = additionalQueue;
     }
 
     @Override
     public void action() {
-        additionalQueue.put(queue.get());
+        var item = queue.get();
+        stop = item == null;
+        additionalQueue.put(item);
     }
 }

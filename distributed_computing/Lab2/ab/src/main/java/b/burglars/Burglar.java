@@ -6,18 +6,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Burglar implements Runnable{
     protected final PCItemQueue queue;
-    protected final AtomicBoolean sync;
+    protected boolean stop = false;
     private final Thread thread;
 
-    public Burglar(PCItemQueue queue, AtomicBoolean sync) {
+    public Burglar(PCItemQueue queue) {
         this.queue = queue;
-        this.sync = sync;
         thread = new Thread(this);
         thread.start();
     }
 
     public void run() {
-        while(sync.get()) {
+        while(!stop) {
             action();
         }
     }
