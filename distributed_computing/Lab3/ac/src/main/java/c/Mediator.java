@@ -28,7 +28,7 @@ public class Mediator implements Runnable {
                     table[0] = components.get(0);
                     table[1] = components.get(1);
                     Thread.sleep(1000);
-                    System.out.println("Mediator put on the table " + table[0] + " and " + table[1]);
+                    System.out.println("\nMediator put on the table " + table[0] + " and " + table[1]);
                 }
                 semaphore.release();
             } catch (InterruptedException e) {
