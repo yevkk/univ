@@ -5,7 +5,7 @@ import b.PCItemQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MidBurglar extends Burglar {
-    private PCItemQueue additionalQueue;
+    private final PCItemQueue additionalQueue;
 
     public MidBurglar(PCItemQueue queue, PCItemQueue additionalQueue) {
         super(queue);

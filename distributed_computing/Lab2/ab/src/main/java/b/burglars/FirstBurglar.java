@@ -4,7 +4,6 @@ import b.Item;
 import b.PCItemQueue;
 
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FirstBurglar extends Burglar {
     private final Queue<Item> storage;

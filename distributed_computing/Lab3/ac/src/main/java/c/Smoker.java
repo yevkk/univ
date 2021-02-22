@@ -2,7 +2,7 @@ package c;
 
 import java.util.concurrent.Semaphore;
 
-public class Smoker implements Runnable{
+public class Smoker implements Runnable {
     private final Component component;
     private final Semaphore semaphore;
     private final Component[] table;

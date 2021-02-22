@@ -24,7 +24,6 @@ public class BeeHive {
                     }
                 }
             }
-            sync.incrementAndGet();
         }
     }
 

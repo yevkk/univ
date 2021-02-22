@@ -2,7 +2,7 @@ package c;
 
 import java.util.concurrent.Semaphore;
 
-public class BMain {
+public class CMain {
     public static void main(String[] args) {
         var semaphore = new Semaphore(1, true);
         Component[] table = {null, null};

@@ -4,7 +4,6 @@ import b.burglars.*;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BMain {
     private static int randomInt(int min, int max) {
@@ -43,10 +42,5 @@ public class BMain {
 
         System.out.println("Truck is loaded, total cost: " + Nechiporuk.getSum());
     }
-
-
-
-
-
 
 }

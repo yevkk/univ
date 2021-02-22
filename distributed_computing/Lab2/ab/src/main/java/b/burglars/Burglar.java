@@ -2,8 +2,6 @@ package b.burglars;
 
 import b.PCItemQueue;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 public abstract class Burglar implements Runnable{
     protected final PCItemQueue queue;
     protected boolean stop = false;
