@@ -26,9 +26,9 @@ func barber() {
 		barberCounter++
 		waitingRoom.L.Unlock()
 		barberAvailable.Signal()
-		fmt.Printf("Barber took client #%v\n", barberCounter)
+		fmt.Printf("\tBarber took client #%v\n", barberCounter)
 		time.Sleep(1 * time.Second)
-		fmt.Printf("Barber finished his work\n")
+		fmt.Printf("\tBarber finished his work\n")
 		haircutDone.Signal()
 	}
 }
