@@ -7,7 +7,5 @@
 }
 
 #main-canvas {
-    max-width: 100%;
-    min-height: 50vw;
     border: 2px dotted green;
 }
