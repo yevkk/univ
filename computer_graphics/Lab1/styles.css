@@ -1,0 +1,13 @@
+#root {
+    min-height: 98vh;
+    max-width: 800px;
+    display: block;
+    margin: auto;
+    border: 2px dotted red;
+}
+
+#main-canvas {
+    max-width: 100%;
+    min-height: 50vw;
+    border: 2px dotted green;
+}
