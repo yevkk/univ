@@ -34,6 +34,7 @@ function onCanvasClick(e) {
 
         points.push(point)
 
+        showMessage(`Set #${points.length} point at (${point.x}, ${point.y})`, 'log')
         let proceedBtn = document.getElementById('proceed-button')
         if (points.length === 2) {
             proceedBtn.classList.add('active-button')
@@ -44,6 +45,7 @@ function onCanvasClick(e) {
         pointToCheck = point
         pointSet = true
         document.getElementById('proceed-button').classList.add('active-button')
+        showMessage(`Set point to check at (${point.x}, ${point.y})`, 'log')
     }
 }
 
@@ -54,10 +56,12 @@ function proceed() {
         polygonFinished = true
         this.innerText = 'Run'
         simple = isSimple(points)
+        showMessage('Polygon closed', 'info')
         if (!simple) {
-            console.log('non simple') //TODO
+            showMessage('Polygon is not simple', 'warning')
+            showMessage('Reset recommended', 'tip')
         } else {
-            console.log('closed') // TODO
+            showMessage('Set point to check', 'tip')
         }
     } else if (pointSet) {
         let context = mainCanvas.getContext('2d');
@@ -75,9 +79,11 @@ function proceed() {
         }
 
         if (res.result) {
-            console.log("inside") //TODO
+            showMessage('Point is inside the polygon', 'info')
+            showMessage('Reset to restart', 'tip')
         } else {
-            console.log("outside") //TODO
+            showMessage('Point is outside the polygon', 'info')
+            showMessage('Reset to restart', 'tip')
         }
     }
     this.classList.remove('active-button')
@@ -93,19 +99,28 @@ function reset() {
     }
     polygonFinished = false
     pointSet = false
-    console.log("add at least 3 points") //TODO
+    showMessage('Add at least 3 points', 'tip')
+}
+
+function showMessage(msg, className) {
+    let console = document.getElementById('console')
+    let newMessage = document.createElement('p')
+    newMessage.classList.add(className)
+    newMessage.innerText = `[${className}] ${msg}`
+    console.appendChild(newMessage)
+    console.scroll(0, console.scrollHeight)
 }
 
 addEventListener('load', () => {
     mainCanvas = document.getElementById('main-canvas')
-    mainCanvas.width = mainCanvas.parentElement.clientWidth
+    mainCanvas.width = mainCanvas.parentElement.clientWidth * 0.7
     mainCanvas.height = 500
     mainCanvas.addEventListener('click', onCanvasClick)
 
     document.getElementById('proceed-button').addEventListener('click', proceed)
     document.getElementById('reset-button').addEventListener('click', () => {
+        showMessage('Canvas cleared', 'info')
         reset()
-        console.log("canvas cleared") //TODO
     })
     reset()
 })
