@@ -1,11 +1,36 @@
+body {
+
+}
+
 #root {
     min-height: 98vh;
     max-width: 800px;
-    display: block;
+    display: flex;
+    flex-direction: column;
     margin: auto;
-    border: 2px dotted red;
 }
 
 #main-canvas {
     border: 2px dotted green;
+}
+
+#buttons-holder {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.button {
+    width: 200px;
+    background: black;
+    font-size: 1.5em;
+    line-height: 2em;
+    text-align: center;
+    user-select: none;
+}
+
+.active-button {
+    background: gray;
+    color: white;
+    cursor: pointer;
 }

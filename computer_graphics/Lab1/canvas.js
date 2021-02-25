@@ -1,14 +1,8 @@
 'use strict'
 
 let mainCanvas
-let isFinished = false
-
-let points = []
-
-function Point(x, y) {
-    this.x = x
-    this.y = y
-}
+let polygonFinished = false
+let pointSet = false
 
 function drawPoint(context, color, point) {
     context.fillStyle = color
@@ -25,24 +19,58 @@ function drawLine(context, color, start, end) {
     context.stroke()
 }
 
+
 function onCanvasClick(e) {
     let point = new Point(e.pageX - mainCanvas.offsetLeft, e.pageY - mainCanvas.offsetTop)
-    let color = '#598add'
-    let context = mainCanvas.getContext('2d');
+    if (!polygonFinished) {
+        let color = '#598add'
+        let context = mainCanvas.getContext('2d');
 
-    drawPoint(context, color, point)
+        drawPoint(context, color, point)
 
-    if (points.length > 0) {
-       drawLine(context, color, points[points.length - 1], point)
+        if (points.length > 0) {
+            drawLine(context, color, points[points.length - 1], point)
+        }
+
+        points.push(point)
+    } else {
+
     }
-
-    points.push(point)
 }
 
-addEventListener("load", () => {
+function proceed() {
+    if (!polygonFinished) {
+        let color = '#598add'
+        drawLine(mainCanvas.getContext('2d'), color, points[0], points[points.length - 1])
+        polygonFinished = true
+        if (isSimple(points)) {
+            this.classList.remove('active-button')
+        } else {
+
+        }
+    } else {
+
+    }
+}
+
+function reset() {
+    points = []
+    mainCanvas.getContext('2d').clearRect(0, 0, mainCanvas.width, mainCanvas.height)
+    let proceedBtn = document.getElementById('proceed-button')
+    if (!proceedBtn.classList.contains('active-button')) {
+        proceedBtn.classList.add('active-button')
+    }
+    polygonFinished = false
+    pointSet = false
+}
+
+addEventListener('load', () => {
     mainCanvas = document.getElementById('main-canvas')
     mainCanvas.width = mainCanvas.parentElement.clientWidth
     mainCanvas.height = 500
-    mainCanvas.addEventListener("click", onCanvasClick)
+    mainCanvas.addEventListener('click', onCanvasClick)
+
+    document.getElementById('proceed-button').addEventListener('click', proceed)
+    document.getElementById('reset-button').addEventListener('click', reset)
 })
 
