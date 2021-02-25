@@ -56,9 +56,9 @@ function isInsidePolygon(polygonPoints, pointToCheck) {
         let x = a * polygonPoints[i].x + (1 - a) * polygonPoints[iNext].x
         if (x > Math.min(polygonPoints[i].x, polygonPoints[iNext].x) && x < Math.max(polygonPoints[i].x, polygonPoints[iNext].x)) {
             crossPoints.push(new Point(x, pointToCheck.y))
-        }
-        if (x < pointToCheck.x) {
-            counter++
+            if (x < pointToCheck.x) {
+                counter++
+            }
         }
     }
     return {

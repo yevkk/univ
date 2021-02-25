@@ -48,7 +48,7 @@ function onCanvasClick(e) {
 }
 
 function proceed() {
-    if (!polygonFinished) {
+    if (!polygonFinished && points.length > 2) {
         let color = '#598add'
         drawLine(mainCanvas.getContext('2d'), color, points[0], points[points.length - 1])
         polygonFinished = true
