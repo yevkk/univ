@@ -77,7 +77,9 @@ function proceed() {
         for (let point of res.crossPoints) {
             drawPoint(context, color, point)
         }
-
+        if (res.possibleError) {
+            showMessage('Special case (contained edge). Result can be inaccurate', 'info')
+        }
         if (res.result) {
             showMessage('Point is inside the polygon', 'info')
             showMessage('Reset to restart', 'tip')

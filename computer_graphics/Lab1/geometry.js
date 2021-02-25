@@ -47,22 +47,31 @@ function isInsidePolygon(polygonPoints, pointToCheck) {
     let crossPoints = []
     let n = polygonPoints.length
     let counter = 0;
+    let possibleError = false
     for (let i = 0; i < n; i++) {
         let iNext = (i + 1) % n
         if (polygonPoints[i].y === polygonPoints[iNext].y) {
+            possibleError = true
             continue
         }
         let a = (pointToCheck.y - polygonPoints[iNext].y) / (polygonPoints[i].y - polygonPoints[iNext].y)
         let x = a * polygonPoints[i].x + (1 - a) * polygonPoints[iNext].x
-        if (x > Math.min(polygonPoints[i].x, polygonPoints[iNext].x) && x < Math.max(polygonPoints[i].x, polygonPoints[iNext].x)) {
+        if (x === points[i].x && pointToCheck.y === points[i].y) {
             crossPoints.push(new Point(x, pointToCheck.y))
-            if (x < pointToCheck.x) {
+            let iPrev = (i - 1 >= 0) ? i - 1 : i - 1 + n
+            if (Math.sign(polygonPoints[i].y - polygonPoints[iNext].y) !== Math.sign(polygonPoints[i].y - polygonPoints[iPrev].y)) {
+                counter++
+            }
+        } else if (x >= Math.min(polygonPoints[i].x, polygonPoints[iNext].x) && x <= Math.max(polygonPoints[i].x, polygonPoints[iNext].x)) {
+            crossPoints.push(new Point(x, pointToCheck.y))
+            if (x <= pointToCheck.x) {
                 counter++
             }
         }
     }
     return {
         crossPoints,
-        result: (counter % 2 === 1)
+        result: (counter % 2 === 1),
+        possibleError
     }
 }
