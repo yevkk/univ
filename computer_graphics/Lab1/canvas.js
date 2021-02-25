@@ -3,6 +3,7 @@
 let mainCanvas
 let polygonFinished = false
 let pointSet = false
+let simple
 
 function drawPoint(context, color, point) {
     context.fillStyle = color
@@ -22,19 +23,27 @@ function drawLine(context, color, start, end) {
 
 function onCanvasClick(e) {
     let point = new Point(e.pageX - mainCanvas.offsetLeft, e.pageY - mainCanvas.offsetTop)
+    let context = mainCanvas.getContext('2d');
     if (!polygonFinished) {
         let color = '#598add'
-        let context = mainCanvas.getContext('2d');
 
         drawPoint(context, color, point)
-
         if (points.length > 0) {
             drawLine(context, color, points[points.length - 1], point)
         }
 
         points.push(point)
-    } else {
 
+        let proceedBtn = document.getElementById('proceed-button')
+        if (points.length === 2) {
+            proceedBtn.classList.add('active-button')
+        }
+    } else if (!pointSet && simple) {
+        let color = '#00c0bc'
+        drawPoint(context, color, point)
+        pointToCheck = point
+        pointSet = true
+        document.getElementById('proceed-button').classList.add('active-button')
     }
 }
 
@@ -43,25 +52,48 @@ function proceed() {
         let color = '#598add'
         drawLine(mainCanvas.getContext('2d'), color, points[0], points[points.length - 1])
         polygonFinished = true
-        if (isSimple(points)) {
-            this.classList.remove('active-button')
+        this.innerText = 'Run'
+        simple = isSimple(points)
+        if (!simple) {
+            console.log('non simple') //TODO
         } else {
-
+            console.log('closed') // TODO
         }
-    } else {
+    } else if (pointSet) {
+        let context = mainCanvas.getContext('2d');
+        let color = '#d8364b'
 
+        context.strokeStyle = color
+        context.beginPath()
+        context.moveTo(10, pointToCheck.y)
+        context.lineTo(mainCanvas.width - 10, pointToCheck.y)
+        context.stroke()
+
+        let res = isInsidePolygon(points, pointToCheck)
+        for (let point of res.crossPoints) {
+            drawPoint(context, color, point)
+        }
+
+        if (res.result) {
+            console.log("inside") //TODO
+        } else {
+            console.log("outside") //TODO
+        }
     }
+    this.classList.remove('active-button')
 }
 
 function reset() {
     points = []
     mainCanvas.getContext('2d').clearRect(0, 0, mainCanvas.width, mainCanvas.height)
     let proceedBtn = document.getElementById('proceed-button')
-    if (!proceedBtn.classList.contains('active-button')) {
-        proceedBtn.classList.add('active-button')
+    proceedBtn.innerText = 'Close polygon'
+    if (proceedBtn.classList.contains('active-button')) {
+        proceedBtn.classList.remove('active-button')
     }
     polygonFinished = false
     pointSet = false
+    console.log("add at least 3 points") //TODO
 }
 
 addEventListener('load', () => {
@@ -71,6 +103,10 @@ addEventListener('load', () => {
     mainCanvas.addEventListener('click', onCanvasClick)
 
     document.getElementById('proceed-button').addEventListener('click', proceed)
-    document.getElementById('reset-button').addEventListener('click', reset)
+    document.getElementById('reset-button').addEventListener('click', () => {
+        reset()
+        console.log("canvas cleared") //TODO
+    })
+    reset()
 })
 
