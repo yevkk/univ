@@ -25,15 +25,13 @@ public class DataFileEditor implements Runnable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(Utils.randomInt(1500, 2500));
                 lock.lock();
                 System.out.printf("[%s] locked\n", Thread.currentThread().getName());
                 if (Math.random() < 0.6) {
-                    addRecord(new Record("Name" + (counter + 1), String.valueOf(counter + 1).repeat(4)));
+                    addRecord(new Utils.Record("Name" + (counter + 1), String.valueOf(counter + 1).repeat(4)));
                 } else {
-                    int index = (int) (Math.random() * (recordsNumber.get() - 1) + 1);
-                    System.out.printf("[%s] deleting %d\n", Thread.currentThread().getName(), index);
-                    deleteRecord(index);
+                    deleteRecord(Utils.randomInt(1, recordsNumber.get()));
                 }
                 System.out.printf("[%s] unlocked\n", Thread.currentThread().getName());
                 lock.unlock();
@@ -43,17 +41,9 @@ public class DataFileEditor implements Runnable {
         }
     }
 
-    private static class Record {
-        String name;
-        String phone;
 
-        Record(String name, String phone) {
-            this.name = name;
-            this.phone = phone;
-        }
-    }
 
-    private void addRecord(Record record) {
+    private void addRecord(Utils.Record record) {
         try {
             var writer = new FileWriter(file, true);
             counter++;
@@ -69,10 +59,10 @@ public class DataFileEditor implements Runnable {
     private void deleteRecord(int index) {
         try {
             var scanner = new Scanner(file);
-            var elements = new ArrayList<Record>();
+            var elements = new ArrayList<Utils.Record>();
             int i = 0;
             while (scanner.hasNext()) {
-                var record = new Record(scanner.next(), scanner.next());
+                var record = new Utils.Record(scanner.next(), scanner.next());
                 i++;
                 if (i != index) {
                     elements.add(record);
