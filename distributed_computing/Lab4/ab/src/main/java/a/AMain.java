@@ -11,15 +11,19 @@ public class AMain {
         var recordsNumber = new AtomicInteger();
 
         var file = new File("data.txt");
-        if (file.exists()) {
-            file.delete();
-        }
         try {
-            file.createNewFile();
+            if(file.delete()) {
+                System.out.println("File deleted");
+            }
+            if(file.createNewFile()) {
+                System.out.println("File created");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         new Thread(new DataFileEditor(file, rwLock, recordsNumber), "Editor").start();
+        new Thread(new DataFinder(file, rwLock, recordsNumber), "Finder-1").start();
+        new Thread(new DataFinder(file, rwLock, recordsNumber), "Finder-2").start();
     }
 }
