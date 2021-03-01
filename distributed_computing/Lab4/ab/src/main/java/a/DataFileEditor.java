@@ -5,31 +5,37 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
 public class DataFileEditor implements Runnable {
     private final File file;
     private final Lock lock;
-    private int records = 0;
+    private final AtomicInteger recordsNumber;
     private int counter = 0;
 
-    public DataFileEditor(File file, ReadWriteLock rwLock) {
+    public DataFileEditor(File file, ReadWriteLock rwLock, AtomicInteger recordsNumber) {
         this.file = file;
         this.lock = rwLock.writeLock();
+        this.recordsNumber  = recordsNumber;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
                 lock.lock();
-                if (Math.random() > 0.5) {
-                    addRecord(new Record("Name" + counter, String.valueOf(counter).repeat(4)));
+                System.out.printf("[%s] locked\n", Thread.currentThread().getName());
+                if (Math.random() < 0.6) {
+                    addRecord(new Record("Name" + (counter + 1), String.valueOf(counter + 1).repeat(4)));
                 } else {
-                    deleteRecord((int) (Math.random() * (records - 1) + 1));
+                    int index = (int) (Math.random() * (recordsNumber.get() - 1) + 1);
+                    System.out.printf("[%s] deleting %d\n", Thread.currentThread().getName(), index);
+                    deleteRecord(index);
                 }
+                System.out.printf("[%s] unlocked\n", Thread.currentThread().getName());
                 lock.unlock();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -37,7 +43,7 @@ public class DataFileEditor implements Runnable {
         }
     }
 
-    private class Record {
+    private static class Record {
         String name;
         String phone;
 
@@ -51,9 +57,10 @@ public class DataFileEditor implements Runnable {
         try {
             var writer = new FileWriter(file, true);
             counter++;
-            records++;
+            recordsNumber.incrementAndGet();
             writer.write(record.name + " " + record.phone + " ");
             System.out.printf("[%s] added record: (%s, %s)\n", Thread.currentThread().getName(), record.name, record.phone);
+            writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,10 +73,11 @@ public class DataFileEditor implements Runnable {
             int i = 0;
             while (scanner.hasNext()) {
                 var record = new Record(scanner.next(), scanner.next());
-                if (++i != index) {
+                i++;
+                if (i != index) {
                     elements.add(record);
                 } else {
-                    records--;
+                    recordsNumber.decrementAndGet();
                     System.out.printf("[%s] removed record: (%s, %s)\n", Thread.currentThread().getName(), record.name, record.phone);
                 }
             }
@@ -78,6 +86,7 @@ public class DataFileEditor implements Runnable {
             for (var record : elements) {
                 writer.write(record.name + " " + record.phone + " ");
             }
+            writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
