@@ -1,4 +1,10 @@
 'use strict'
 
-let points = []
-let edges = []
+let graph = {
+    points: [],
+    edges: [],
+    clear: function () {
+        this.points = []
+        this.edges = []
+    }
+}
