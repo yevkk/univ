@@ -13,6 +13,9 @@ body {
 #main-canvas {
     border: 1px solid #637395;
     border-radius: 5px;
+    --main-color: #598add;
+    --special-point-color: #00c0bc;
+    --hightlight-color: #d8364b;
 }
 
 #sidebar{
@@ -62,7 +65,7 @@ body {
 .button {
     width: 150px;
     margin: 10px 0;
-    border: 3px solid #637395;
+    border: 2px solid #637395;
     border-radius: 5px;
     color: gray;
     font-size: 1.1em;
@@ -73,7 +76,7 @@ body {
 }
 
 .active-button {
-    border: 3px solid #0075ff;
+    border-color: #0075ff;
     color: #0075ff;
     cursor: pointer;
     transition: background-color 0.1s ease-in-out;
