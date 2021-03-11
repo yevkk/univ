@@ -11,11 +11,11 @@ body {
 }
 
 #main-canvas {
-    border: 1px solid #637395;
-    border-radius: 5px;
     --main-color: #598add;
     --special-point-color: #00c0bc;
-    --hightlight-color: #d8364b;
+    --highlight-color: #d8364b;
+    border: 1px solid #637395;
+    border-radius: 5px;
 }
 
 #sidebar{
