@@ -2,11 +2,12 @@
 
 const POINT_RADIUS = 5
 
-// 0 - drawing graph; 1 - setting point; 2 - animating result;
+// 0 - drawing graph; 1 - setting point; 2 - animating result; 3 - needs restart
 let stage = 0
-let proceedBtnText = ['Make regular', 'Run']
+let proceedBtnText = ['Preprocessing', 'Run']
 let selectedPoint = null
 let mainCanvas
+
 
 function drawPoint(context, color, point) {
     context.fillStyle = color
@@ -26,7 +27,7 @@ function drawEdge(context, color, edge) {
 function drawGraph(canvas, graph) {
     let context = canvas.getContext('2d')
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-    for (let point of graph.points) {
+    for (let point of graph.nodes) {
         drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--main-color'), point)
     }
     for (let edge of graph.edges) {
@@ -43,7 +44,7 @@ function onCanvasClick(e) {
         case 0:
             let x = e.pageX - mainCanvas.offsetLeft
             let y = e.pageY - mainCanvas.offsetTop
-            let point = graph.points.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)
+            let point = graph.nodes.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)
             if (point) {
                 if (selectedPoint) {
                     if (selectedPoint === point) {
@@ -58,7 +59,7 @@ function onCanvasClick(e) {
                         selectedPoint = null
                     }
                 } else {
-                    if (graph.points.length > 1) {
+                    if (graph.nodes.length > 1) {
                         selectedPoint = point
                         showMessage(`selected point (${point.x}, ${point.y})`, `log`)
                     } else {
@@ -69,19 +70,46 @@ function onCanvasClick(e) {
                 if (selectedPoint) {
                     showMessage(`you should select a point`, `warning`)
                 } else {
-                    point = new Point(x, y)
-                    graph.points.push(point)
+                    point = new Node(x, y)
+                    graph.nodes.push(point)
                     showMessage(`added point (${point.x}, ${point.y})`, `log`)
                 }
             }
+            if (graph.nodes.length > 2 && graph.edges.length > 1) {
+                let proceedBtn = document.getElementById('proceed-button')
+                if (!proceedBtn.classList.contains('active-button')) {
+                    proceedBtn.classList.add('active-button')
+                }
+            }
             drawGraph(mainCanvas, graph)
-            break;
+            break
         default:
-            break;
+            break
     }
 }
 
 function proceed() {
+    let proceedBtn = document.getElementById('proceed-button')
+    if (!proceedBtn.classList.contains('active-button')) {
+        return
+    }
+    switch (stage) {
+        case 0:
+            if (graph.containsCrossingEdges()) {
+                stage = 3;
+                proceedBtn.classList.remove('active-button')
+                showMessage(`graph contains crossing edges; reset required`, `warning`)
+            }
+            graph.nodes.sort((point1, point2) => (point1.y !== point2.y) ? (point2.y - point1.y) : (point1.x - point2.x))
+            //graph.makeRegular()
+            //graph.weightBalance()
+            //graph.buildChains()
+            stage++
+            proceedBtn.innerText = proceedBtnText[stage]
+            break
+        default:
+            break
+    }
 
 }
 

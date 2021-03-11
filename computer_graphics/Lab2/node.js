@@ -1,6 +1,6 @@
 'use strict'
 
-class Point {
+class Node {
     #x
     #y
     #in = []
