@@ -1,13 +1,12 @@
 'use strict'
 
-const POINT_RADIUS = 3
+const POINT_RADIUS = 5
 
 // 0 - drawing graph; 1 - setting point; 2 - animating result;
 let stage = 0
 let proceedBtnText = ['Make regular', 'Run']
-
+let selectedPoint = null
 let mainCanvas
-
 
 function drawPoint(context, color, point) {
     context.fillStyle = color
@@ -16,18 +15,66 @@ function drawPoint(context, color, point) {
     context.fill()
 }
 
-function drawEdge(context, color, start, end) {
+function drawEdge(context, color, edge) {
     context.strokeStyle = color
     context.beginPath()
-    context.moveTo(start.x, start.y)
-    context.lineTo(end.x, end.y)
+    context.moveTo(edge.start.x, edge.start.y)
+    context.lineTo(edge.end.x, edge.end.y)
     context.stroke()
 }
 
+function drawGraph(canvas, graph) {
+    let context = canvas.getContext('2d')
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    for (let point of graph.points) {
+        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--main-color'), point)
+    }
+    for (let edge of graph.edges) {
+        drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--main-color'), edge)
+    }
+    if (selectedPoint) {
+        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--highlight-color'), selectedPoint)
+    }
+}
 
 function onCanvasClick(e) {
+    let context = mainCanvas.getContext('2d');
     switch (stage) {
         case 0:
+            let x = e.pageX - mainCanvas.offsetLeft
+            let y = e.pageY - mainCanvas.offsetTop
+            let point = graph.points.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)
+            if (point) {
+                if (selectedPoint) {
+                    if (selectedPoint === point) {
+                        showMessage(`you should select another point`, `warning`)
+                    } else if (!graph.edges.find(item => (item.start === point && item.end === selectedPoint) || (item.start === selectedPoint && item.end === point))) {
+                        let edge = new Edge(selectedPoint, point)
+                        graph.edges.push(edge)
+                        showMessage(`added edge (${edge.start.x}, ${edge.start.y}) - (${edge.end.x}, ${edge.end.y})`, `log`)
+                        selectedPoint = null
+                    } else {
+                        showMessage(`edge already exists`, `info`)
+                        selectedPoint = null
+                    }
+                } else {
+                    if (graph.points.length > 1) {
+                        selectedPoint = point
+                        showMessage(`selected point (${point.x}, ${point.y})`, `log`)
+                    } else {
+                        showMessage(`you should create at least 2 points`, `warning`)
+                    }
+                }
+            } else {
+                if (selectedPoint) {
+                    showMessage(`you should select a point`, `warning`)
+                } else {
+                    point = new Point(x, y)
+                    graph.points.push(point)
+                    showMessage(`added point (${point.x}, ${point.y})`, `log`)
+                }
+            }
+            drawGraph(mainCanvas, graph)
             break;
         default:
             break;
@@ -41,13 +88,14 @@ function proceed() {
 function reset() {
     graph.clear()
     stage = 0
-    mainCanvas.getContext('2d').clearRect(0, 0, mainCanvas.width, mainCanvas.height)
+    selectedPoint = null
+    drawGraph(mainCanvas, graph)
     let proceedBtn = document.getElementById('proceed-button')
     proceedBtn.innerText = proceedBtnText[stage]
     if (proceedBtn.classList.contains('active-button')) {
         proceedBtn.classList.remove('active-button')
     }
-    showMessage('Add at least 3 points', 'tip')
+    showMessage('Add at least 3 point and 2 edges', 'tip')
 }
 
 function showMessage(msg, className) {
