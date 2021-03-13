@@ -1,13 +1,13 @@
 'use strict'
 
 let graph = {
-    nodes: [],
+    points: [],
     edges: [],
     clear: function () {
-        this.nodes = []
+        this.points = []
         this.edges = []
     },
-    containsCrossingEdges: function() {
+    containsCrossingEdges: function () {
         return !this.edges.every((item, index, arr) => {
             for (let i = index + 1; i < arr.length; i++) {
                 if (item.start === arr[i].start || item.start === arr[i].end || item.end === arr[i].start || item.end === arr[i].end) {
@@ -20,8 +20,98 @@ let graph = {
             return true
         })
     },
-    makeRegular: function() {
-        let statusNodes = []
-        let statusEdges = []
+    makeRegular: function () {
+        let binarySearch = (currentNode) => {
+            let left = 0
+            let right = statusEdges.length - 1
+            let x = (edge, node) => (node.y - edge.start.y) * (edge.end.x - edge.start.x) / (edge.end.y - edge.start.y) + edge.start.x
+            while (right - left > 1) {
+                let mid = Math.ceil((right + left) / 2)
+                if (currentNode.x < x(statusEdges[mid], currentNode)) {
+                    right = mid
+                } else {
+                    left = mid
+                }
+            }
+            if (currentNode.x > x(statusEdges[right], currentNode)) {
+                return right + 1
+            }
+            if (currentNode.x < x(statusEdges[left], currentNode)) {
+                return left
+            }
+            return right
+        }
+        let currentNode
+
+        let statusEdges = [...this.points[0].out]
+        let statusNodes = new Array(statusEdges.length + 1).fill(this.points[0])
+
+        for (let i = 1; i < this.points.length; i++) {
+            currentNode = this.points[i]
+
+
+            if (currentNode.in.length === 0) {
+                if (statusEdges.length !== 0) {
+                    let index = binarySearch(currentNode)
+                    graph.edges.push(new Edge(currentNode, statusNodes[index]))
+                    statusEdges.splice(index, 0, ...currentNode.out)
+                    statusNodes.splice(index, 1, ...new Array(currentNode.out.length + 1).fill(currentNode))
+                } else {
+                    graph.edges.push(new Edge(currentNode, statusNodes[0]))
+                    statusEdges = currentNode.out
+                    statusNodes = new Array(statusEdges.length + 1).fill(currentNode)
+                }
+            } else {
+                let index = statusEdges.findIndex(item => item === currentNode.in[0])
+                statusEdges.splice(index, currentNode.in.length, ...currentNode.out)
+                statusNodes.splice(index, currentNode.in.length + 1, ...new Array(currentNode.out.length + 1).fill(currentNode))
+                if (statusNodes.length === 0) {
+                    statusNodes.push(currentNode)
+                }
+            }
+        }
+
+        statusEdges = [...this.points[this.points.length - 1].in]
+        statusNodes = new Array(statusEdges.length + 1).fill(this.points[this.points.length - 1])
+
+        for (let i = this.points.length - 2; i >= 0; i--) {
+            currentNode = this.points[i]
+
+
+            if (currentNode.out.length === 0) {
+                if (statusEdges.length !== 0) {
+                    let index = binarySearch(currentNode)
+                    graph.edges.push(new Edge(currentNode, statusNodes[index]))
+                    statusEdges.splice(index, 0, ...currentNode.in)
+                    statusNodes.splice(index, 1, ...new Array(currentNode.in.length + 1).fill(currentNode))
+                } else {
+                    graph.edges.push(new Edge(currentNode, statusNodes[0]))
+                    statusEdges = currentNode.in
+                    statusNodes = new Array(statusEdges.length + 1).fill(currentNode)
+                }
+            } else {
+                let index = statusEdges.findIndex(item => item === currentNode.out[0])
+                statusEdges.splice(index, currentNode.out.length, ...currentNode.in)
+                statusNodes.splice(index, currentNode.out.length + 1, ...new Array(currentNode.in.length + 1).fill(currentNode))
+                if (statusNodes.length === 0) {
+                    statusNodes.push(currentNode)
+                }
+            }
+        }
+    },
+    weightBalance: function () {
+        this.edges.forEach((edge) => edge.W = 0)
+        for (let i = 1; i < this.points.length - 1; i++) {
+            let currentNode = this.points[i]
+            if (currentNode.Win > currentNode.Wout) {
+                currentNode.out[0].W = currentNode.Win - currentNode.Wout + 1
+            }
+        }
+        for (let i = this.points.length - 2; i > 0; i--) {
+            let currentNode = this.points[i]
+            if (currentNode.Wout > currentNode.Win) {
+                currentNode.in[0].W = currentNode.Wout - currentNode.Win + currentNode.in[0].W
+            }
+        }
     }
 }
