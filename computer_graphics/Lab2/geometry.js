@@ -60,7 +60,7 @@ let graph = {
                     statusNodes.splice(index, 1, ...new Array(currentNode.out.length + 1).fill(currentNode))
                 } else {
                     graph.edges.push(new Edge(currentNode, statusNodes[0]))
-                    statusEdges = currentNode.out
+                    statusEdges = [...currentNode.out]
                     statusNodes = new Array(statusEdges.length + 1).fill(currentNode)
                 }
             } else {
@@ -88,7 +88,7 @@ let graph = {
                     statusNodes.splice(index, 1, ...new Array(currentNode.in.length + 1).fill(currentNode))
                 } else {
                     graph.edges.push(new Edge(currentNode, statusNodes[0]))
-                    statusEdges = currentNode.in
+                    statusEdges = [...currentNode.in]
                     statusNodes = new Array(statusEdges.length + 1).fill(currentNode)
                 }
             } else {

@@ -123,7 +123,7 @@ function onCanvasClick(e) {
             drawGraph(mainCanvas, graph)
             break
         case 1:
-            if (!pointToCheck ?? chainsAnimation.finished) {
+            if (!pointToCheck && chainsAnimation.finished) {
                 if (point) {
                     pointToCheck = point
                 } else {
@@ -175,7 +175,7 @@ function proceed() {
 function reset() {
     graph.clear()
     stage = 0
-    selectedPoint = null
+    selectedPoint = undefined
     drawGraph(mainCanvas, graph)
     let proceedBtn = document.getElementById('proceed-button')
     proceedBtn.innerText = proceedBtnText[stage]
