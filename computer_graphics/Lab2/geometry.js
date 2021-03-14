@@ -1,5 +1,8 @@
 'use strict'
 
+let pointToCheck
+let chains = []
+
 let graph = {
     points: [],
     edges: [],
@@ -33,10 +36,10 @@ let graph = {
                     left = mid
                 }
             }
-            if (currentNode.x > x(statusEdges[right], currentNode)) {
+            if (statusEdges[right].pointRelativeX(currentNode) > 0) {
                 return right + 1
             }
-            if (currentNode.x < x(statusEdges[left], currentNode)) {
+            if (statusEdges[left].pointRelativeX(currentNode) < 0) {
                 return left
             }
             return right

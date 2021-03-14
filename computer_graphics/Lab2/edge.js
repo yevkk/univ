@@ -53,4 +53,9 @@ class Edge {
 
         return res1 && res2
     }
+
+    pointRelativeX(point) {
+        let x = (point.y - this.start.y) * (this.end.x - this.start.x) / (this.end.y - this.start.y) + this.start.x
+        return point.x - x
+    }
 }
