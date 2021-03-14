@@ -28,11 +28,11 @@ class Point {
     }
 
     get Win() {
-        return this.in.reduce((sum, item) => sum + item, 0)
+        return this.in.reduce((sum, item) => sum + item.W, 0)
     }
 
     get Wout() {
-        return this.out.reduce((sum, item) => sum + item, 0)
+        return this.out.reduce((sum, item) => sum + item.W, 0)
     }
 
     addEdge(edge) {

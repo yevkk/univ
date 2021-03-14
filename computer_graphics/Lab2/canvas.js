@@ -104,9 +104,10 @@ function proceed() {
             graph.makeRegular()
             drawGraph(mainCanvas, graph)
             graph.weightBalance()
-            //graph.buildChains()
+            let chains = graph.buildChains()
             stage++
             proceedBtn.innerText = proceedBtnText[stage]
+            showMessage(`select point to localize`, `tip`)
             break
         default:
             break

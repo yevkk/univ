@@ -100,7 +100,7 @@ let graph = {
         }
     },
     weightBalance: function () {
-        this.edges.forEach((edge) => edge.W = 0)
+        this.edges.forEach((edge) => edge.W = 1)
         for (let i = 1; i < this.points.length - 1; i++) {
             let currentNode = this.points[i]
             if (currentNode.Win > currentNode.Wout) {
@@ -113,5 +113,20 @@ let graph = {
                 currentNode.in[0].W = currentNode.Wout - currentNode.Win + currentNode.in[0].W
             }
         }
+    },
+    buildChains: function() {
+      let chains = []
+      while(this.points[0].Wout > 0) {
+          let chain = new Chain()
+          let currentPoint = this.points[0]
+          while (currentPoint !== this.points[this.points.length - 1]) {
+              let edge =  currentPoint.out.find(item => item.W > 0)
+              edge.W--
+              chain.edges.push(edge)
+              currentPoint = edge.end
+          }
+          chains.push(chain)
+      }
+      return chains
     }
 }
