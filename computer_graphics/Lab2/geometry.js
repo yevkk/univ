@@ -27,10 +27,9 @@ let graph = {
         let binarySearch = (currentNode) => {
             let left = 0
             let right = statusEdges.length - 1
-            let x = (edge, node) => (node.y - edge.start.y) * (edge.end.x - edge.start.x) / (edge.end.y - edge.start.y) + edge.start.x
             while (right - left > 1) {
                 let mid = Math.ceil((right + left) / 2)
-                if (currentNode.x < x(statusEdges[mid], currentNode)) {
+                if (statusEdges[mid].pointRelativeX(currentNode) < 0) {
                     right = mid
                 } else {
                     left = mid
