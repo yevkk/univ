@@ -1,6 +1,6 @@
 'use strict'
 
-const POINT_RADIUS = 10
+const POINT_RADIUS = 5
 
 // 0 - drawing graph; 1 - setting point; 2 - animating result; 3 - needs restart
 let stage = 0
@@ -18,6 +18,7 @@ function drawPoint(context, color, point) {
 
 function drawEdge(context, color, edge) {
     context.strokeStyle = color
+    context.lineWidth = 2
     context.beginPath()
     context.moveTo(edge.start.x, edge.start.y)
     context.lineTo(edge.end.x, edge.end.y)
@@ -27,11 +28,11 @@ function drawEdge(context, color, edge) {
 function drawGraph(canvas, graph) {
     let context = canvas.getContext('2d')
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-    for (let point of graph.points) {
-        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--main-color'), point)
-    }
     for (let edge of graph.edges) {
-        drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--main-color'), edge)
+        drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--edge-color'), edge)
+    }
+    for (let point of graph.points) {
+        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--point-color'), point)
     }
     if (selectedPoint) {
         drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--highlight-color'), selectedPoint)
