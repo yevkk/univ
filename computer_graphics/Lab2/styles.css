@@ -15,6 +15,7 @@ body {
     --edge-color: #2d54b5;
     --special-point-color: #00c0bc;
     --highlight-color: #d8364b;
+    --section-color: #ffed7c;
     border: 1px solid #637395;
     border-radius: 5px;
 }

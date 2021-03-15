@@ -130,5 +130,24 @@ let graph = {
           chains.push(chain)
       }
       return chains
+    },
+    localizePoint: function(point, chains) {
+        if (!chains) {
+            chains = this.buildChains()
+        }
+        if (chains[0].pointRelativeX(point) === null || chains[0].pointRelativeX(point) < 0 || chains[chains.length - 1].pointRelativeX(point) > 0) {
+            return null
+        }
+        let left = 0
+        let right = chains.length - 1
+        while (right - left > 1) {
+            let mid = Math.ceil((right + left) / 2)
+            if (chains[mid].pointRelativeX(point) < 0) {
+                right = mid
+            } else {
+                left = mid
+            }
+        }
+        return {left, right}
     }
 }

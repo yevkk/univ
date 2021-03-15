@@ -1,6 +1,6 @@
 'use strict'
 
-const POINT_RADIUS = 10
+const POINT_RADIUS = 5
 
 // 0 - drawing graph; 1 - setting point; 2 - animating result; 3 - needs restart
 let stage = 0
@@ -73,6 +73,31 @@ function chainsAnimation(canvas, graph, chains, step) {
             step++
             chainsAnimation(canvas, graph, chains, step)
         }, delay)
+    }
+}
+
+function drawLocalizationResult(canvas, graph, specialPoint, chains, result) {
+    let context = canvas.getContext('2d')
+    context.clearRect(0, 0, canvas.width, canvas.height)
+    context.beginPath()
+    context.moveTo(graph.points[0].x, graph.points[0].y)
+    for (let edge of chains[result.left].edges) {
+        context.lineTo(edge.end.x, edge.end.y)
+    }
+    for (let edge of chains[result.right].edges.reverse()) {
+        context.lineTo(edge.start.x, edge.start.y)
+    }
+    context.fillStyle = window.getComputedStyle(canvas).getPropertyValue('--section-color')
+    context.fill()
+
+    for (let edge of graph.edges) {
+        drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--edge-color'), edge)
+    }
+    for (let point of graph.points) {
+        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--point-color'), point)
+    }
+    if (specialPoint) {
+        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--special-point-color'), specialPoint)
     }
 }
 
@@ -164,7 +189,21 @@ function proceed() {
             chainsAnimation.finished = false
             chainsAnimation(mainCanvas, graph, chains)
 
-            showMessage(`select point to localize`, `tip`)
+            showMessage(`select point to localize and run`, `tip`)
+            break
+        case 1:
+            stage++
+            proceedBtn.classList.remove('active-button')
+
+            let result = graph.localizePoint(pointToCheck, chains)
+            if (result !== null) {
+                drawLocalizationResult(mainCanvas, graph, pointToCheck, chains, result)
+                showMessage(`point localized`, `info`)
+            } else {
+                showMessage(`point is outside of graph`, `info`)
+            }
+
+            showMessage(`reset to restart`, `tip`)
             break
         default:
             break
@@ -175,7 +214,7 @@ function proceed() {
 function reset() {
     graph.clear()
     stage = 0
-    selectedPoint = undefined
+    pointToCheck = undefined
     drawGraph(mainCanvas, graph)
     let proceedBtn = document.getElementById('proceed-button')
     proceedBtn.innerText = proceedBtnText[stage]
