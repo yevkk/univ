@@ -6,12 +6,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StringHandler implements Runnable {
     private StringBuilder str;
-    private final CyclicBarrier barrier;
+    private CyclicBarrier barrier;
     private final AtomicBoolean done;
     private int abCounter;
 
-    public StringHandler(int length, CyclicBarrier barrier, AtomicBoolean done) {
-        this.barrier = barrier;
+    public StringHandler(int length, AtomicBoolean done) {
         this.done = done;
         this.abCounter = 0;
 
@@ -20,6 +19,10 @@ public class StringHandler implements Runnable {
             var rand = Math.random();
             str.append((rand < 0.25) ? "A" : ((rand < 0.5) ? "B" : ((rand < 0.75) ? "C" : "D")));
         }
+    }
+
+    public void setBarrier(CyclicBarrier barrier) {
+        this.barrier = barrier;
     }
 
     public int getCounter() {
