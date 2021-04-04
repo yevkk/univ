@@ -12,7 +12,6 @@ class CustomBarrier {
 
     public synchronized void await() throws InterruptedException {
         waitingFor--;
-
         if (waitingFor > 0) {
             this.wait();
         } else {
