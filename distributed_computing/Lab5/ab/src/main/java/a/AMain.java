@@ -18,13 +18,16 @@ public class AMain {
         var barrier = new CustomBarrier(units.length, () -> {
             try {
                 Thread.sleep(20);
-                System.out.println();
 
                 var modified = false;
+                var strBuilder = new StringBuilder();
                 for (int i = 0; i < units.length; i++) {
-                    System.out.printf("Handler-%d: %s\n", i, units[i].getLineString());
+//                    System.out.printf("Unit-%d: %s\n", i, units[i].getLineString());
+                    strBuilder.append(units[i].getLineString());
                     modified = modified || units[i].getModified();
                 }
+                System.out.printf("Line: %s\n", strBuilder.toString());
+
                 if (!modified) {
                     done.set(true);
                 } else {
