@@ -42,7 +42,6 @@ public class BoardView extends View {
 
         canvas.drawRect(0, 0, this.getMeasuredWidth(), this.getMeasuredHeight(), paint);
 
-        paint.setColor(getResources().getColor(R.color.lifeCell, null));
         drawCells(canvas);
     }
 
@@ -51,11 +50,13 @@ public class BoardView extends View {
         int sizeY = cells[0].length;
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
-                if (cells[i][j] == CellState.ALIVE1) {
+                if (cells[i][j] == CellState.ALIVE1 || cells[i][j] == CellState.ALIVE2) {
                     float x = hPadding + cellSize * i;
                     float y = vPadding + cellSize * j;
+                    paint.setColor(getResources().getColor(cells[i][j] == CellState.ALIVE1 ? R.color.lifeCell1 : R.color.lifeCell2, null));
                     canvas.drawRect(x, y, x + cellSize, y + cellSize, paint);
                 }
+
             }
         }
     }

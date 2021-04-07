@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Board board = new Board(100, 175, 0.5);
+        Board board = new Board(100, 175, 0.2, 0.2);
         BoardView boardView = findViewById(R.id.boardView);
         Exchanger<CellState[][]> exchanger = new Exchanger<>();
         AtomicBoolean done = new AtomicBoolean(false);
