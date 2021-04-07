@@ -59,10 +59,6 @@ public class Board {
             threads[w].join();
         }
 
-
-
-
-
         cells = newGeneration;
         return cells;
     }
