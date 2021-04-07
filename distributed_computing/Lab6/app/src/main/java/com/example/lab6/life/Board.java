@@ -26,35 +26,42 @@ public class Board {
         return cells;
     }
 
-    public CellState[][] generation() {
+    public CellState[][] generation() throws InterruptedException {
         CellState[][] newGeneration = new CellState[sizeX][sizeY];
         AtomicInteger sync = new AtomicInteger(sizeX);
-//        for (int w = 0; w < WORKERS; w++) {
-//            Runnable generationWorker = () -> {
-//
-//            };
-//            new Thread(generationWorker, "generation worker - " + w).start();
-//        }
-
-        int x;
-        while ((x = sync.decrementAndGet()) >= 0) {
-            for (int y = 0; y < sizeY; y++) {
-                int aliveCounter1 = 0;
-                int aliveCounter2 = 0;
-                for (int i = Math.max(0, x - 1); i <= Math.min(sizeX - 1, x + 1); i++) {
-                    for (int j = Math.max(0, y - 1); j <= Math.min(sizeY - 1, y + 1); j++) {
-                        if (!(i == x && j == y)) {
-                            if (cells[i][j] == CellState.ALIVE1) {
-                                aliveCounter1++;
-                            } else if (cells[i][j] == CellState.ALIVE2) {
-                                aliveCounter2++;
+        Thread[] threads = new Thread[WORKERS];
+        Runnable generationWorker = () -> {
+            int x;
+            while ((x = sync.decrementAndGet()) >= 0) {
+                for (int y = 0; y < sizeY; y++) {
+                    int aliveCounter1 = 0;
+                    int aliveCounter2 = 0;
+                    for (int i = Math.max(0, x - 1); i <= Math.min(sizeX - 1, x + 1); i++) {
+                        for (int j = Math.max(0, y - 1); j <= Math.min(sizeY - 1, y + 1); j++) {
+                            if (!(i == x && j == y)) {
+                                if (cells[i][j] == CellState.ALIVE1) {
+                                    aliveCounter1++;
+                                } else if (cells[i][j] == CellState.ALIVE2) {
+                                    aliveCounter2++;
+                                }
                             }
                         }
                     }
+                    newGeneration[x][y] = cells[x][y].next(aliveCounter1, aliveCounter2);
                 }
-                newGeneration[x][y] = cells[x][y].next(aliveCounter1, aliveCounter2);
             }
+        };
+        for (int w = 0; w < WORKERS; w++) {
+            threads[w] = new Thread(generationWorker, "generation worker - " + w);
+            threads[w].start();
         }
+        for (int w = 0; w < WORKERS; w++) {
+            threads[w].join();
+        }
+
+
+
+
 
         cells = newGeneration;
         return cells;
