@@ -25,9 +25,30 @@ function drawEdge(context, color, edge) {
     context.stroke()
 }
 
+function drawGrid(canvas) {
+    let context = canvas.getContext('2d')
+    context.strokeStyle = window.getComputedStyle(canvas).getPropertyValue('--grid-color')
+    context.lineWidth = 0.5
+
+    for (let i = 10; i < canvas.width; i += 10) {
+        context.beginPath()
+        context.moveTo(i, 10)
+        context.lineTo(i, canvas.height - 10)
+        context.stroke()
+    }
+
+    for (let i = 10; i < canvas.height; i += 10) {
+        context.beginPath()
+        context.moveTo(10, i)
+        context.lineTo(canvas.width - 10, i)
+        context.stroke()
+    }
+}
+
 function drawGraph(canvas, graph, specialPoint) {
     let context = canvas.getContext('2d')
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    drawGrid(canvas)
     for (let edge of graph.edges) {
         drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--edge-color'), edge)
     }
@@ -45,6 +66,7 @@ function drawGraph(canvas, graph, specialPoint) {
 function drawLocationResult(canvas, graph, specialPoint, strips, result) {
     let context = canvas.getContext('2d')
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    drawGrid(canvas)
 
     let stripBottom = strips[result.stripIndex]
     let stripUp = strips[result.stripIndex + 1]
@@ -70,6 +92,8 @@ function drawLocationResult(canvas, graph, specialPoint, strips, result) {
     for (let edge of graph.edges) {
         drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--edge-color'), edge)
     }
+
+    context.lineWidth = 1
     for (let point of graph.points) {
         drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--point-color'), point)
         context.beginPath()
@@ -173,7 +197,7 @@ function proceed() {
 
             let result = locatePoint(pointToCheck, strips)
             showMessage(`point located`, `info`)
-            if (result.stripIndex === -1 || result.stripIndex >= strips.length - 1 || result.segmentIndex === -1 || result.segmentIndex >= strips[result.stripIndex].segments.length - 1) {
+            if (result.stripIndex < 0 || result.stripIndex >= strips.length - 1 || result.segmentIndex < 0 || result.segmentIndex >= strips[result.stripIndex].segments.length - 1) {
                 showMessage(`point is outside of graph`, `info`)
             } else {
                 drawLocationResult(mainCanvas, graph, pointToCheck, strips, result)
@@ -191,6 +215,7 @@ function reset() {
     graph.clear()
     stage = 0
     pointToCheck = undefined
+    selectedPoint = undefined
     drawGraph(mainCanvas, graph)
     let proceedBtn = document.getElementById('proceed-button')
     proceedBtn.innerText = proceedBtnText[stage]

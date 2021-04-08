@@ -16,6 +16,7 @@ body {
     --special-point-color: #00c0bc;
     --highlight-color: #d8364b;
     --section-color: #ffed7c;
+    --grid-color: #d8dbdb;
     border: 1px solid #637395;
     border-radius: 5px;
 }
