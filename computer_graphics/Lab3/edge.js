@@ -12,6 +12,8 @@ class Edge {
             this.#start = point2
             this.#end = point1
         }
+        point1.addEdge(this)
+        point2.addEdge(this)
     }
 
     get start() {

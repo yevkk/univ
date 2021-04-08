@@ -42,6 +42,46 @@ function drawGraph(canvas, graph, specialPoint) {
     }
 }
 
+function drawLocationResult(canvas, graph, specialPoint, strips, result) {
+    let context = canvas.getContext('2d')
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+
+    let stripBottom = strips[result.stripIndex]
+    let stripUp = strips[result.stripIndex + 1]
+    let segmentLeft = stripBottom.segments[result.segmentIndex]
+    let segmentRight = stripBottom.segments[result.segmentIndex + 1]
+
+    let x1 = segmentLeft.start.x + (stripUp.y - segmentLeft.start.y) * (segmentLeft.end.x - segmentLeft.start.x) / (segmentLeft.end.y - segmentLeft.start.y)
+    let x2 = segmentRight.start.x + (stripUp.y - segmentRight.start.y) * (segmentRight.end.x - segmentRight.start.x) / (segmentRight.end.y - segmentRight.start.y)
+    let x3 = segmentRight.start.x + (stripBottom.y - segmentRight.start.y) * (segmentRight.end.x - segmentRight.start.x) / (segmentRight.end.y - segmentRight.start.y)
+    let x4 = segmentLeft.start.x + (stripBottom.y - segmentLeft.start.y) * (segmentLeft.end.x - segmentLeft.start.x) / (segmentLeft.end.y - segmentLeft.start.y)
+
+
+    context.beginPath()
+    context.moveTo(x1, stripUp.y)
+    context.lineTo(x2, stripUp.y)
+    context.lineTo(x3, stripBottom.y)
+    context.lineTo(x4, stripBottom.y)
+    context.lineTo(x1, stripUp.y)
+
+    context.fillStyle = window.getComputedStyle(canvas).getPropertyValue('--section-color')
+    context.fill()
+
+    for (let edge of graph.edges) {
+        drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--edge-color'), edge)
+    }
+    for (let point of graph.points) {
+        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--point-color'), point)
+        context.beginPath()
+        context.moveTo(10, point.y)
+        context.lineTo(canvas.width - 10, point.y)
+        context.stroke()
+    }
+    if (specialPoint) {
+        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--special-point-color'), specialPoint)
+    }
+}
+
 function onCanvasClick(e) {
     let context = mainCanvas.getContext('2d');
     let x = e.pageX - mainCanvas.offsetLeft
@@ -112,7 +152,6 @@ function proceed() {
     switch (stage) {
         case 0:
             graph.points.sort((point1, point2) => (point1.y !== point2.y) ? (point2.y - point1.y) : (point1.x - point2.x))
-            graph.makeRegular()
             drawGraph(mainCanvas, graph)
             if (graph.containsCrossingEdges()) {
                 stage = 3;
@@ -124,7 +163,7 @@ function proceed() {
             proceedBtn.innerText = proceedBtnText[stage]
             proceedBtn.classList.remove('active-button')
 
-            //TODO: implement building search tree here
+            strips = buildStrips(graph)
 
             showMessage(`select point to localize and run`, `tip`)
             break
@@ -132,10 +171,13 @@ function proceed() {
             stage++
             proceedBtn.classList.remove('active-button')
 
-            //TODO: implement point location
-
-            // showMessage(`point located`, `info`)
-            // showMessage(`point is outside of graph`, `info`)
+            let result = locatePoint(pointToCheck, strips)
+            showMessage(`point located`, `info`)
+            if (result.stripIndex === -1 || result.stripIndex >= strips.length - 1 || result.segmentIndex === -1 || result.segmentIndex >= strips[result.stripIndex].segments.length - 1) {
+                showMessage(`point is outside of graph`, `info`)
+            } else {
+                drawLocationResult(mainCanvas, graph, pointToCheck, strips, result)
+            }
 
             showMessage(`reset to restart`, `tip`)
             break

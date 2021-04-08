@@ -1,3 +1,4 @@
+
 'use strict'
 
 class Point {
@@ -26,4 +27,25 @@ class Point {
     get out() {
         return this.#out
     }
+
+    addEdge(edge) {
+        if (edge.start === this) {
+            let ctg = e => (e.start.x - e.end.x) / (e.start.y - e.end.y)
+            let index = this.#out.findIndex(item => ctg(item) < ctg(edge))
+            if (index === -1) {
+                this.#out.push(edge)
+            } else {
+                this.#out.splice(index, 0, edge)
+            }
+        } else if (edge.end === this) {
+            let ctg = e => (e.end.x - e.start.x) / (e.start.y - e.end.y)
+            let index = this.#in.findIndex(item => ctg(item) < ctg(edge))
+            if (index === -1) {
+                this.#in.push(edge)
+            } else {
+                this.#in.splice(index, 0, edge)
+            }
+        }
+    }
+
 }

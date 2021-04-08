@@ -1,6 +1,7 @@
 'use strict'
 
 let pointToCheck
+let strips = []
 
 let graph = {
     points: [],
@@ -99,5 +100,42 @@ let graph = {
                 }
             }
         }
+    }
+}
+
+function Strip(y) {
+    return {
+        y,
+        segments: []
+    }
+}
+
+function buildStrips(graph) {
+    let strips = []
+    graph.points.sort((point1, point2) => point2.y - point1.y)
+    let status = []
+    for (let i = 0; i < graph.points.length; i++) {
+        let point = graph.points[i]
+        let strip = new Strip(point.y)
+        status = status.filter((item) => !point.in.includes(item))
+        status.push(...graph.points[i].out)
+        status.sort((edge1, edge2) => {
+            let x1 = edge1.start.x + (point.y - edge1.start.y) * (edge1.end.x - edge1.start.x) / (edge1.end.y - edge1.start.y)
+            let x2 = edge2.start.x + (point.y - edge2.start.y) * (edge2.end.x - edge2.start.x) / (edge2.end.y - edge2.start.y)
+            return x1 - x2
+        })
+        strip.segments = [...status]
+        strips.push(strip)
+    }
+    return strips
+}
+
+function locatePoint(point, strips) {
+    let stripIndex = strips.findIndex(strip => strip.y < point.y) - 1
+    let segmentIndex = strips[stripIndex].segments.findIndex(segment => segment.pointRelativeX(point) < 0) - 1
+
+    return {
+        stripIndex,
+        segmentIndex
     }
 }
