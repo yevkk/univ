@@ -131,8 +131,51 @@ function buildStrips(graph) {
 }
 
 function locatePoint(point, strips) {
-    let stripIndex = strips.findIndex(strip => strip.y < point.y) - 1
-    let segmentIndex = strips[stripIndex].segments.findIndex(segment => segment.pointRelativeX(point) < 0) - 1
+    // let stripIndex = strips.findIndex(strip => strip.y < point.y) - 1
+    // let segmentIndex = strips[stripIndex].segments.findIndex(segment => segment.pointRelativeX(point) < 0) - 1
+
+    let right, left, mid
+    let stripIndex, segmentIndex
+
+    if (point.y > strips[0].y || point.y < strips[strips.length - 1].y) {
+        return {
+            stripIndex: -1,
+            segmentIndex: -1
+        }
+    } else {
+        right = strips.length - 1
+        left = 0
+        while (right - left > 1) {
+            mid = Math.floor((right + left) / 2)
+            if (strips[mid].y < point.y) {
+                right = mid
+            } else {
+                left = mid
+            }
+        }
+        stripIndex = left
+
+        let strip = strips[stripIndex]
+        if (strip.segments[0].pointRelativeX(point) < 0 || strip.segments[strip.segments.length - 1].pointRelativeX(point) > 0) {
+            return {
+                stripIndex: -1,
+                segmentIndex: -1
+            }
+        } else {
+            right = strip.segments.length - 1
+            left = 0
+            while (right - left > 1) {
+                mid = Math.floor((right + left) / 2)
+                if (strip.segments[mid].pointRelativeX(point) < 0) {
+                    right = mid
+                } else {
+                    left = mid
+                }
+            }
+            segmentIndex = left
+        }
+    }
+
 
     return {
         stripIndex,
