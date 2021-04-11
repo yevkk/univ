@@ -96,6 +96,7 @@ function drawLocationResult(canvas, graph, specialPoint, strips, result) {
     context.lineWidth = 1
     for (let point of graph.points) {
         drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--point-color'), point)
+        context.strokeStyle = window.getComputedStyle(canvas).getPropertyValue('--highlight-color')
         context.beginPath()
         context.moveTo(10, point.y)
         context.lineTo(canvas.width - 10, point.y)
