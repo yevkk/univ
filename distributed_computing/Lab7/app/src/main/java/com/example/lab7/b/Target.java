@@ -24,6 +24,10 @@ public class Target implements Runnable {
         return exchanger;
     }
 
+    public AtomicBoolean getDone() {
+        return done;
+    }
+
     @Override
     public void run() {
         try {

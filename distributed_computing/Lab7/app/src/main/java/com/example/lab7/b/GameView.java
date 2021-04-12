@@ -81,7 +81,7 @@ public class GameView extends View {
             Target[] targets = new Target[targetsNo];
             for (int i = 0; i < targetsNo; i++) {
                 done[i + 1] = new AtomicBoolean(false);
-                targets[i] = new Target(this, new Exchanger<>(), done[i]);
+                targets[i] = new Target(this, new Exchanger<>(), done[i + 1]);
                 new Thread(targets[i]).start();
             }
 
@@ -90,25 +90,15 @@ public class GameView extends View {
                     Thread.sleep(50);
 
                     semaphore.acquire();
-                    points[0] = hunter.getExchanger().exchange(null);
-                    for (int i = 0; i < targetsNo; i++) {
-                        if (done[i + 1] != null) {
-                            points[i + 1] = targets[i].getExchanger().exchange(null);
-                        } else {
-                            done[i + 1] = new AtomicBoolean(false);
-                            targets[i] = new Target(this, new Exchanger<>(), done[i + 1]);
-                            new Thread(targets[i]).start();
-                        }
-                    }
-                    int i = 0;
-                    while (i < bullets.size()) {
+                    int k = 0;
+                    while (k < bullets.size()) {
                         boolean del = false;
-                        Point bullet = bullets.get(i);
+                        Point bullet = bullets.get(k);
                         bullet.y -= 10;
                         for (int j = 1; j <= targetsNo; j++) {
                             if (points[j] != null) {
                                 if (Math.abs(points[j].x - bullet.x) < Target.size && Math.abs(points[j].y - bullet.y) < Target.size) {
-                                    done[j].set(true);
+                                    targets[j - 1].getDone().set(true);
                                     done[j] = null;
                                     del = true;
                                     break;
@@ -119,9 +109,20 @@ public class GameView extends View {
                             del = true;
                         }
                         if (del) {
-                            bullets.remove(i);
+                            bullets.remove(k);
                         } else {
-                            i++;
+                            k++;
+                        }
+                    }
+
+                    points[0] = hunter.getExchanger().exchange(null);
+                    for (int i = 0; i < targetsNo; i++) {
+                        if (done[i + 1] != null) {
+                            points[i + 1] = targets[i].getExchanger().exchange(null);
+                        } else {
+                            done[i + 1] = new AtomicBoolean(false);
+                            targets[i] = new Target(this, new Exchanger<>(), done[i + 1]);
+                            new Thread(targets[i]).start();
                         }
                     }
                     semaphore.release();
