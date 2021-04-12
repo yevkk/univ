@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Lab7</string>
+    <string name="background_image_desc">background</string>
+    <string name="ground_image_desc">ground</string>
 </resources>
