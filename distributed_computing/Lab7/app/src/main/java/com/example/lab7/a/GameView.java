@@ -45,7 +45,7 @@ public class GameView extends View {
         try {
             semaphore.acquire();
             for (int i = 0; i < targetsNo; i++) {
-                if (Math.abs(points[i].x - event.getX()) < Target.size && Math.abs(points[i].x - event.getX()) < Target.size) {
+                if (Math.abs(points[i].x - event.getX()) < Target.size && Math.abs(points[i].y - event.getY()) < Target.size) {
                     done[i].set(true);
                     done[i] = null;
                 }
