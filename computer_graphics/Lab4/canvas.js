@@ -142,7 +142,6 @@ function proceed() {
             for (let point of res) {
                 drawPoint(mainCanvas.getContext('2d'), window.getComputedStyle(mainCanvas).getPropertyValue('--highlight-color'), point)
             }
-            console.log(res)
             stage++
             proceedBtn.classList.remove('active-button')
             showMessage(`found ${res.length} points`, `info`)
