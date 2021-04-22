@@ -35,16 +35,57 @@ function drawGrid(canvas) {
     }
 }
 
-function drawGraph(canvas, points, queryRect) {
+function drawGraph(canvas, points, queryRect, tree) {
     let context = canvas.getContext('2d')
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    context.clearRect(0, 0, canvas.width, canvas.height)
     drawGrid(canvas)
+    if (queryRect != null) {
+        if (queryRect.left_up && queryRect.right_bottom) {
+            context.fillStyle = window.getComputedStyle(canvas).getPropertyValue('--section-color')
+            context.fillRect(queryRect.left_up.x, queryRect.left_up.y, queryRect.right_bottom.x - queryRect.left_up.x, queryRect.right_bottom.y - queryRect.left_up.y)
+        } else if (queryRect.left_up) {
+            drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--section-color'), queryRect.left_up)
+        }
+    }
+    if (tree) {
+        drawTree(mainCanvas, tree)
+    }
     for (let point of points) {
         drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--point-color'), point)
     }
-    if (queryRect != null) {
-        //todo: draw queryRect
+}
+
+function drawTree(canvas, tree) {
+    let context = canvas.getContext('2d')
+    context.strokeStyle = window.getComputedStyle(canvas).getPropertyValue('--edge-color')
+    context.lineWidth = 1
+
+    let drawNode = (node, max_left, max_right, max_top, max_bottom) => {
+        if (node == null) {
+            return
+        }
+
+        context.beginPath()
+        if (node.type === "x") {
+            context.moveTo(node.point.x, max_top)
+            context.lineTo(node.point.x, max_bottom)
+        } else {
+            context.moveTo(max_left, node.point.y)
+            context.lineTo(max_right, node.point.y)
+        }
+        context.stroke()
+
+        if (node.type === "x") {
+            drawNode(node.left, max_left, node.point.x, max_top, max_bottom)
+            drawNode(node.right, node.point.x, max_right, max_top, max_bottom)
+        } else {
+            drawNode(node.right, max_left, max_right, node.point.y, max_bottom)
+            drawNode(node.left, max_left, max_right, max_top, node.point.y)
+
+        }
     }
+
+    drawNode(tree, 10, canvas.width - 10, 10, canvas.height - 10)
 }
 
 function onCanvasClick(e) {
@@ -67,11 +108,11 @@ function onCanvasClick(e) {
             if (queryRect.left_up == null) {
                 queryRect.left_up = point
                 showMessage(`left-up point of region: (${point.x}, ${point.y})`, `log`)
-                drawGraph(mainCanvas, points, queryRect)
+                drawGraph(mainCanvas, points, queryRect, tree)
             } else if (queryRect.right_bottom == null){
                 queryRect.right_bottom = point
                 showMessage(`right-bottom point of region: (${point.x}, ${point.y})`, `log`)
-                drawGraph(mainCanvas, points, queryRect)
+                drawGraph(mainCanvas, points, queryRect, tree)
                 document.getElementById('proceed-button').classList.add('active-button')
             }
             break
@@ -87,7 +128,8 @@ function proceed() {
     }
     switch (stage) {
         case 0:
-            //todo: build binary tree for algorithm
+            tree = createTree(points, null)
+            drawGraph(mainCanvas, points, queryRect, tree)
 
             stage++
             proceedBtn.classList.remove('active-button')
