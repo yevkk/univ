@@ -30,3 +30,25 @@ function createTree(points, prevType) {
 
     return node
 }
+
+function search(tree, queryRect, res) {
+    if (tree ==  null) {
+        return
+    }
+
+    if (queryRect.left_up.x < tree.point.x && tree.point.x < queryRect.right_bottom.x && queryRect.left_up.y < tree.point.y && tree.point.y < queryRect.right_bottom.y) {
+        res.push(tree.point)
+    }
+
+    let m = (tree.type === "x") ? tree.point.x : tree.point.y;
+    let l = (tree.type === "x") ? queryRect.left_up.x : queryRect.left_up.y;
+    let r = (tree.type === "x") ? queryRect.right_bottom.x : queryRect.right_bottom.y;
+
+    if (l < m) {
+        search(tree.left, queryRect, res)
+    }
+
+    if (m < r) {
+        search(tree.right, queryRect, res)
+    }
+}

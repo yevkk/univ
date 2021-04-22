@@ -137,11 +137,15 @@ function proceed() {
             showMessage(`select rectangle and run`, `tip`)
             break
         case 1:
-            //todo: get result
-
+            let res = []
+            search(tree, queryRect, res)
+            for (let point of res) {
+                drawPoint(mainCanvas.getContext('2d'), window.getComputedStyle(mainCanvas).getPropertyValue('--highlight-color'), point)
+            }
+            console.log(res)
             stage++
             proceedBtn.classList.remove('active-button')
-            showMessage(`found ${0} points`, `info`)
+            showMessage(`found ${res.length} points`, `info`)
             showMessage(`reset to restart`, `tip`)
             break
         default:
