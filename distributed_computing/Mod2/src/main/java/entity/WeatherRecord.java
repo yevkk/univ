@@ -1,6 +1,7 @@
 package entity;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class WeatherRecord extends Entity {
     public enum Precipitation {
@@ -27,12 +28,12 @@ public class WeatherRecord extends Entity {
         }
     }
 
-    private Calendar date;
+    private LocalDate date;
     private int temperature;
     private Precipitation precipitation;
     private int regionID;
 
-    public WeatherRecord(int id, Calendar date, int temperature, Precipitation precipitation, int regionID) {
+    public WeatherRecord(int id, LocalDate date, int temperature, Precipitation precipitation, int regionID) {
         super(id);
         this.date = date;
         this.temperature = temperature;
@@ -40,7 +41,7 @@ public class WeatherRecord extends Entity {
         this.regionID = regionID;
     }
 
-    public WeatherRecord(int id, Calendar date, int temperature, String precipitationString, int regionID) {
+    public WeatherRecord(int id, LocalDate date, int temperature, String precipitationString, int regionID) {
         super(id);
         this.date = date;
         this.temperature = temperature;
@@ -48,7 +49,7 @@ public class WeatherRecord extends Entity {
         this.regionID = regionID;
     }
 
-    public Calendar getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -64,7 +65,7 @@ public class WeatherRecord extends Entity {
         return regionID;
     }
 
-    public void setDate(Calendar date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
