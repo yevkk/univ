@@ -3,11 +3,11 @@ package socket;
 import dao.NationDAO;
 import dao.RegionDAO;
 import dao.WeatherRecordDAO;
+import entity.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -27,7 +27,7 @@ public class ServerSocketTask8 {
     }
 
     private static class ClientHandler implements Runnable {
-        private Socket socket;
+        private final Socket socket;
 
         ClientHandler(Socket socket) {
             this.socket = socket;
@@ -39,44 +39,109 @@ public class ServerSocketTask8 {
                 String mode = (String) in.readObject();
                 String action = (String) in.readObject();
                 switch (mode) {
-                    case "nations":
-                        nationsHelper(in, out, action);
-                        break;
-                    case "regions":
-                        regionsHelper(in, out, action);
-                        break;
-                    case "weather":
-                        weatherHelper(in, out, action);
-                        break;
-                    default:
-                        out.writeObject(Boolean.FALSE);
+                    case "nations" -> nationsHelper(in, out, action);
+                    case "regions" -> regionsHelper(in, out, action);
+                    case "weather" -> weatherHelper(in, out, action);
+                    default -> out.writeObject(null);
                 }
+                out.flush();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
-        private void nationsHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException {
+        private void nationsHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException, ClassNotFoundException {
             var dao = new NationDAO();
             switch (action) {
-                default:
-                    out.writeObject(Boolean.FALSE);
+                case "findAll" -> {
+                    out.writeObject(dao.findAll());
+                }
+                case "find" -> {
+                    var id = in.readInt();
+                    out.writeObject(dao.find(id));
+                }
+                case "create" -> {
+                    var nation = (Nation) in.readObject();
+                    out.writeObject(dao.create(nation));
+                }
+                case "update" -> {
+                    var nation = (Nation) in.readObject();
+                    out.writeObject(dao.update(nation));
+                }
+                case "delete" -> {
+                    var id = in.readInt();
+                    out.writeObject(dao.delete(id));
+                }
+                default -> out.writeObject(null);
             }
         }
 
-        private void regionsHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException {
+        private void regionsHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException, ClassNotFoundException {
             var dao = new RegionDAO();
             switch (action) {
-                default:
-                    out.writeObject(Boolean.FALSE);
+                case "findAll" -> {
+                    out.writeObject(dao.findAll());
+                }
+                case "find" -> {
+                    var id = in.readInt();
+                    out.writeObject(dao.find(id));
+                }
+                case "create" -> {
+                    var region = (Region) in.readObject();
+                    out.writeObject(dao.create(region));
+                }
+                case "update" -> {
+                    var region = (Region) in.readObject();
+                    out.writeObject(dao.update(region));
+                }
+                case "delete" -> {
+                    var id = in.readInt();
+                    out.writeObject(dao.delete(id));
+                }
+                default -> out.writeObject(null);
             }
         }
 
-        private void weatherHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException {
+        private void weatherHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException, ClassNotFoundException {
             var dao = new WeatherRecordDAO();
             switch (action) {
-                default:
-                    out.writeObject(Boolean.FALSE);
+                case "findAll" -> {
+                    out.writeObject(dao.findAll());
+                }
+                case "find" -> {
+                    var id = in.readInt();
+                    out.writeObject(dao.find(id));
+                }
+                case "create" -> {
+                    var weatherRecord = (WeatherRecord) in.readObject();
+                    out.writeObject(dao.create(weatherRecord));
+                }
+                case "update" -> {
+                    var weatherRecord = (WeatherRecord) in.readObject();
+                    out.writeObject(dao.update(weatherRecord));
+                }
+                case "delete" -> {
+                    var id = in.readInt();
+                    out.writeObject(dao.delete(id));
+                }
+                case "findByRegionID" -> {
+                    var id = in.readInt();
+                    out.writeObject(dao.findByRegion(id));
+                }
+                case "findDatesByRegionWithConditions" -> {
+                    var id = in.readInt();
+                    var temperature = in.readInt();
+                    out.writeObject(dao.findDatesByRegionWithConditions(id, temperature));
+                }
+                case "findByNationLanguageForLastWeek" -> {
+                    var language = (String) in.readObject();
+                    out.writeObject(dao.findByNationLanguageForLastWeek(language));
+                }
+                case "findAvgTempInRegionsWithConditionsForLastWeek" -> {
+                    var square = in.readDouble();
+                    out.writeObject(dao.findAverageTemperatureInRegionsWithConditionsForLastWeek(square));
+                }
+                default -> out.writeObject(null);
             }
         }
     }

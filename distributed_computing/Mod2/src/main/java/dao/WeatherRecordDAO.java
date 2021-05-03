@@ -165,8 +165,6 @@ public class WeatherRecordDAO implements BaseDAO<WeatherRecord> {
         return null;
     }
 
-
-
     /**
      * Invokes {@link #findDatesByRegionWithConditions(int regionID, int temperature)}
      */
