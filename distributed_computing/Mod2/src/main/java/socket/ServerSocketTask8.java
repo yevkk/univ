@@ -5,9 +5,7 @@ import dao.RegionDAO;
 import dao.WeatherRecordDAO;
 import entity.*;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -35,18 +33,19 @@ public class ServerSocketTask8 {
 
         @Override
         public void run() {
-            try (var in = new ObjectInputStream(socket.getInputStream()); var out = new ObjectOutputStream(socket.getOutputStream())) {
-                String mode = (String) in.readObject();
-                String action = (String) in.readObject();
-                switch (mode) {
-                    case "nations" -> nationsHelper(in, out, action);
-                    case "regions" -> regionsHelper(in, out, action);
-                    case "weather" -> weatherHelper(in, out, action);
-                    default -> out.writeObject(null);
+            try (var in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream())); var out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()))) {
+                while(!socket.isClosed()) {
+                    String mode = (String) in.readObject();
+                    String action = (String) in.readObject();
+                    switch (mode) {
+                        case "nations" -> nationsHelper(in, out, action);
+                        case "regions" -> regionsHelper(in, out, action);
+                        case "weather" -> weatherHelper(in, out, action);
+                        default -> out.writeObject(null);
+                    }
                 }
-                out.flush();
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.print("");
             }
         }
 
@@ -62,18 +61,19 @@ public class ServerSocketTask8 {
                 }
                 case "create" -> {
                     var nation = (Nation) in.readObject();
-                    out.writeObject(dao.create(nation));
+                    out.writeBoolean(dao.create(nation));
                 }
                 case "update" -> {
                     var nation = (Nation) in.readObject();
-                    out.writeObject(dao.update(nation));
+                    out.writeBoolean(dao.update(nation));
                 }
                 case "delete" -> {
                     var id = in.readInt();
-                    out.writeObject(dao.delete(id));
+                    out.writeBoolean(dao.delete(id));
                 }
                 default -> out.writeObject(null);
             }
+            out.flush();
         }
 
         private void regionsHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException, ClassNotFoundException {
@@ -88,18 +88,19 @@ public class ServerSocketTask8 {
                 }
                 case "create" -> {
                     var region = (Region) in.readObject();
-                    out.writeObject(dao.create(region));
+                    out.writeBoolean(dao.create(region));
                 }
                 case "update" -> {
                     var region = (Region) in.readObject();
-                    out.writeObject(dao.update(region));
+                    out.writeBoolean(dao.update(region));
                 }
                 case "delete" -> {
                     var id = in.readInt();
-                    out.writeObject(dao.delete(id));
+                    out.writeBoolean(dao.delete(id));
                 }
                 default -> out.writeObject(null);
             }
+            out.flush();
         }
 
         private void weatherHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException, ClassNotFoundException {
@@ -114,15 +115,15 @@ public class ServerSocketTask8 {
                 }
                 case "create" -> {
                     var weatherRecord = (WeatherRecord) in.readObject();
-                    out.writeObject(dao.create(weatherRecord));
+                    out.writeBoolean(dao.create(weatherRecord));
                 }
                 case "update" -> {
                     var weatherRecord = (WeatherRecord) in.readObject();
-                    out.writeObject(dao.update(weatherRecord));
+                    out.writeBoolean(dao.update(weatherRecord));
                 }
                 case "delete" -> {
                     var id = in.readInt();
-                    out.writeObject(dao.delete(id));
+                    out.writeBoolean(dao.delete(id));
                 }
                 case "findByRegionID" -> {
                     var id = in.readInt();
@@ -143,6 +144,7 @@ public class ServerSocketTask8 {
                 }
                 default -> out.writeObject(null);
             }
+            out.flush();
         }
     }
 }
