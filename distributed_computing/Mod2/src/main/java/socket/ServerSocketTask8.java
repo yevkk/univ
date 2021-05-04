@@ -73,7 +73,6 @@ public class ServerSocketTask8 {
                 }
                 default -> out.writeObject(null);
             }
-            out.flush();
         }
 
         private void regionsHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException, ClassNotFoundException {
@@ -100,7 +99,6 @@ public class ServerSocketTask8 {
                 }
                 default -> out.writeObject(null);
             }
-            out.flush();
         }
 
         private void weatherHelper (ObjectInputStream in, ObjectOutputStream out, String action) throws IOException, ClassNotFoundException {
@@ -144,7 +142,6 @@ public class ServerSocketTask8 {
                 }
                 default -> out.writeObject(null);
             }
-            out.flush();
         }
     }
 }

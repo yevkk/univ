@@ -38,7 +38,6 @@ public class ClientSocketTask8 implements AutoCloseable {
     public List<Nation> findAllNations() throws IOException, ClassNotFoundException {
         out.writeObject("nations");
         out.writeObject("findAll");
-        out.flush();
         return (ArrayList<Nation>) in.readObject();
     }
 
@@ -46,7 +45,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("nations");
         out.writeObject("find");
         out.writeInt(id);
-        out.flush();
         return (Nation) in.readObject();
     }
 
@@ -54,7 +52,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("nations");
         out.writeObject("create");
         out.writeObject(nation);
-        out.flush();
         return in.readBoolean();
     }
 
@@ -62,7 +59,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("nations");
         out.writeObject("update");
         out.writeObject(nation);
-        out.flush();
         return in.readBoolean();
     }
 
@@ -70,14 +66,12 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("nations");
         out.writeObject("delete");
         out.writeInt(id);
-        out.flush();
         return in.readBoolean();
     }
 
     public List<Region> findAllRegions() throws IOException, ClassNotFoundException {
         out.writeObject("regions");
         out.writeObject("findAll");
-        out.flush();
         return (ArrayList<Region>) in.readObject();
     }
 
@@ -85,7 +79,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("regions");
         out.writeObject("find");
         out.writeInt(id);
-        out.flush();
         return (Region) in.readObject();
     }
 
@@ -93,7 +86,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("regions");
         out.writeObject("create");
         out.writeObject(region);
-        out.flush();
         return in.readBoolean();
     }
 
@@ -101,7 +93,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("regions");
         out.writeObject("update");
         out.writeObject(region);
-        out.flush();
         return in.readBoolean();
     }
 
@@ -109,14 +100,12 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("regions");
         out.writeObject("delete");
         out.writeInt(id);
-        out.flush();
         return in.readBoolean();
     }
 
     public List<WeatherRecord> findAllWeatherRecords() throws IOException, ClassNotFoundException {
         out.writeObject("weather");
         out.writeObject("findAll");
-        out.flush();
         return (ArrayList<WeatherRecord>) in.readObject();
     }
 
@@ -124,7 +113,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("weather");
         out.writeObject("find");
         out.writeInt(id);
-        out.flush();
         return (WeatherRecord) in.readObject();
     }
 
@@ -132,7 +120,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("weather");
         out.writeObject("create");
         out.writeObject(weatherRecord);
-        out.flush();
         return in.readBoolean();
     }
 
@@ -140,7 +127,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("weather");
         out.writeObject("update");
         out.writeObject(weatherRecord);
-        out.flush();
         return in.readBoolean();
     }
 
@@ -148,7 +134,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("weather");
         out.writeObject("delete");
         out.writeInt(id);
-        out.flush();
         return in.readBoolean();
     }
 
@@ -156,7 +141,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("weather");
         out.writeObject("findByRegionID");
         out.writeInt(regionID);
-        out.flush();
         return (ArrayList<WeatherRecord>) in.readObject();
     }
 
@@ -164,7 +148,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("weather");
         out.writeObject("findByNationLanguageForLastWeek");
         out.writeObject(language);
-        out.flush();
         return (ArrayList<WeatherRecord>) in.readObject();
     }
 
@@ -173,7 +156,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("findDatesByRegionWithConditions");
         out.writeInt(regionID);
         out.writeInt(temperature);
-        out.flush();
         return (ArrayList<LocalDate>) in.readObject();
     }
 
@@ -181,7 +163,6 @@ public class ClientSocketTask8 implements AutoCloseable {
         out.writeObject("weather");
         out.writeObject("findAvgTempInRegionsWithConditionsForLastWeek");
         out.writeDouble(square);
-        out.flush();
         return in.readDouble();
     }
 }
