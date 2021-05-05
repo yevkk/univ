@@ -69,7 +69,7 @@ body {
 
 .button {
     width: 150px;
-    margin: 10px 0;
+    margin: 10px 10px;
     border-radius: 5px;
     box-shadow: #8395a0 1px 1px 4px;
     color: gray;
@@ -91,4 +91,9 @@ body {
     background-color: #0075ff;
     color: #ffffff;
     cursor: pointer;
+}
+
+.horizontal-button-holder {
+    display: flex;
+    align-content: space-between;
 }
