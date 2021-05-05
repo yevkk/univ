@@ -44,3 +44,33 @@ QuickHull.step = function (points, res, leftSep, rightSep, mode) {
             break
     }
 }
+
+function JarvisConvexHull(points) {
+    if (points.length === 0) {
+        return []
+    } else if (points.length === 1) {
+        return [...points]
+    }
+
+    let rightMost = points.reduce((current, point) => {
+        return (current.x < point.x) ? point : current
+    }, points[0])
+    let res = [rightMost]
+
+    for (let i = 0; ; i++) {
+        let next = points.reduce((current, point, index) => {
+            if (point === res[i]) {
+                return current
+            } else {
+                return ((current.x - res[i].x) * (point.y - res[i].y) - (point.x - res[i].x) * (current.y - res[i].y)) > 0 ? point : current
+            }
+        }, points[0])
+        if (next === rightMost) {
+            break
+        } else {
+            res.push(next)
+        }
+    }
+
+    return res
+}
