@@ -1,6 +1,6 @@
 'use strict'
 
-const POINT_RADIUS = 3
+const POINT_RADIUS = 5
 
 let done = false;
 let mainCanvas
@@ -98,7 +98,6 @@ function reset() {
     done = false;
     drawGraph(mainCanvas, points)
     let proceedBtn = document.getElementById('proceed-button')
-    proceedBtn.innerText = 'Run'
     if (!proceedBtn.classList.contains('active-button')) {
         proceedBtn.classList.add('active-button')
     }
@@ -113,11 +112,28 @@ function showMessage(msg, className) {
     console.scroll(0, console.scrollHeight)
 }
 
+function onMouseMove(e) {
+    let x = e.pageX - mainCanvas.offsetLeft
+    let y = e.pageY - mainCanvas.offsetTop
+    let point = points.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)
+
+    let hintBox = document.getElementById('hint-box')
+    if (point) {
+        hintBox.innerText = `x: ${mainCanvas.offsetLeft + point.x}, y: ${mainCanvas.offsetTop + point.y}; i: ${points.indexOf(point)}`
+        hintBox.style.top = `${e.pageY + 15}px`;
+        hintBox.style.left = `${e.pageX + 15}px`;
+        hintBox.style.display = 'block'
+    } else {
+        hintBox.style.display = 'none'
+    }
+}
+
 addEventListener('load', () => {
     mainCanvas = document.getElementById('main-canvas')
     mainCanvas.width = mainCanvas.parentElement.clientWidth * 0.7
     mainCanvas.height = 500
     mainCanvas.addEventListener('click', onCanvasClick)
+    mainCanvas.addEventListener('mousemove', onMouseMove)
 
     document.getElementById('proceed-button').addEventListener('click', proceed)
     document.getElementById('reset-button').addEventListener('click', () => {

@@ -97,3 +97,17 @@ body {
     display: flex;
     align-content: space-between;
 }
+
+#hint-box {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    padding: 2px;
+    min-width: 50px;
+    min-height: 1em;
+    background: white;
+    border: 1px solid #0075ff;
+    font-size: 0.75em;
+    z-index: 5;
+    display: none;
+}
