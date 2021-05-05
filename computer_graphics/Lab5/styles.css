@@ -3,6 +3,7 @@ body {
 }
 
 #root {
+    padding-top: 15px;
     min-height: 98vh;
     max-width: 1000px;
     align-items: flex-start;
@@ -17,8 +18,7 @@ body {
     --highlight-color: #d8364b;
     --section-color: #ffed7c;
     --grid-color: #d8dbdb;
-    border: 1px solid #637395;
-    border-radius: 5px;
+    box-shadow: #8395a0 1px 1px 4px;
 }
 
 #sidebar{
@@ -26,7 +26,7 @@ body {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    margin-left: 5px;
+    margin-left: 15px;
     flex: 1;
 }
 
@@ -35,13 +35,15 @@ body {
     max-height: 350px;
     min-height: 350px;
     padding: 4px 10px;
+    margin-bottom: 15px;
     box-sizing: border-box;
-    border: 1px solid #637395;
+    box-shadow: #8395a0 1px 1px 4px;
     border-radius: 5px;
     overflow-y: scroll;
-    font-family: monospace;
+    font-family: "JetBrains Mono ExtraLight", monospace;
+    font-size: 0.75em;
     font-weight: bold;
-    line-height: 1em;
+    line-height: 1.1em;
 }
 
 #console p {
@@ -68,12 +70,12 @@ body {
 .button {
     width: 150px;
     margin: 10px 0;
-    border: 2px solid #637395;
     border-radius: 5px;
+    box-shadow: #8395a0 1px 1px 4px;
     color: gray;
     font-size: 1.1em;
     font-weight: bold;
-    line-height: 2em;
+    line-height: 2.5em;
     text-align: center;
     user-select: none;
 }

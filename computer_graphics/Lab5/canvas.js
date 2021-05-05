@@ -1,6 +1,6 @@
 'use strict'
 
-const POINT_RADIUS = 5
+const POINT_RADIUS = 3
 
 let done = false;
 let mainCanvas
