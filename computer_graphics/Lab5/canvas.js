@@ -2,9 +2,9 @@
 
 const POINT_RADIUS = 5
 
-// 0 - setting points; 1 - animating result; 3 - needs restart
+// 0 - setting points; 1 - needs restart
 let stage = 0
-let proceedBtnText = ['Preprocessing', 'Run']
+let proceedBtnText = ['Run']
 let mainCanvas
 
 
@@ -79,16 +79,10 @@ function proceed() {
             for (let point of res) {
                 drawPoint(mainCanvas.getContext('2d'), window.getComputedStyle(mainCanvas).getPropertyValue('--highlight-color'), point)
             }
-            
-            stage++
-            proceedBtn.classList.remove('active-button')
-            proceedBtn.innerText = proceedBtnText[stage]
-            showMessage(`select rectangle and run`, `tip`)
-            break
-        case 1:
 
             stage++
             proceedBtn.classList.remove('active-button')
+            proceedBtn.innerText = proceedBtnText[stage]
             showMessage(`reset to restart`, `tip`)
             break
         default:
