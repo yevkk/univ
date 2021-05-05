@@ -2,11 +2,8 @@
 
 const POINT_RADIUS = 5
 
-// 0 - setting points; 1 - needs restart
-let stage = 0
-let proceedBtnText = ['Run']
+let done = false;
 let mainCanvas
-
 
 function drawPoint(context, color, point) {
     context.fillStyle = color
@@ -44,26 +41,42 @@ function drawGraph(canvas, points) {
     }
 }
 
+function drawResult(canvas, points) {
+    if (points.length === 0) {
+        return
+    }
+
+    let context = canvas.getContext('2d')
+    context.strokeStyle = window.getComputedStyle(canvas).getPropertyValue('--edge-color')
+    context.lineWidth = 1
+
+    context.beginPath()
+    context.moveTo(points[0].x, points[0].y)
+    points.forEach(point => context.lineTo(point.x, point.y))
+    context.lineTo(points[0].x, points[0].y)
+    context.stroke()
+
+    points.forEach(point => drawPoint(context, window.getComputedStyle(mainCanvas).getPropertyValue('--highlight-color'), point))
+}
+
 function onCanvasClick(e) {
+    if (done) {
+        return
+    }
+
     let x = e.pageX - mainCanvas.offsetLeft
     let y = e.pageY - mainCanvas.offsetTop
     let point = points.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)
-    switch (stage) {
-        case 0:
-            if (point) {
-                showMessage(`point already exists`, `warning`)
-            } else {
-                point = new Point(x, y)
-                points.push(point)
-                showMessage(`added point (${point.x}, ${point.y})`, `log`)
-            }
-            drawGraph(mainCanvas, points)
-            break
-        case 1:
-            break
-        default:
-            break
+
+    if (point) {
+        showMessage(`point already exists`, `warning`)
+    } else {
+        point = new Point(x, y)
+        points.push(point)
+        showMessage(`added point (${point.x}, ${point.y})`, `log`)
     }
+    drawGraph(mainCanvas, points)
+
 }
 
 function proceed() {
@@ -71,32 +84,21 @@ function proceed() {
     if (!proceedBtn.classList.contains('active-button')) {
         return
     }
-    switch (stage) {
-        case 0:
-            drawGraph(mainCanvas, points)
 
-            let res = QuickHull(points)
-            for (let point of res) {
-                drawPoint(mainCanvas.getContext('2d'), window.getComputedStyle(mainCanvas).getPropertyValue('--highlight-color'), point)
-            }
+    done = true
+    drawGraph(mainCanvas, points)
+    drawResult(mainCanvas, QuickHull(points))
 
-            stage++
-            proceedBtn.classList.remove('active-button')
-            proceedBtn.innerText = proceedBtnText[stage]
-            showMessage(`reset to restart`, `tip`)
-            break
-        default:
-            break
-    }
-
+    proceedBtn.classList.remove('active-button')
+    showMessage(`reset to restart`, `tip`)
 }
 
 function reset() {
     points = []
-    stage = 0
+    done = false;
     drawGraph(mainCanvas, points)
     let proceedBtn = document.getElementById('proceed-button')
-    proceedBtn.innerText = proceedBtnText[stage]
+    proceedBtn.innerText = 'Run'
     if (!proceedBtn.classList.contains('active-button')) {
         proceedBtn.classList.add('active-button')
     }
