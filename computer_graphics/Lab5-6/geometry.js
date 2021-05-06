@@ -50,7 +50,7 @@ function JarvisConvexHull(points) {
         return [...points]
     }
 
-    let orientation= (p1, q, r) => ((q.y - p1.y) * (r.x - q.x) - (q.x - p1.x) * (r.y - q.y))
+    let orientation = (p, q, r) => ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y))
 
     let hull = []
     let leftMostI = points.reduce((current, point, index) => {
@@ -70,4 +70,85 @@ function JarvisConvexHull(points) {
         }
     }
 
+    return hull.map(i => points[i])
 }
+
+function divideAndConquerConvexHull(points) {
+    if (points.length <= divideAndConquerConvexHull.minPoints) {
+        return JarvisConvexHull(points)
+    }
+
+    let P1 = [], P2 = [];
+    points.forEach((item, index) => {
+        if (index < points.length / 2) {
+            P1.push(item)
+        } else {
+            P2.push(item)
+        }
+    })
+
+    let hull1 = divideAndConquerConvexHull(P1)
+    let hull2 = divideAndConquerConvexHull(P2)
+
+    return divideAndConquerConvexHull.merge(hull1, hull2)
+}
+
+divideAndConquerConvexHull.minPoints = 5
+
+divideAndConquerConvexHull.merge = function (hull1, hull2) {
+    //calculating p
+    let p1 = hull1[0]
+    let p2 = hull1[Math.floor(hull1.length / 3)]
+    let p3 = hull1[Math.floor(2 * hull1.length / 3)]
+    let p = new Point((p1.x + p2.x + p3.x) / 3, (p1.y + p2.y + p3.y) / 3)
+    drawPoint(mainCanvas.getContext('2d'), 'green', p)
+
+    //checking if p is inside hull2
+    let pInsideHull2 = false
+    for (let i = 0; i < hull2.length + 1; i++) {
+        let point1 = hull2[i % hull2.length]
+        let point2 = hull2[(i + 1) % hull2.length]
+        if ((point1.y - p.y) * (point2 - p.y) < 0 && p.relativeX(point1, point2) > 0) {
+            pInsideHull2 = !pInsideHull2
+        }
+    }
+
+
+    let orientation = (p, q, r) => ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y))
+    let points = [...hull1]
+    if (pInsideHull2) {
+        points.concat(hull2)
+    } else {
+        let tangentPoints = []
+        let n2 = hull2.length
+        hull2.forEach((point, index) => {
+            if (hull2[(index + 1) % n2].relativeY(point, p) * hull2[(n2 + index - 1) % n2].relativeY(point, p) > 0) {
+                tangentPoints.push(point)
+            }
+        })
+        let [upper, lower] = (tangentPoints[0].y > tangentPoints[1].y) ? tangentPoints : tangentPoints.reverse()
+
+        if (p.relativeX(upper, lower) > 0) {
+            for (let i = hull2.indexOf(lower); ; i = (i + 1) % n2) {
+                points.push(hull2[i])
+                if (hull2[i] === upper) {
+                    break
+                }
+            }
+        } else {
+            for (let i = hull2.indexOf(upper); ; i = (i + 1) % n2) {
+                points.push(hull2[i])
+                if (hull2[i] === lower) {
+                    break
+                }
+            }
+        }
+    }
+    points.sort((point1, point2) => orientation(point1, p, point2))
+
+
+
+    return points
+}
+
+

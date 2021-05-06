@@ -1,6 +1,6 @@
 'use strict'
 
-const POINT_RADIUS = 5
+const POINT_RADIUS = 4
 
 let done = false;
 let mainCanvas
@@ -119,7 +119,7 @@ function onMouseMove(e) {
 
     let hintBox = document.getElementById('hint-box')
     if (point) {
-        hintBox.innerText = `x: ${mainCanvas.offsetLeft + point.x}, y: ${mainCanvas.offsetTop + point.y}; i: ${points.indexOf(point)}`
+        hintBox.innerText = `x: ${point.x}, y: ${point.y}; i: ${points.indexOf(point)}`
         hintBox.style.top = `${e.pageY + 15}px`;
         hintBox.style.left = `${e.pageX + 15}px`;
         hintBox.style.display = 'block'
