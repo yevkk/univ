@@ -148,11 +148,11 @@ divideAndConquerConvexHull.merge = function (hull1, hull2) {
         }
 
     }
-    points.sort((point1, point2) => orientation(point1, p, point2))
 
     let init = points.reduce((current, point, index) => {
         return (points[current].y < point.y) ? index : current
     }, 0)
+    points.sort((point1, point2) => orientation(point1, p, point2))
     let n = points.length
     let i = (init + 1) % n
     let counter = 0;
