@@ -101,7 +101,6 @@ divideAndConquerConvexHull.merge = function (hull1, hull2) {
     let p2 = hull1[Math.floor(hull1.length / 3)]
     let p3 = hull1[Math.floor(2 * hull1.length / 3)]
     let p = new Point((p1.x + p2.x + p3.x) / 3, (p1.y + p2.y + p3.y) / 3)
-    drawPoint(mainCanvas.getContext('2d'), 'green', p)
 
     //checking if p is inside hull2
     let pInsideHull2 = false
@@ -126,27 +125,47 @@ divideAndConquerConvexHull.merge = function (hull1, hull2) {
                 tangentPoints.push(point)
             }
         })
-        let [upper, lower] = (tangentPoints[0].y > tangentPoints[1].y) ? tangentPoints : tangentPoints.reverse()
+        if (tangentPoints.length === 2) {
+            let [upper, lower] = (tangentPoints[0].y > tangentPoints[1].y) ? tangentPoints : tangentPoints.reverse()
 
-        if (p.relativeX(upper, lower) > 0) {
-            for (let i = hull2.indexOf(lower); ; i = (i + 1) % n2) {
-                points.push(hull2[i])
-                if (hull2[i] === upper) {
-                    break
+            if (p.relativeX(upper, lower) > 0) {
+                for (let i = hull2.indexOf(lower); ; i = (i + 1) % n2) {
+                    points.push(hull2[i])
+                    if (hull2[i] === upper) {
+                        break
+                    }
+                }
+            } else {
+                for (let i = hull2.indexOf(upper); ; i = (i + 1) % n2) {
+                    points.push(hull2[i])
+                    if (hull2[i] === lower) {
+                        break
+                    }
                 }
             }
         } else {
-            for (let i = hull2.indexOf(upper); ; i = (i + 1) % n2) {
-                points.push(hull2[i])
-                if (hull2[i] === lower) {
-                    break
-                }
-            }
+            points.concat(hull2)
         }
+
     }
     points.sort((point1, point2) => orientation(point1, p, point2))
 
-
+    let init = points.reduce((current, point, index) => {
+        return (points[current].y < point.y) ? index : current
+    }, 0)
+    let n = points.length
+    let i = (init + 1) % n
+    let counter = 0;
+    while (counter <= n) {
+        if (orientation(points[(n + i - 1) % n], points[i], points[(i + 1) % n]) > 0) {
+            i = (i + 1) % n
+        } else {
+            points.splice(i, 1)
+            n = points.length
+            i = (n + i - 1) % n
+        }
+        counter++
+    }
 
     return points
 }

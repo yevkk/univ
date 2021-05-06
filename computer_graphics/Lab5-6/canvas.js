@@ -4,6 +4,8 @@ const POINT_RADIUS = 4
 
 let done = false;
 let mainCanvas
+let proceedBtn1
+let proceedBtn2
 
 function drawPoint(context, color, point) {
     context.fillStyle = color
@@ -79,9 +81,8 @@ function onCanvasClick(e) {
 
 }
 
-function proceed() {
-    let proceedBtn = document.getElementById('proceed-button')
-    if (!proceedBtn.classList.contains('active-button')) {
+function proceed1() {
+    if (!proceedBtn1.classList.contains('active-button')) {
         return
     }
 
@@ -89,7 +90,22 @@ function proceed() {
     drawGraph(mainCanvas, points)
     drawResult(mainCanvas, QuickHull(points))
 
-    proceedBtn.classList.remove('active-button')
+    proceedBtn1.classList.remove('active-button')
+    proceedBtn2.classList.remove('active-button')
+    showMessage(`reset to restart`, `tip`)
+}
+
+function proceed2() {
+    if (!proceedBtn2.classList.contains('active-button')) {
+        return
+    }
+
+    done = true
+    drawGraph(mainCanvas, points)
+    drawResult(mainCanvas, divideAndConquerConvexHull(points))
+
+    proceedBtn1.classList.remove('active-button')
+    proceedBtn2.classList.remove('active-button')
     showMessage(`reset to restart`, `tip`)
 }
 
@@ -97,9 +113,12 @@ function reset() {
     points = []
     done = false;
     drawGraph(mainCanvas, points)
-    let proceedBtn = document.getElementById('proceed-button')
-    if (!proceedBtn.classList.contains('active-button')) {
-        proceedBtn.classList.add('active-button')
+    if (!proceedBtn1.classList.contains('active-button')) {
+        proceedBtn1.classList.add('active-button')
+    }
+
+    if (!proceedBtn2.classList.contains('active-button')) {
+        proceedBtn2.classList.add('active-button')
     }
 }
 
@@ -135,7 +154,12 @@ addEventListener('load', () => {
     mainCanvas.addEventListener('click', onCanvasClick)
     mainCanvas.addEventListener('mousemove', onMouseMove)
 
-    document.getElementById('proceed-button').addEventListener('click', proceed)
+    proceedBtn1 = document.getElementById('proceed-button')
+    proceedBtn1.addEventListener('click', proceed1)
+
+    proceedBtn2 = document.getElementById('proceed-button-2')
+    proceedBtn2.addEventListener('click', proceed2)
+
     document.getElementById('reset-button').addEventListener('click', () => {
         showMessage('Canvas cleared', 'info')
         reset()
