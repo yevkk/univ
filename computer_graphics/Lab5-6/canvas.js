@@ -81,6 +81,7 @@ function onCanvasClick(e) {
 
 }
 
+
 function proceed1() {
     if (!proceedBtn1.classList.contains('active-button')) {
         return
@@ -89,6 +90,7 @@ function proceed1() {
     done = true
     drawGraph(mainCanvas, points)
     drawResult(mainCanvas, QuickHull(points))
+
 
     proceedBtn1.classList.remove('active-button')
     proceedBtn2.classList.remove('active-button')
@@ -106,6 +108,7 @@ function proceed2() {
 
     proceedBtn1.classList.remove('active-button')
     proceedBtn2.classList.remove('active-button')
+
     showMessage(`reset to restart`, `tip`)
 }
 
@@ -113,6 +116,7 @@ function reset() {
     points = []
     done = false;
     drawGraph(mainCanvas, points)
+
     if (!proceedBtn1.classList.contains('active-button')) {
         proceedBtn1.classList.add('active-button')
     }
@@ -130,6 +134,7 @@ function showMessage(msg, className) {
     console.appendChild(newMessage)
     console.scroll(0, console.scrollHeight)
 }
+
 
 function onMouseMove(e) {
     let x = e.pageX - mainCanvas.offsetLeft
@@ -152,6 +157,7 @@ addEventListener('load', () => {
     mainCanvas.width = mainCanvas.parentElement.clientWidth * 0.7
     mainCanvas.height = 500
     mainCanvas.addEventListener('click', onCanvasClick)
+  
     mainCanvas.addEventListener('mousemove', onMouseMove)
 
     proceedBtn1 = document.getElementById('proceed-button')

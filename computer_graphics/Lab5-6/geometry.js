@@ -43,6 +43,7 @@ QuickHull.step = function (points, res, leftSep, rightSep, mode) {
             QuickHull.step(points.filter(point => point.relativeY(newPoint, rightSep) > 0), res, newPoint, rightSep, mode)
             break
     }
+
 }
 
 function JarvisConvexHull(points) {
@@ -189,4 +190,3 @@ function polarSort(points, center) {
 
     return [...quadIV.map(item => item.point), ...quadIII.map(item => item.point), ...quadII.map(item => item.point), ...quadI.map(item => item.point)]
 }
-
