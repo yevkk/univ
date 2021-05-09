@@ -104,10 +104,10 @@ divideAndConquerConvexHull.merge = function (hull1, hull2) {
 
     //checking if p is inside hull2
     let pInsideHull2 = false
-    for (let i = 0; i < hull2.length + 1; i++) {
+    for (let i = 0; i < hull2.length; i++) {
         let point1 = hull2[i % hull2.length]
         let point2 = hull2[(i + 1) % hull2.length]
-        if ((point1.y - p.y) * (point2 - p.y) < 0 && p.relativeX(point1, point2) > 0) {
+        if ((point1.y - p.y) * (point2.y - p.y) < 0 && p.relativeX(point1, point2) > 0) {
             pInsideHull2 = !pInsideHull2
         }
     }
@@ -116,7 +116,7 @@ divideAndConquerConvexHull.merge = function (hull1, hull2) {
     let orientation = (p, q, r) => ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y))
     let points = [...hull1]
     if (pInsideHull2) {
-        points.concat(hull2)
+        points.push(...hull2)
     } else {
         let tangentPoints = []
         let n2 = hull2.length
@@ -144,30 +144,49 @@ divideAndConquerConvexHull.merge = function (hull1, hull2) {
                 }
             }
         } else {
-            points.concat(hull2)
+            points.push(hull2)
         }
 
     }
 
     let init = points.reduce((current, point, index) => {
-        return (points[current].y < point.y) ? index : current
-    }, 0)
-    points.sort((point1, point2) => orientation(point1, p, point2))
-    let n = points.length
+            return (points[current].y < point.y) ? index : current
+        }, 0)
+    ;
+    let pointsSorted = polarSort(points, p)
+    let n = pointsSorted.length
     let i = (init + 1) % n
     let counter = 0;
     while (counter <= n) {
-        if (orientation(points[(n + i - 1) % n], points[i], points[(i + 1) % n]) > 0) {
+        if (orientation(pointsSorted[(n + i - 1) % n], pointsSorted[i], pointsSorted[(i + 1) % n]) > 0) {
             i = (i + 1) % n
         } else {
-            points.splice(i, 1)
-            n = points.length
+            pointsSorted.splice(i, 1)
+            n = pointsSorted.length
             i = (n + i - 1) % n
+            counter = 0;
         }
         counter++
     }
 
-    return points
+    return pointsSorted
 }
 
+function polarSort(points, center) {
+    // let orientation = (p, q, r) => ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y))
+    let tg = (point, center) => ((point.y - center.y) / (point.x - center.x))
+    let orientationArray = points.map(point => {
+        return {
+            point: point,
+            tg: tg(point, center)
+        }
+    })
+
+    let quadIV = orientationArray.filter(item => item.point.x > center.x && item.point.y < center.y).sort((item1, item2) => item2.tg - item1.tg)
+    let quadIII = orientationArray.filter(item => item.point.x < center.x && item.point.y < center.y).sort((item1, item2) => item2.tg - item1.tg)
+    let quadII = orientationArray.filter(item => item.point.x < center.x && item.point.y > center.y).sort((item1, item2) => item2.tg - item1.tg)
+    let quadI = orientationArray.filter(item => item.point.x > center.x && item.point.y > center.y).sort((item1, item2) => item2.tg - item1.tg)
+
+    return [...quadIV.map(item => item.point), ...quadIII.map(item => item.point), ...quadII.map(item => item.point), ...quadI.map(item => item.point)]
+}
 
