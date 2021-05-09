@@ -1,9 +1,11 @@
 'use strict'
 
-const POINT_RADIUS = 3
+const POINT_RADIUS = 4
 
 let done = false;
 let mainCanvas
+let proceedBtn1
+let proceedBtn2
 
 function drawPoint(context, color, point) {
     context.fillStyle = color
@@ -79,9 +81,9 @@ function onCanvasClick(e) {
 
 }
 
-function proceed() {
-    let proceedBtn = document.getElementById('proceed-button')
-    if (!proceedBtn.classList.contains('active-button')) {
+
+function proceed1() {
+    if (!proceedBtn1.classList.contains('active-button')) {
         return
     }
 
@@ -89,7 +91,24 @@ function proceed() {
     drawGraph(mainCanvas, points)
     drawResult(mainCanvas, QuickHull(points))
 
-    proceedBtn.classList.remove('active-button')
+
+    proceedBtn1.classList.remove('active-button')
+    proceedBtn2.classList.remove('active-button')
+    showMessage(`reset to restart`, `tip`)
+}
+
+function proceed2() {
+    if (!proceedBtn2.classList.contains('active-button')) {
+        return
+    }
+
+    done = true
+    drawGraph(mainCanvas, points)
+    drawResult(mainCanvas, divideAndConquerConvexHull(points))
+
+    proceedBtn1.classList.remove('active-button')
+    proceedBtn2.classList.remove('active-button')
+
     showMessage(`reset to restart`, `tip`)
 }
 
@@ -97,10 +116,13 @@ function reset() {
     points = []
     done = false;
     drawGraph(mainCanvas, points)
-    let proceedBtn = document.getElementById('proceed-button')
-    proceedBtn.innerText = 'Run'
-    if (!proceedBtn.classList.contains('active-button')) {
-        proceedBtn.classList.add('active-button')
+
+    if (!proceedBtn1.classList.contains('active-button')) {
+        proceedBtn1.classList.add('active-button')
+    }
+
+    if (!proceedBtn2.classList.contains('active-button')) {
+        proceedBtn2.classList.add('active-button')
     }
 }
 
@@ -113,13 +135,37 @@ function showMessage(msg, className) {
     console.scroll(0, console.scrollHeight)
 }
 
+
+function onMouseMove(e) {
+    let x = e.pageX - mainCanvas.offsetLeft
+    let y = e.pageY - mainCanvas.offsetTop
+    let point = points.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)
+
+    let hintBox = document.getElementById('hint-box')
+    if (point) {
+        hintBox.innerText = `x: ${point.x}, y: ${point.y}; i: ${points.indexOf(point)}`
+        hintBox.style.top = `${e.pageY + 15}px`;
+        hintBox.style.left = `${e.pageX + 15}px`;
+        hintBox.style.display = 'block'
+    } else {
+        hintBox.style.display = 'none'
+    }
+}
+
 addEventListener('load', () => {
     mainCanvas = document.getElementById('main-canvas')
     mainCanvas.width = mainCanvas.parentElement.clientWidth * 0.7
     mainCanvas.height = 500
     mainCanvas.addEventListener('click', onCanvasClick)
+  
+    mainCanvas.addEventListener('mousemove', onMouseMove)
 
-    document.getElementById('proceed-button').addEventListener('click', proceed)
+    proceedBtn1 = document.getElementById('proceed-button')
+    proceedBtn1.addEventListener('click', proceed1)
+
+    proceedBtn2 = document.getElementById('proceed-button-2')
+    proceedBtn2.addEventListener('click', proceed2)
+
     document.getElementById('reset-button').addEventListener('click', () => {
         showMessage('Canvas cleared', 'info')
         reset()
