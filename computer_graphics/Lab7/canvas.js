@@ -40,6 +40,24 @@ function drawGraph(canvas, points) {
     }
 }
 
+function drawResult(canvas, points) {
+    if (points.length === 0) {
+        return
+    }
+
+    let context = canvas.getContext('2d')
+    context.strokeStyle = window.getComputedStyle(canvas).getPropertyValue('--edge-color')
+    context.lineWidth = 1
+
+    context.beginPath()
+    context.moveTo(points[0].x, points[0].y)
+    points.forEach(point => context.lineTo(point.x, point.y))
+    context.lineTo(points[0].x, points[0].y)
+    context.stroke()
+
+    points.forEach(point => drawPoint(context, window.getComputedStyle(mainCanvas).getPropertyValue('--highlight-color'), point))
+}
+
 function onCanvasClick(e) {
     let x = e.pageX - mainCanvas.offsetLeft
     let y = e.pageY - mainCanvas.offsetTop
@@ -51,15 +69,18 @@ function onCanvasClick(e) {
         point = new Point(x, y)
         points.push(point)
         showMessage(`added point (${point.x}, ${point.y})`, `log`)
-
-
+        if (addPointCH(convexHull, point)) {
+            showMessage(`added to CH`, `info`)
+        }
     }
     drawGraph(mainCanvas, points)
+    drawResult(mainCanvas, convexHull)
 
 }
 
 function reset() {
     points = []
+    convexHull = []
     drawGraph(mainCanvas, points)
 }
 
