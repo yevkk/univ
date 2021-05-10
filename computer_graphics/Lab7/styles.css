@@ -1,0 +1,113 @@
+body {
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+#root {
+    padding-top: 15px;
+    min-height: 95vh;
+    max-width: 1000px;
+    align-items: flex-start;
+    display: flex;
+    margin: auto;
+}
+
+#main-canvas {
+    --point-color: #603ccf;
+    --edge-color: #2d54b5;
+    --special-point-color: #00c0bc;
+    --highlight-color: #d8364b;
+    --section-color: #ffed7c;
+    --grid-color: #d8dbdb;
+    box-shadow: #8395a0 1px 1px 4px;
+}
+
+#sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 15px;
+    flex: 1;
+}
+
+#console {
+    min-width: 100%;
+    max-height: 350px;
+    min-height: 350px;
+    padding: 4px 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    box-shadow: #8395a0 1px 1px 4px;
+    border-radius: 5px;
+    overflow-y: scroll;
+    font-family: "JetBrains Mono ExtraLight", monospace;
+    font-size: 0.75em;
+    font-weight: bold;
+    line-height: 1.1em;
+}
+
+#console p {
+    padding: 0 0 3px;
+    border-bottom: 1px solid lightgray;
+}
+
+#console .warning {
+    color: #cc3791
+}
+
+#console .info {
+    color: #1d7def;
+}
+
+#console .tip {
+    color: #7e00fd;
+}
+
+#console .log {
+    color: #9ea3b0;
+}
+
+.button {
+    width: 150px;
+    margin: 10px 10px;
+    border-radius: 5px;
+    box-shadow: #8395a0 1px 1px 4px;
+    color: gray;
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height: 2.5em;
+    text-align: center;
+    user-select: none;
+}
+
+.active-button {
+    border-color: #0075ff;
+    color: #0075ff;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.active-button:hover {
+    background-color: #0075ff;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.horizontal-button-holder {
+    display: flex;
+    align-content: space-between;
+}
+
+#hint-box {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    padding: 2px;
+    min-width: 50px;
+    min-height: 1em;
+    background: white;
+    border: 1px solid #0075ff;
+    font-size: 0.75em;
+    z-index: 5;
+    display: none;
+}
