@@ -12,3 +12,7 @@ target_link_libraries(Lab8 PRIVATE ${MPI_LIB})
 add_executable(serial serial.cpp)
 target_link_directories(serial PRIVATE ${MPI_DIR})
 target_link_libraries(serial PRIVATE ${MPI_LIB})
+
+add_executable(fox parallel_fox.cpp)
+target_link_directories(fox PRIVATE ${MPI_DIR})
+target_link_libraries(fox PRIVATE ${MPI_LIB})
