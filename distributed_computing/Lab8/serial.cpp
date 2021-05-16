@@ -3,14 +3,19 @@
 
 #include <iostream>
 
-void calculation(double *A, double *B, double *C, int size) {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            for (int k = 0; k < size; k++) {
-                C[i * size + j] += A[i * size + k] * B[k * size + j];
-            }
-        }
-    }
+void init(double *&aMatrix, double *&bMatrix, double *&resMatrix, int &size) {
+    std::cout << "Matrix size: ";
+    std::cin >> size;
+
+    utils::fill_matrix(aMatrix = new double[size * size], size);
+    utils::fill_matrix(bMatrix = new double[size * size], size);
+    utils::fill_matrix(resMatrix = new double[size * size], size, 0);
+}
+
+void on_shutdown(const double *aMatrix, const double *bMatrix, const double *resMatrix) {
+    delete[] aMatrix;
+    delete[] bMatrix;
+    delete[] resMatrix;
 }
 
 int main() {
@@ -22,15 +27,15 @@ int main() {
     double duration;
 
     std::cout << "Serial multiplication:\n";
-    utils::init(aMatrix, bMatrix, resMatrix, size);
+    init(aMatrix, bMatrix, resMatrix, size);
 
     start = clock();
-    calculation(aMatrix, bMatrix, resMatrix, size);
+    utils::serialCalculation(aMatrix, bMatrix, resMatrix, size);
     finish = clock();
     duration = (finish - start) / double(CLOCKS_PER_SEC);
 
     std::cout << "Time: " << duration;
 
-    utils::on_shutdown(aMatrix, bMatrix, resMatrix);
+    on_shutdown(aMatrix, bMatrix, resMatrix);
     return 0;
 }

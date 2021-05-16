@@ -16,7 +16,7 @@ namespace utils {
 
     void fill_matrix(double *matrix, int size) {
         for (std::size_t i = 0; i < size * size; i++) {
-            matrix[i] = rand_double(-100, 100);
+            matrix[i] = rand_double(-10, 100);
         }
     }
 
@@ -26,21 +26,6 @@ namespace utils {
         }
     }
 
-    void init(double *&aMatrix, double *&bMatrix, double *&resMatrix, int &size) {
-        std::cout << "Matrix size: ";
-        std::cin >> size;
-
-        fill_matrix(aMatrix = new double[size * size], size);
-        fill_matrix(bMatrix = new double[size * size], size);
-        fill_matrix(resMatrix = new double[size * size], size, 0);
-    }
-
-    void on_shutdown(const double *aMatrix, const double *bMatrix, const double *resMatrix) {
-        delete[] aMatrix;
-        delete[] bMatrix;
-        delete[] resMatrix;
-    }
-
     void print_matrix(double *matrix, int size, std::ostream &os = std::cout) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -48,5 +33,34 @@ namespace utils {
             }
             os << '\n';
         }
+    }
+
+    void serialCalculation(double *A, double *B, double *C, int size) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                for (int k = 0; k < size; k++) {
+                    C[i * size + j] += A[i * size + k] * B[k * size + j];
+                }
+            }
+        }
+    }
+
+    void testResult(double *A, double *B, double *C, int size) {
+        double *serialResult;
+        fill_matrix(serialResult = new double [size * size], size, 0);
+        double e = 1.e-6;
+        bool equal = true;
+
+        serialCalculation(A, B, serialResult, size);
+        for (int i = 0; i < size * size; i++) {
+            if (fabs(serialResult[i] - C[i]) >= e) {
+                equal = false;
+                break;
+            }
+        }
+
+        std::cout << std::boolalpha << equal << std::endl;
+
+        delete [] serialResult;
     }
 }
