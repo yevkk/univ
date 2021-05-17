@@ -16,3 +16,7 @@ target_link_libraries(serial PRIVATE ${MPI_LIB})
 add_executable(fox parallel_fox.cpp)
 target_link_directories(fox PRIVATE ${MPI_DIR})
 target_link_libraries(fox PRIVATE ${MPI_LIB})
+
+add_executable(striped parallel_striped.cpp)
+target_link_directories(striped PRIVATE ${MPI_DIR})
+target_link_libraries(striped PRIVATE ${MPI_LIB})

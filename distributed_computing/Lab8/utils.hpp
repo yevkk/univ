@@ -52,6 +52,9 @@ namespace utils {
         bool equal = true;
 
         serialCalculation(A, B, serialResult, size);
+        std::cout << "C ser\n";
+        print_matrix(serialResult, size);
+        std::cout << "\n";
         for (int i = 0; i < size * size; i++) {
             if (fabs(serialResult[i] - C[i]) >= e) {
                 equal = false;
