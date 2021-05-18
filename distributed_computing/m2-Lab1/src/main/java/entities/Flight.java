@@ -1,4 +1,4 @@
-package items;
+package entities;
 
 import java.time.ZonedDateTime;
 

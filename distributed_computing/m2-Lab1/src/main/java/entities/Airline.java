@@ -1,4 +1,4 @@
-package items;
+package entities;
 
 public class Airline extends Entity {
     private String name;

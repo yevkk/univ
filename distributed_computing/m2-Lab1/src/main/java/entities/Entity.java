@@ -1,4 +1,4 @@
-package items;
+package entities;
 
 public abstract class Entity {
     private int id;
