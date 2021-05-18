@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<airlines xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xmlns="urn:Lab.Namespace"
-          xsi:schemaLocation="urn:Lab.Namespace airlines.xsd">
-    <airline id="0">
-        <name>AirlineUA</name>
-        <country>Ukraine</country>
-    </airline>
-    <airline id="1">
-        <name>AirlinePL</name>
-        <country>Poland</country>
-    </airline>
-</airlines>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><airlines/>

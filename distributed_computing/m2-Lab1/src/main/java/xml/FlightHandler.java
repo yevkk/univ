@@ -4,6 +4,8 @@ import appdata.DataStorage;
 import appdata.FlightData;
 import entities.Airline;
 import entities.Flight;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -31,11 +33,20 @@ public class FlightHandler extends BaseHandler {
     private final EnumSet<Elements> withText;
 
     public FlightHandler() {
+        this(new FlightData());
+    }
+
+    public FlightHandler(FlightData data) {
         super();
-        this.data = new FlightData();
+        this.data = data;
         withText = EnumSet.range(Elements.DEPARTURE, Elements.DEPARTURE_TIMESTAMP);
         attrs = new ArrayList<>(Arrays.asList("id", "airline_id"));
         complexElements = new ArrayList<>();
+    }
+
+    @Override
+    public String rootElementName() {
+        return "flights";
     }
 
     @Override
@@ -97,5 +108,31 @@ public class FlightHandler extends BaseHandler {
     @Override
     public void saveMainElement() {
         data.add(current);
+    }
+
+    @Override
+    public void proceedSavingElement(Document document, Element element, int index) {
+        var flight = data.getAll().get(index);
+        element.setAttribute("id", String.valueOf(flight.getId()));
+
+        var airlineId = document.createElement("airline_id");
+        airlineId.setTextContent( String.valueOf(flight.getAirlineId()));
+        element.appendChild(airlineId);
+
+        var departure = document.createElement("departure");
+        departure.setTextContent(flight.getDepartureAirport());
+        element.appendChild(departure);
+
+        var arrival = document.createElement("arrival");
+        arrival.setTextContent(flight.getArrivalAirport());
+        element.appendChild(arrival);
+
+        var price = document.createElement("price");
+        price.setTextContent(String.valueOf(flight.getPrice()));
+        element.appendChild(price);
+
+        var departureDateTime = document.createElement("departure_timestamp");
+        departureDateTime.setTextContent(flight.getDepartureDateTime().toString());
+        element.appendChild(departureDateTime);
     }
 }

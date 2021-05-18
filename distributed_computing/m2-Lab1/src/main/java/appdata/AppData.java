@@ -28,7 +28,11 @@ public class AppData {
     }
 
     public void saveToFile(String airlineFilename, String flightFilename) {
-        //TODO: implement;
+        var airlinesBuilder = new DOMBuilder(new AirlineHandler(airlineData));
+        var flightsBuilder = new DOMBuilder(new FlightHandler(flightData));
+
+        airlinesBuilder.saveDataStorage(airlineFilename);
+        flightsBuilder.saveDataStorage(flightFilename);
     }
 
     public static AppData loadFromFile(String airlineFilename, String flightFilename){

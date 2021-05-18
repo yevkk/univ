@@ -3,6 +3,8 @@ package xml;
 import appdata.AirlineData;
 import appdata.DataStorage;
 import entities.Airline;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -23,11 +25,20 @@ public class AirlineHandler extends BaseHandler {
     private final EnumSet<Elements> withText;
 
     public AirlineHandler() {
+        this(new AirlineData());
+    }
+
+    public AirlineHandler(AirlineData data) {
         super();
-        this.data = new AirlineData();
+        this.data = data;
         withText = EnumSet.range(Elements.NAME, Elements.COUNTRY);
         attrs = new ArrayList<>(Collections.singletonList("id"));
         complexElements = new ArrayList<>();
+    }
+
+    @Override
+    public String rootElementName() {
+        return "airlines";
     }
 
     @Override
@@ -86,5 +97,19 @@ public class AirlineHandler extends BaseHandler {
     @Override
     public void saveMainElement() {
         data.add(current);
+    }
+
+    @Override
+    public void proceedSavingElement(Document document, Element element, int index) {
+        var airline = data.getAll().get(index);
+        element.setAttribute("id", String.valueOf(airline.getId()));
+
+        var name = document.createElement("name");
+        name.setTextContent(airline.getName());
+        element.appendChild(name);
+
+        var country = document.createElement("country");
+        country.setTextContent(airline.getCountry());
+        element.appendChild(country);
     }
 }
