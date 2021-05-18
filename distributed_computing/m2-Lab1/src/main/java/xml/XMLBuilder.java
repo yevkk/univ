@@ -1,19 +1,16 @@
 package xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import appdata.DataStorage;
 
-public abstract class XMLBuilder <T> {
-    protected List<T> list;
+public abstract class XMLBuilder {
+    protected DataStorage<?> dataStorage;
 
     public XMLBuilder() {
-        list = new ArrayList<>();
     }
 
-    public List<T> getList() {
-        return list;
+    public DataStorage<?> getDataStorage() {
+        return dataStorage;
     }
 
-    public abstract void buildList(String filename);
+    public abstract void buildDataStorage(String filename);
 }

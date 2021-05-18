@@ -1,5 +1,6 @@
 package xml;
 
+import appdata.DataStorage;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -15,10 +16,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class DOMBuilder<T extends Comparable<T>> extends XMLBuilder<T> {
+public class DOMBuilder extends XMLBuilder {
     private final BaseHandler handler;
     private DocumentBuilder documentBuilder;
-    private Logger logger;
+    private final Logger logger;
 
     public DOMBuilder(BaseHandler handler) {
         super();
@@ -29,12 +30,11 @@ public class DOMBuilder<T extends Comparable<T>> extends XMLBuilder<T> {
             documentBuilder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             logger.warning("DOM parser config error");
-
         }
     }
 
     @Override
-    public void buildList(String filename) {
+    public void buildDataStorage(String filename) {
         Document document;
         try {
             document = documentBuilder.parse(filename);
@@ -54,7 +54,7 @@ public class DOMBuilder<T extends Comparable<T>> extends XMLBuilder<T> {
         } catch (IOException e) {
             logger.warning("I/O stream error");
         }
-        list = (List<T>) handler.getList();
+        dataStorage = handler.getDataStorage();
     }
 
     private void buildElement(Element element) {

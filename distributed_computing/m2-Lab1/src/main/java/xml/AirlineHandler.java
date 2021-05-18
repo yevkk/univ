@@ -1,5 +1,7 @@
 package xml;
 
+import appdata.AirlineData;
+import appdata.DataStorage;
 import entities.Airline;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -15,14 +17,14 @@ public class AirlineHandler extends BaseHandler {
         COUNTRY
     }
 
-    private final List<Airline> list;
+    private final AirlineData data;
     private Airline current = null;
     private Elements currentElement = null;
     private final EnumSet<Elements> withText;
 
     public AirlineHandler() {
         super();
-        this.list = new ArrayList<>();
+        this.data = new AirlineData();
         withText = EnumSet.range(Elements.NAME, Elements.COUNTRY);
         attrs = new ArrayList<>(Collections.singletonList("id"));
     }
@@ -33,8 +35,8 @@ public class AirlineHandler extends BaseHandler {
     }
 
     @Override
-    public List<?> getList() {
-        return list;
+    public DataStorage<?> getDataStorage() {
+        return data;
     }
 
     @Override
@@ -82,6 +84,6 @@ public class AirlineHandler extends BaseHandler {
 
     @Override
     public void saveMainElement() {
-        list.add(current);
+        data.add(current);
     }
 }

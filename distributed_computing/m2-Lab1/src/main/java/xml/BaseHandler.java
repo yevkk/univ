@@ -1,9 +1,9 @@
 package xml;
 
+import appdata.DataStorage;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class BaseHandler extends DefaultHandler {
     protected ArrayList<String> attrs;
@@ -11,7 +11,7 @@ public abstract class BaseHandler extends DefaultHandler {
 
     public abstract String mainElementName();
 
-    public abstract List<?> getList();
+    public abstract DataStorage<?> getDataStorage();
 
     public abstract void proceedElement(String elemLocalName, String elemValue);
 

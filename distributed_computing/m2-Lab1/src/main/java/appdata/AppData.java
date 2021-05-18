@@ -1,5 +1,11 @@
 package appdata;
 
+import entities.Airline;
+import xml.AirlineHandler;
+import xml.DOMBuilder;
+import xml.FlightHandler;
+
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 public class AppData {
@@ -7,9 +13,9 @@ public class AppData {
     private final FlightData flightData;
     private final Logger logger;
 
-    public AppData() {
-        airlineData = new AirlineData();
-        flightData = new FlightData();
+    public AppData(AirlineData airlineData, FlightData flightData) {
+        this.airlineData = airlineData;
+        this.flightData = flightData;
         logger = Logger.getLogger(AppData.class.getName());
     }
 
@@ -26,8 +32,13 @@ public class AppData {
     }
 
     static AppData loadFromFile(String airlineFilename, String flightFilename){
-        //TODO: implement;
-        return null;
+        var airlinesBuilder = new DOMBuilder(new AirlineHandler());
+        var flightsBuilder = new DOMBuilder(new FlightHandler());
+
+        airlinesBuilder.buildDataStorage(airlineFilename);
+        flightsBuilder.buildDataStorage(flightFilename);
+
+        return new AppData((AirlineData) airlinesBuilder.getDataStorage(), (FlightData) flightsBuilder.getDataStorage());
     }
 
 }

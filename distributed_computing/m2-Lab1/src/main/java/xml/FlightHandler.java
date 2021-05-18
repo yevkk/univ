@@ -1,14 +1,14 @@
 package xml;
 
+import appdata.DataStorage;
+import appdata.FlightData;
 import entities.Airline;
 import entities.Flight;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 public class FlightHandler extends BaseHandler {
     private enum Elements {
@@ -21,14 +21,14 @@ public class FlightHandler extends BaseHandler {
         DEPARTURE_TIMESTAMP
     }
 
-    private final List<Flight> list;
+    private final FlightData data;
     private Flight current = null;
     private Elements currentElement = null;
     private final EnumSet<Elements> withText;
 
     public FlightHandler() {
         super();
-        this.list = new ArrayList<>();
+        this.data = new FlightData();
         withText = EnumSet.range(Elements.DEPARTURE, Elements.DEPARTURE_TIMESTAMP);
     }
 
@@ -38,8 +38,8 @@ public class FlightHandler extends BaseHandler {
     }
 
     @Override
-    public List<?> getList() {
-        return list;
+    public DataStorage<?> getDataStorage() {
+        return data;
     }
 
     @Override
@@ -89,6 +89,6 @@ public class FlightHandler extends BaseHandler {
 
     @Override
     public void saveMainElement() {
-        list.add(current);
+        data.add(current);
     }
 }
