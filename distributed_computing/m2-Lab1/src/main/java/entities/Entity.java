@@ -1,6 +1,8 @@
 package entities;
 
-public abstract class Entity {
+import java.io.Serializable;
+
+public abstract class Entity implements Cloneable, Serializable {
     private int id;
 
     public Entity(int id) {
@@ -9,5 +11,9 @@ public abstract class Entity {
 
     public int getId() {
         return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
