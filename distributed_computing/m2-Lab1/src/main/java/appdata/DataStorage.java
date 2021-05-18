@@ -1,5 +1,7 @@
 package appdata;
 
+import entities.Entity;
+
 import java.util.List;
 
 public interface DataStorage<E extends Entity> {
