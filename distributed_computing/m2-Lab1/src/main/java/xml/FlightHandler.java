@@ -8,6 +8,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 
 public class FlightHandler extends BaseHandler {
@@ -15,6 +18,7 @@ public class FlightHandler extends BaseHandler {
         FLIGHTS,
         FLIGHT,
         ID,
+        AIRLINE_ID,
         DEPARTURE,
         ARRIVAL,
         PRICE,
@@ -30,6 +34,8 @@ public class FlightHandler extends BaseHandler {
         super();
         this.data = new FlightData();
         withText = EnumSet.range(Elements.DEPARTURE, Elements.DEPARTURE_TIMESTAMP);
+        attrs = new ArrayList<>(Arrays.asList("id", "airline_id"));
+        complexElements = new ArrayList<>();
     }
 
     @Override
@@ -47,6 +53,7 @@ public class FlightHandler extends BaseHandler {
         if (localName.equals("flight")) {
             createMainElement();
             current.setId(Integer.parseInt(attributes.getValue(0)));
+            current.setAirlineId(Integer.parseInt(attributes.getValue(1)));
         } else {
             var tmp = Elements.valueOf(localName.toUpperCase());
             if (withText.contains(tmp)) {

@@ -27,6 +27,7 @@ public class AirlineHandler extends BaseHandler {
         this.data = new AirlineData();
         withText = EnumSet.range(Elements.NAME, Elements.COUNTRY);
         attrs = new ArrayList<>(Collections.singletonList("id"));
+        complexElements = new ArrayList<>();
     }
 
     @Override

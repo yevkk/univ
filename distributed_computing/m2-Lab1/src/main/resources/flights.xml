@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flights xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="urn:Lab.Namespace"
+          xsi:schemaLocation="urn:Lab.Namespace flights.xsd">
+    <flight id="0" airport_id="1">
+        <departure>KEP</departure>
+        <arrival>TUY</arrival>
+        <price>56.7</price>
+        <departure_timestamp>2002-05-30T09:30:10+06:00</departure_timestamp>
+    </flight>
+</flights>

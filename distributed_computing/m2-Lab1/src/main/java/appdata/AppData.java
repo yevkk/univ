@@ -31,7 +31,7 @@ public class AppData {
         //TODO: implement;
     }
 
-    static AppData loadFromFile(String airlineFilename, String flightFilename){
+    public static AppData loadFromFile(String airlineFilename, String flightFilename){
         var airlinesBuilder = new DOMBuilder(new AirlineHandler());
         var flightsBuilder = new DOMBuilder(new FlightHandler());
 
