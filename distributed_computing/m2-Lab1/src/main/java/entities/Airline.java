@@ -1,8 +1,10 @@
 package entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Airline extends Entity {
     private String name;
     private String country;

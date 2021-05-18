@@ -1,10 +1,12 @@
 package entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 
 @Data
+@NoArgsConstructor
 public class Flight extends Entity {
     private int airlineId;
     private String departureAirport;

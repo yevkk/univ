@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseHandler extends DefaultHandler {
-    public ArrayList<String> attrs;
-    public ArrayList<String> complexElements;
+    protected ArrayList<String> attrs;
+    protected ArrayList<String> complexElements;
 
     public abstract String mainElementName();
 
