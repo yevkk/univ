@@ -1,32 +1,18 @@
 package entities;
 
-public class Airline extends Entity {
+import appdata.FlightData;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class Airline {
+    private int id;
     private String name;
     private String country;
+    private FlightData flightData;
 
-    public Airline(int id, String name, String country) {
-        super(id);
-        this.name = name;
-        this.country = country;
-    }
-
-    public Airline(String name, String country) {
-        this(-1, name, country);
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCountry() {
-        return this.country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public Airline(String name, String country, FlightData flightData) {
+        this(-1, name, country, flightData);
     }
 }
