@@ -65,14 +65,46 @@ function drawPolygon(canvas, points, pointColor, edgeColor) {
     points.forEach(point => drawPoint(context, point, pointColor))
 }
 
-function drawAll() {
-    let context = mainCanvas.getContext('2d')
-    mainCanvas.getContext('2d').clearRect(0, 0, mainCanvas.width, mainCanvas.height)
-    drawGrid(mainCanvas, colors.grid)
-    drawPolygon(mainCanvas, pointsA, colors.point, colors.edgeA)
-    drawPolygon(mainCanvas, pointsB, colors.point, colors.edgeB)
-    drawPolygon(mainCanvas, morphDst, colors.point, colors.morph)
-    drawPolygon(mainCanvas, morphSrc, colors.point, 'coral')
+function drawAll(canvas) {
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    drawGrid(canvas, colors.grid)
+    drawPolygon(canvas, pointsA, colors.point, colors.edgeA)
+    drawPolygon(canvas, pointsB, colors.point, colors.edgeB)
+    drawPolygon(canvas, morphSrc, colors.point, colors.morph)
+    // drawPolygon(canvas, morphSrc, colors.point, 'coral')
+}
+
+function morphAnimation(canvas, morphCurrent, morphEnd, frames, step) {
+    let delay = 50
+    if (step === undefined) {
+        step = 0
+        drawAll(canvas)
+        setTimeout(() => {
+            morphAnimation(canvas, morphSrc, morphEnd, frames, step)
+        }, delay)
+        return
+    }
+
+    morphCurrent.forEach((point, index) => {
+        let divisor = frames - step
+        let deltaX = (morphEnd[index].x - point.x) / divisor
+        let deltaY = (morphEnd[index].y - point.y) / divisor
+
+        point.x += deltaX
+        point.y += deltaY
+    })
+    drawAll(canvas)
+
+    if (step === frames - 1) {
+        setTimeout(() => {
+            drawAll(canvas)
+        }, delay)
+    } else {
+        setTimeout(() => {
+            step++
+            morphAnimation(canvas, morphCurrent, morphEnd, frames, step)
+        }, delay)
+    }
 }
 
 function onCanvasClick(e) {
@@ -88,7 +120,7 @@ function onCanvasClick(e) {
                 pointsA.push(point)
                 showMessage(`added point (${point.x}, ${point.y}) to A`, `log`)
             }
-            drawAll();
+            drawAll(mainCanvas);
             break
         case 1:
             if (pointsB.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)) {
@@ -98,7 +130,7 @@ function onCanvasClick(e) {
                 pointsB.push(point)
                 showMessage(`added point (${point.x}, ${point.y}) to B`, `log`)
             }
-            drawAll();
+            drawAll(mainCanvas);
             break;
         default:
             break;
@@ -123,7 +155,7 @@ function proceed() {
                 stage++
             }
             proceedBtn.innerText = proceedBtnText[stage]
-            drawAll()
+            drawAll(mainCanvas)
             break;
         case 1:
             showMessage('polygon B finished', 'info')
@@ -138,13 +170,13 @@ function proceed() {
 
             mergeCenters(pointsA, pointsB)
 
-            drawAll()
+            drawAll(mainCanvas)
             break;
         case 2:
             let res = buildMorph(pointsA, pointsB)
             morphSrc = res.morphBegin
             morphDst = res.morphEnd
-            drawAll();
+            morphAnimation(mainCanvas, morphSrc, morphDst, 50)
             break;
         case 3:
             break;
@@ -157,7 +189,7 @@ function reset() {
     morphSrc = []
     morphDst = []
     stage = 0
-    drawAll()
+    drawAll(mainCanvas)
 
     proceedBtn.innerText = proceedBtnText[stage];
     if (!proceedBtn.classList.contains('active-button')) {

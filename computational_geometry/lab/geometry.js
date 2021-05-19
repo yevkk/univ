@@ -68,7 +68,6 @@ function buildMorph(pointsA, pointsB) {
 
     let orientation = (p, q, r) => ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y))
     drawPoint(mainCanvas.getContext('2d'), o, 'green')
-    pointsB.forEach(point => console.log(orientation(point, o, pointsA[0])))
 
     let indexB = pointsB.findIndex(point => orientation(point, o, pointsA[0]) > 0);
     let  nA = pointsA.length
