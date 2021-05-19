@@ -9,8 +9,8 @@ const POINT_RADIUS = 4
 //4 - needs restart
 let stage = 0;
 let proceedBtnText = ['finish A', 'finish B', 'morph', '...', '...']
-let mainCanvas
-let proceedBtn
+let mainCanvas = document.getElementById('main-canvas')
+let proceedBtn = document.getElementById('proceed-button')
 
 let colors = {
     point: window.getComputedStyle(mainCanvas).getPropertyValue('--point-color'),
@@ -66,84 +66,82 @@ function drawPolygon(canvas, points, pointColor, edgeColor) {
 }
 
 function drawAll() {
+    let context = mainCanvas.getContext('2d')
+    mainCanvas.getContext('2d').clearRect(0, 0, mainCanvas.width, mainCanvas.height)
     drawGrid(mainCanvas, colors.grid)
     drawPolygon(mainCanvas, pointsA, colors.point, colors.edgeA)
     drawPolygon(mainCanvas, pointsB, colors.point, colors.edgeB)
     drawPolygon(mainCanvas, morphDst, colors.morph, colors.morph)
 }
 
-// function onCanvasClick(e) {
-//     let x = e.pageX - mainCanvas.offsetLeft
-//     let y = e.pageY - mainCanvas.offsetTop
-//
-//     switch (stage) {
-//         case 0:
-//             if (pointsA.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)) {
-//                 showMessage(`point already exists`, `warning`)
-//             } else {
-//                 let point = new Point(x, y)
-//                 pointsA.push(point)
-//                 showMessage(`added point (${point.x}, ${point.y})`, `log`)
-//             }
-//             drawAll();
-//             break
-//         case 1:
-//             if (pointsB.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)) {
-//                 showMessage(`point already exists`, `warning`)
-//             } else {
-//                 let point = new Point(x, y)
-//                 pointsB.push(point)
-//                 showMessage(`added point (${point.x}, ${point.y})`, `log`)
-//             }
-//             drawAll();
-//             break;
-//         default:
-//             break;
-//
-//     }
-//
-//
-// }
-//
-//
-// function proceed() {
-//     if (!proceedBtn.classList.contains('active-button')) {
-//         return
-//     }
-//
-//     switch (stage) {
-//         case 0:
-//             break;
-//         case 1:
-//             break;
-//         case 2:
-//             break;
-//         case 3:
-//             break;
-//     }
-//
-//
-//     done = true
-//     drawAll
-//
-//
-//     proceedBtn.classList.remove('active-button')
-//     showMessage(`reset to restart`, `tip`)
-//
-//
-//     let color = '#598add'
-//     drawLine(mainCanvas.getContext('2d'), color, points[0], points[points.length - 1])
-//     polygonFinished = true
-//     this.innerText = 'Run'
-//     simple = isSimple(points)
-//     showMessage('Polygon closed', 'info')
-//     if (!simple) {
-//         showMessage('Polygon is not simple', 'warning')
-//         showMessage('Reset recommended', 'tip')
-//     } else {
-//         showMessage('Set point to check', 'tip')
-//     }
-// }
+function onCanvasClick(e) {
+    let x = e.pageX - mainCanvas.offsetLeft
+    let y = e.pageY - mainCanvas.offsetTop
+
+    switch (stage) {
+        case 0:
+            if (pointsA.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)) {
+                showMessage(`point already exists`, `warning`)
+            } else {
+                let point = new Point(x, y)
+                pointsA.push(point)
+                showMessage(`added point (${point.x}, ${point.y}) to A`, `log`)
+            }
+            drawAll();
+            break
+        case 1:
+            if (pointsB.find(item => Math.abs(x - item.x) < POINT_RADIUS && Math.abs(y - item.y) < POINT_RADIUS)) {
+                showMessage(`point already exists`, `warning`)
+            } else {
+                let point = new Point(x, y)
+                pointsB.push(point)
+                showMessage(`added point (${point.x}, ${point.y}) to B`, `log`)
+            }
+            drawAll();
+            break;
+        default:
+            break;
+
+    }
+}
+
+
+function proceed() {
+    if (!proceedBtn.classList.contains('active-button')) {
+        return
+    }
+
+    switch (stage) {
+        case 0:
+            showMessage('polygon A finished', 'info')
+            if (!isSimple(pointsA)) {
+                stage = 4
+                showMessage('A is not simple', 'warning')
+                showMessage(`reset to restart`, `tip`)
+            } else {
+                stage++
+            }
+            proceedBtn.innerText = proceedBtnText[stage]
+            drawAll()
+            break;
+        case 1:
+            showMessage('polygon B finished', 'info')
+            if (!isSimple(pointsB)) {
+                stage = 4
+                showMessage('B is not simple', 'warning')
+                showMessage(`reset to restart`, `tip`)
+            } else {
+                stage++
+            }
+            proceedBtn.innerText = proceedBtnText[stage]
+            drawAll()
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
+}
 
 function reset() {
     pointsA = []
@@ -190,15 +188,13 @@ function onMouseMove(e) {
 }
 
 addEventListener('load', () => {
-    mainCanvas = document.getElementById('main-canvas')
     mainCanvas.width = mainCanvas.parentElement.clientWidth * 0.7
     mainCanvas.height = 500
     mainCanvas.addEventListener('click', onCanvasClick)
   
     mainCanvas.addEventListener('mousemove', onMouseMove)
 
-    proceedBtn = document.getElementById('proceed-button')
-    proceedBtn.addEventListener('click', proceed1)
+    proceedBtn.addEventListener('click', proceed)
 
     document.getElementById('reset-button').addEventListener('click', () => {
         showMessage('Canvas cleared', 'info')
