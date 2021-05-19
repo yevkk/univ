@@ -71,7 +71,8 @@ function drawAll() {
     drawGrid(mainCanvas, colors.grid)
     drawPolygon(mainCanvas, pointsA, colors.point, colors.edgeA)
     drawPolygon(mainCanvas, pointsB, colors.point, colors.edgeB)
-    drawPolygon(mainCanvas, morphDst, colors.morph, colors.morph)
+    drawPolygon(mainCanvas, morphDst, colors.point, colors.morph)
+    drawPolygon(mainCanvas, morphSrc, colors.point, 'coral')
 }
 
 function onCanvasClick(e) {
@@ -134,9 +135,16 @@ function proceed() {
                 stage++
             }
             proceedBtn.innerText = proceedBtnText[stage]
+
+            mergeCenters(pointsA, pointsB)
+
             drawAll()
             break;
         case 2:
+            let res = buildMorph(pointsA, pointsB)
+            morphSrc = res.morphBegin
+            morphDst = res.morphEnd
+            drawAll();
             break;
         case 3:
             break;

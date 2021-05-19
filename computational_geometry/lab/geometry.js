@@ -41,7 +41,6 @@ function isSimple(points) {
 }
 
 function polarSort(points, center) {
-    // let orientation = (p, q, r) => ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y))
     let tg = (point, center) => ((point.y - center.y) / (point.x - center.x))
     let orientationArray = points.map(point => {
         return {
@@ -57,3 +56,55 @@ function polarSort(points, center) {
 
     return [...quadIV.map(item => item.point), ...quadIII.map(item => item.point), ...quadII.map(item => item.point), ...quadI.map(item => item.point)]
 }
+
+function buildMorph(pointsA, pointsB) {
+    let morphBegin = []
+    let morphEnd = []
+
+    let o = new Point(pointsA.reduce((value, point) => value + point.x, 0) / pointsA.length, pointsA.reduce((value, point) => value + point.y, 0) / pointsA.length)
+
+    pointsA = polarSort(pointsA, o)
+    pointsB = polarSort(pointsB, o)
+
+    let orientation = (p, q, r) => ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y))
+    drawPoint(mainCanvas.getContext('2d'), o, 'green')
+    pointsB.forEach(point => console.log(orientation(point, o, pointsA[0])))
+
+    let indexB = pointsB.findIndex(point => orientation(point, o, pointsA[0]) > 0);
+    let  nA = pointsA.length
+    pointsA.forEach((point, index) => {
+        let localCounter = 0;
+        while(orientation(pointsB[indexB], o, pointsA[(index + 1) % nA]) < 0) {
+            morphBegin.push(new Point(point.x, point.y));
+            morphEnd.push(new Point(pointsB[indexB].x, pointsB[indexB].y))
+            localCounter++
+            indexB = (indexB + 1) % pointsB.length
+        }
+        if (localCounter === 0) {
+            morphBegin.push(new Point(point.x, point.y));
+            morphEnd.push(new Point(pointsB[indexB].x, pointsB[indexB].y))
+        }
+    })
+;
+    return {
+        morphBegin,
+        morphEnd
+    }
+}
+
+function mergeCenters(pointsA, pointsB) {
+    let oAx = pointsA.reduce((value, point) => value + point.x, 0) / pointsA.length
+    let oAy = pointsA.reduce((value, point) => value + point.y, 0) / pointsA.length
+
+    let oBx = pointsB.reduce((value, point) => value + point.x, 0) / pointsB.length
+    let oBy = pointsB.reduce((value, point) => value + point.y, 0) / pointsB.length
+
+    let deltaX = oBx - oAx;
+    let deltaY = oBy - oAy;
+
+    pointsA.forEach(point => {
+        point.x += deltaX
+        point.y += deltaY
+    })
+}
+
