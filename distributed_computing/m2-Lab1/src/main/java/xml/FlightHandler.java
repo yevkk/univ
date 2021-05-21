@@ -93,6 +93,8 @@ public class FlightHandler extends BaseHandler {
     public void proceedElement(String elemLocalName, String elemValue) {
         var element = Elements.valueOf(elemLocalName.toUpperCase());
         switch (element) {
+            case ID -> current.setId(Integer.parseInt(elemValue));
+            case AIRLINE_ID -> current.setAirlineId(Integer.parseInt(elemValue));
             case DEPARTURE -> current.setDepartureAirport(elemValue);
             case ARRIVAL -> current.setArrivalAirport(elemValue);
             case PRICE -> current.setPrice(Double.parseDouble(elemValue));

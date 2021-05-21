@@ -84,6 +84,7 @@ public class AirlineHandler extends BaseHandler {
     public void proceedElement(String elemLocalName, String elemValue) {
         var element = Elements.valueOf(elemLocalName.toUpperCase());
         switch (element) {
+            case ID -> current.setId(Integer.parseInt(elemValue));
             case NAME -> current.setName(elemValue);
             case COUNTRY -> current.setCountry(elemValue);
         }

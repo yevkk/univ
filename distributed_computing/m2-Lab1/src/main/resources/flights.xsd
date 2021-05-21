@@ -25,6 +25,6 @@
                 <xsd:restriction base="xsd:token" />
             </xsd:simpleType>
         </xsd:attribute>
-        <xsd:attribute name="airport_id" use="required" />
+        <xsd:attribute name="airline_id" use="required" />
     </xsd:complexType>
 </xsd:schema>
