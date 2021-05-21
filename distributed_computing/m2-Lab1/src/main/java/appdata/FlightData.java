@@ -1,6 +1,5 @@
 package appdata;
 
-import entities.Airline;
 import entities.Flight;
 
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ public class FlightData implements DataStorage<Flight> {
                 flight.setDepartureAirport(entity.getDepartureAirport());
                 flight.setArrivalAirport(entity.getArrivalAirport());
                 flight.setPrice(entity.getPrice());
-                flight.setDepartureDateTime(entity.getDepartureDateTime());
                 break;
             }
         }

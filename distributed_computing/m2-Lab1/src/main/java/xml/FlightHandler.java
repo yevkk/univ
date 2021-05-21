@@ -23,8 +23,7 @@ public class FlightHandler extends BaseHandler {
         AIRLINE_ID,
         DEPARTURE,
         ARRIVAL,
-        PRICE,
-        DEPARTURE_TIMESTAMP
+        PRICE
     }
 
     private final FlightData data;
@@ -39,7 +38,7 @@ public class FlightHandler extends BaseHandler {
     public FlightHandler(FlightData data) {
         super();
         this.data = data;
-        withText = EnumSet.range(Elements.DEPARTURE, Elements.DEPARTURE_TIMESTAMP);
+        withText = EnumSet.range(Elements.DEPARTURE, Elements.PRICE);
         attrs = new ArrayList<>(Arrays.asList("id", "airline_id"));
         complexElements = new ArrayList<>();
     }
@@ -98,7 +97,6 @@ public class FlightHandler extends BaseHandler {
             case DEPARTURE -> current.setDepartureAirport(elemValue);
             case ARRIVAL -> current.setArrivalAirport(elemValue);
             case PRICE -> current.setPrice(Double.parseDouble(elemValue));
-            case DEPARTURE_TIMESTAMP -> current.setDepartureDateTime(ZonedDateTime.parse(elemValue));
         }
     }
 
@@ -132,9 +130,5 @@ public class FlightHandler extends BaseHandler {
         var price = document.createElement("price");
         price.setTextContent(String.valueOf(flight.getPrice()));
         element.appendChild(price);
-
-        var departureDateTime = document.createElement("departure_timestamp");
-        departureDateTime.setTextContent(flight.getDepartureDateTime().toString());
-        element.appendChild(departureDateTime);
     }
 }
