@@ -10,7 +10,6 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -40,10 +39,10 @@ public class GUI extends JFrame {
     private JLabel airlineIdValueLabel;
     private JButton airlineUpdateBtn;
     private JButton airlineRemoveBtn;
-    private JComboBox flightAirlineComboBox;
+    private JComboBox<Integer> flightAirlineComboBox;
     private JTextField flightDepartureTextField;
     private JTextField flightArrivalTextField;
-    private JSpinner flightProceSpinner;
+    private JSpinner flightPriceSpinner;
     private JLabel flightIdLabel;
     private JLabel flightIdValueLabel;
     private JLabel flightAirlineIdLabel;
@@ -63,7 +62,7 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(1000, 1000));
 
-        flightProceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
+        flightPriceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
 
         initTable(airlineTable, new String[]{"id", "name", "country"});
         updateAirlinesTable(airlineTable);
@@ -91,6 +90,28 @@ public class GUI extends JFrame {
             }
         });
 
+        flightTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = flightTable.rowAtPoint(e.getPoint());
+                if (row != -1) {
+                    var model = flightTable.getModel();
+
+                    int id = (int) model.getValueAt(row, 0);
+                    var tmp = appdata.getFlightData().get(id);
+                    selectedFlight = new Flight(id, tmp.getAirlineId(), tmp.getDepartureAirport(), tmp.getArrivalAirport(), tmp.getPrice());
+
+                    flightIdValueLabel.setText(String.valueOf(id));
+                    flightAirlineComboBox.setSelectedItem(selectedFlight.getAirlineId());
+                    flightDepartureTextField.setText(selectedFlight.getDepartureAirport());
+                    flightArrivalTextField.setText(selectedFlight.getArrivalAirport());
+                    flightPriceSpinner.setValue(selectedFlight.getPrice());
+                } else {
+                    clearSelectedFlight();
+                }
+            }
+        });
+
         airlineUpdateBtn.addActionListener(e -> {
             if (selectedAirline == null) {
                 return;
@@ -104,6 +125,21 @@ public class GUI extends JFrame {
             updateAirlinesTable(airlineTable);
         });
 
+        flightUpdateBtn.addActionListener(e -> {
+            if (selectedFlight == null) {
+                return;
+            }
+
+            selectedFlight.setAirlineId((int) flightAirlineComboBox.getSelectedItem());
+            selectedFlight.setDepartureAirport(flightDepartureTextField.getText());
+            selectedFlight.setArrivalAirport(flightArrivalTextField.getText());
+            selectedFlight.setPrice((double) flightPriceSpinner.getValue());
+
+            appdata.getFlightData().update(selectedFlight);
+
+            updateFlightTable(flightTable);
+        });
+
         airlineRemoveBtn.addActionListener(e -> {
             if (selectedAirline == null) {
                 return;
@@ -113,6 +149,17 @@ public class GUI extends JFrame {
 
             clearSelectedAirline();
             updateAirlinesTable(airlineTable);
+        });
+
+        flightRemoveBtn.addActionListener(e -> {
+            if (selectedFlight == null) {
+                return;
+            }
+
+            appdata.getFlightData().remove(selectedFlight.getId());
+
+            clearSelectedFlight();
+            updateFlightTable(flightTable);
         });
     }
 
@@ -140,13 +187,17 @@ public class GUI extends JFrame {
         model.setNumRows(0);
 
         var list = appdata.getAirlineData().getAll();
-        for (var item : list) {
+        Integer[] airlineIDs = new Integer[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            var item = list.get(i);
+            airlineIDs[i] = item.getId();
             model.addRow(new Object[]{
                     item.getId(),
                     item.getName(),
                     item.getCountry()
             });
         }
+        flightAirlineComboBox.setModel(new DefaultComboBoxModel<>(airlineIDs));
     }
 
     public void updateFlightTable(JTable table) {
@@ -170,6 +221,15 @@ public class GUI extends JFrame {
         airlineIdValueLabel.setText("");
         airlineNameTextField.setText("");
         airlineCountryTextFiled.setText("");
+    }
+
+    private void clearSelectedFlight() {
+        selectedFlight = null;
+        flightIdValueLabel.setText("");
+        flightAirlineComboBox.setSelectedIndex(0);
+        flightDepartureTextField.setText("");
+        flightArrivalTextField.setText("");
+        flightPriceSpinner.setValue(0.0);
     }
 
     public static void main(String[] args) {
@@ -268,8 +328,8 @@ public class GUI extends JFrame {
         flightPriceLabel = new JLabel();
         flightPriceLabel.setText("price:");
         panel2.add(flightPriceLabel, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        flightProceSpinner = new JSpinner();
-        panel2.add(flightProceSpinner, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        flightPriceSpinner = new JSpinner();
+        panel2.add(flightPriceSpinner, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         flightUpdateBtn = new JButton();
         flightUpdateBtn.setText("Update");
         panel2.add(flightUpdateBtn, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
