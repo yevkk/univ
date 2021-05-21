@@ -1,38 +1,99 @@
 package ui;
 
+import appdata.AppData;
+
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Locale;
+import java.util.ResourceBundle;
+
+import com.formdev.flatlaf.FlatIntelliJLaf;
 
 public class GUI extends JFrame {
+    private final AppData appdata;
+
     private JPanel rootPanel;
-    private JTextPane textPane;
-    private JList list1;
+    private JTabbedPane tabbedPane;
+    private JPanel airlineTab;
+    private JPanel flightTab;
+    private JPanel createTab;
+    private JTable airlineTable;
+    private JScrollPane airlineTableWrapper;
+    private JTable flightTable;
+    private JScrollPane flightTableWrapper;
 
     public GUI() {
+        ResourceBundle resource = ResourceBundle.getBundle("xml");
+        appdata = AppData.loadFromFile(resource.getString("filename.airlines"), resource.getString("filename.flights"));
+
         setContentPane(rootPanel);
         setVisible(true);
-        pack();
-
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(1000, 1000));
 
-        list1.addMouseListener(new MouseAdapter() {
+        initTable(airlineTable, new String[]{"id", "name", "country"});
+        updateAirlinesTable(airlineTable);
+
+        initTable(flightTable, new String[]{"id", "airline", "from", "to", "price", "departure time"});
+
+    }
+
+    public void initTable(JTable table, String[] columnNames) {
+        var model = new DefaultTableModel() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                var list = (JList) e.getSource();
-                if (e.getClickCount() == 2) {
-                    int index = list.locationToIndex(e.getPoint());
-                    textPane.setText(list.getModel().getElementAt(index).toString());
-                }
+            public boolean isCellEditable(int row, int column) {
+                return false;
             }
-        });
+        };
+
+        for (String columnName : columnNames) {
+            model.addColumn(columnName);
+        }
+
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setFillsViewportHeight(true);
+        table.setRowSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setModel(model);
+    }
+
+    public void updateAirlinesTable(JTable table) {
+        var model = (DefaultTableModel) table.getModel();
+        model.setNumRows(0);
+
+        var list = appdata.getAirlineData().getAll();
+        for (var item : list) {
+            model.addRow(new Object[]{
+                    item.getId(),
+                    item.getName(),
+                    item.getCountry()
+            });
+        }
+    }
+
+    public void updateFlightTable(JTable table) {
+        var model = (DefaultTableModel) table.getModel();
+        model.setNumRows(0);
+
+        var list = appdata.getFlightData().getAll();
+        for (var item : list) {
+            model.addRow(new Object[]{
+                    item.getId(),
+                    appdata.getAirlineData().get(item.getAirlineId()).getName(),
+                    item.getDepartureAirport(),
+                    item.getAirlineId(),
+                    item.getPrice(),
+                    item.getDepartureDateTime().toString()
+            });
+        }
     }
 
     public static void main(String[] args) {
+        FlatIntelliJLaf.install();
         new GUI();
     }
 
@@ -52,20 +113,35 @@ public class GUI extends JFrame {
      */
     private void $$$setupUI$$$() {
         rootPanel = new JPanel();
-        rootPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        rootPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         Font rootPanelFont = this.$$$getFont$$$("JetBrains Mono Medium", -1, -1, rootPanel.getFont());
         if (rootPanelFont != null) rootPanel.setFont(rootPanelFont);
-        textPane = new JTextPane();
-        textPane.setText("fdffdfdfdfdfdfdffdf");
-        rootPanel.add(textPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        tabbedPane = new JTabbedPane();
+        rootPanel.add(tabbedPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        airlineTab = new JPanel();
+        airlineTab.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        tabbedPane.addTab("Airlines Data", airlineTab);
+        airlineTableWrapper = new JScrollPane();
+        airlineTab.add(airlineTableWrapper, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        airlineTableWrapper.setBorder(BorderFactory.createTitledBorder(null, "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        airlineTable = new JTable();
+        airlineTable.setFillsViewportHeight(true);
+        airlineTable.putClientProperty("terminateEditOnFocusLost", Boolean.FALSE);
+        airlineTableWrapper.setViewportView(airlineTable);
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        rootPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        list1 = new JList();
-        final DefaultListModel defaultListModel1 = new DefaultListModel();
-        defaultListModel1.addElement("11");
-        defaultListModel1.addElement("22");
-        list1.setModel(defaultListModel1);
-        rootPanel.add(list1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        airlineTab.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        flightTab = new JPanel();
+        flightTab.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        tabbedPane.addTab("Flights Data", flightTab);
+        flightTableWrapper = new JScrollPane();
+        flightTab.add(flightTableWrapper, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        flightTable = new JTable();
+        flightTableWrapper.setViewportView(flightTable);
+        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
+        flightTab.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        createTab = new JPanel();
+        createTab.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        tabbedPane.addTab("Create", createTab);
     }
 
     /**
