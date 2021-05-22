@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:Lab.Namespace"
+            xmlns:lab="urn:Lab.Namespace"
+            elementFormDefault="qualified"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ">
+    <xsd:element name="flights">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="flight" type="lab:Flight" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="Flight">
+        <xsd:sequence>
+            <xsd:element name="departure" />
+            <xsd:element name="arrival" />
+            <xsd:element name="price" type="xsd:decimal" />
+        </xsd:sequence>
+        <xsd:attribute name="id" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:token" />
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="airline_id" use="required" />
+    </xsd:complexType>
+</xsd:schema>
