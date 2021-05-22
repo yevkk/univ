@@ -1,4 +1,4 @@
-package socket;
+package client;
 
 import java.io.IOException;
 import java.util.logging.Logger;
