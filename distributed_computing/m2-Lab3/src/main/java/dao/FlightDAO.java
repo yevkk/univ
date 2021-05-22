@@ -1,6 +1,6 @@
 package dao;
 
-import enitites.Flight;
+import entites.Flight;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

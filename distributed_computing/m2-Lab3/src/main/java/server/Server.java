@@ -2,8 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 import dao.AppData;
-import enitites.Airline;
-import enitites.Flight;
+import entites.Airline;
+import entites.Flight;
 
 import java.io.*;
 import java.net.ServerSocket;

@@ -161,7 +161,7 @@ public class GUI extends JFrame {
 
             clearSelectedAirline();
             updateAirlinesTable(airlineTable);
-            updateAirlinesTable(flightTable);
+            updateFlightTable(flightTable);
         });
 
         flightRemoveBtn.addActionListener(e -> {

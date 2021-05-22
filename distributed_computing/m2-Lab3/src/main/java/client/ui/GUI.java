@@ -1,25 +1,25 @@
-package ui;
+package client.ui;
 
-import dao.AppData;
+import client.Client;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Locale;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import entities.Airline;
-import entities.Flight;
+import entites.Airline;
+import entites.Flight;
+import lombok.SneakyThrows;
 
 public class GUI extends JFrame {
-    private AppData appdata;
+    private Client client;
     private Airline selectedAirline = null;
     private Flight selectedFlight = null;
+    private final Logger logger = Logger.getLogger(GUI.class.getName());
 
     private JPanel rootPanel;
     private JTabbedPane tabbedPane;
@@ -66,14 +66,14 @@ public class GUI extends JFrame {
     private JLabel flightCreateArrivalLabel;
     private JLabel flightCreatePriceLabel;
 
-    public GUI() {
+    public GUI() throws IOException {
 
-        appdata = new AppData();
-        
+        client = new Client();
+
         setContentPane(rootPanel);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(800, 500));        
+        setMinimumSize(new Dimension(800, 500));
 
         flightPriceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
         flightCreatePriceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
@@ -85,6 +85,7 @@ public class GUI extends JFrame {
         updateFlightTable(flightTable);
 
         airlineTable.addMouseListener(new MouseAdapter() {
+            @SneakyThrows
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = airlineTable.rowAtPoint(e.getPoint());
@@ -92,7 +93,7 @@ public class GUI extends JFrame {
                     var model = airlineTable.getModel();
 
                     int id = (int) model.getValueAt(row, 0);
-                    selectedAirline = appdata.getAirlineDAO().find(id);
+                    selectedAirline = client.findAirline(id);
 
                     airlineIdValueLabel.setText(String.valueOf(id));
                     airlineNameTextField.setText(selectedAirline.getName());
@@ -104,6 +105,7 @@ public class GUI extends JFrame {
         });
 
         flightTable.addMouseListener(new MouseAdapter() {
+            @SneakyThrows
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = flightTable.rowAtPoint(e.getPoint());
@@ -111,7 +113,7 @@ public class GUI extends JFrame {
                     var model = flightTable.getModel();
 
                     int id = (int) model.getValueAt(row, 0);
-                    selectedFlight = appdata.getFlightDAO().find(id);
+                    selectedFlight = client.findFlight(id);
 
                     flightIdValueLabel.setText(String.valueOf(id));
                     flightAirlineComboBox.setSelectedItem(selectedFlight.getAirlineId());
@@ -132,7 +134,11 @@ public class GUI extends JFrame {
             selectedAirline.setName(airlineNameTextField.getText());
             selectedAirline.setCountry(airlineCountryTextFiled.getText());
 
-            appdata.getAirlineDAO().update(selectedAirline);
+            try {
+                client.updateAirline(selectedAirline);
+            } catch (IOException exception) {
+                logger.warning(exception.getMessage());
+            }
 
             updateAirlinesTable(airlineTable);
         });
@@ -147,7 +153,11 @@ public class GUI extends JFrame {
             selectedFlight.setTo(flightArrivalTextField.getText());
             selectedFlight.setPrice((double) flightPriceSpinner.getValue());
 
-            appdata.getFlightDAO().update(selectedFlight);
+            try {
+                client.updateFlight(selectedFlight);
+            } catch (IOException exception) {
+                logger.warning(exception.getMessage());
+            }
 
             updateFlightTable(flightTable);
         });
@@ -157,11 +167,15 @@ public class GUI extends JFrame {
                 return;
             }
 
-            appdata.getAirlineDAO().delete(selectedAirline.getId());
+            try {
+                client.deleteAirline(selectedAirline.getId());
+            } catch (IOException exception) {
+                logger.warning(exception.getMessage());
+            }
 
             clearSelectedAirline();
             updateAirlinesTable(airlineTable);
-            updateAirlinesTable(flightTable);
+            updateFlightTable(flightTable);
         });
 
         flightRemoveBtn.addActionListener(e -> {
@@ -169,7 +183,11 @@ public class GUI extends JFrame {
                 return;
             }
 
-            appdata.getFlightDAO().delete(selectedFlight.getId());
+            try {
+                client.deleteFlight(selectedFlight.getId());
+            } catch (IOException exception) {
+                logger.warning(exception.getMessage());
+            }
 
             clearSelectedFlight();
             updateFlightTable(flightTable);
@@ -183,7 +201,11 @@ public class GUI extends JFrame {
             airlineCreateNameTextFiled.setText("");
             airlineCreateCountryTextField.setText("");
 
-            appdata.getAirlineDAO().create(airline);
+            try {
+                client.createAirline(airline);
+            } catch (IOException exception) {
+                logger.warning(exception.getMessage());
+            }
             updateAirlinesTable(airlineTable);
         });
 
@@ -199,7 +221,11 @@ public class GUI extends JFrame {
             flightCreateArrivalTextField.setText("");
             flightCreatePriceSpinner.setValue(0);
 
-            appdata.getFlightDAO().create(flight);
+            try {
+                client.createFlight(flight);
+            } catch (IOException exception) {
+                logger.warning(exception.getMessage());
+            }
             updateFlightTable(flightTable);
         });
     }
@@ -227,34 +253,42 @@ public class GUI extends JFrame {
         var model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
 
-        var list = appdata.getAirlineDAO().findAll();
-        Integer[] airlineIDs = new Integer[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            var item = list.get(i);
-            airlineIDs[i] = item.getId();
-            model.addRow(new Object[]{
-                    item.getId(),
-                    item.getName(),
-                    item.getCountry()
-            });
+        try {
+            var list = client.findAllAirlines();
+            Integer[] airlineIDs = new Integer[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                var item = list.get(i);
+                airlineIDs[i] = item.getId();
+                model.addRow(new Object[]{
+                        item.getId(),
+                        item.getName(),
+                        item.getCountry()
+                });
+            }
+            flightAirlineComboBox.setModel(new DefaultComboBoxModel<>(airlineIDs));
+            flightCreateAirlineComboBox.setModel(new DefaultComboBoxModel<>(airlineIDs));
+        } catch (IOException exception) {
+            logger.warning(exception.getMessage());
         }
-        flightAirlineComboBox.setModel(new DefaultComboBoxModel<>(airlineIDs));
-        flightCreateAirlineComboBox.setModel(new DefaultComboBoxModel<>(airlineIDs));
     }
 
     public void updateFlightTable(JTable table) {
         var model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
 
-        var list = appdata.getFlightDAO().findAll();
-        for (var item : list) {
-            model.addRow(new Object[]{
-                    item.getId(),
-                    item.getAirlineId(),
-                    item.getFrom(),
-                    item.getTo(),
-                    item.getPrice(),
-            });
+        try {
+            var list = client.findAllFlights();
+            for (var item : list) {
+                model.addRow(new Object[]{
+                        item.getId(),
+                        item.getAirlineId(),
+                        item.getFrom(),
+                        item.getTo(),
+                        item.getPrice(),
+                });
+            }
+        } catch (IOException exception) {
+            logger.warning(exception.getMessage());
         }
     }
 
@@ -274,7 +308,7 @@ public class GUI extends JFrame {
         flightPriceSpinner.setValue(0.0);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         FlatIntelliJLaf.setup();
         new GUI();
     }

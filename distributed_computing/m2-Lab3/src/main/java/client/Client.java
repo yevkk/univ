@@ -2,8 +2,9 @@ package client;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import enitites.Airline;
-import enitites.Flight;
+import entites.Airline;
+import entites.Flight;
+import lombok.SneakyThrows;
 
 import java.io.*;
 import java.net.Socket;
@@ -73,13 +74,13 @@ public class Client implements AutoCloseable {
         return "true".equals(in.readLine());
     }
 
-    public List<Flight> findAllFlights() throws IOException, ClassNotFoundException {
+    public List<Flight> findAllFlights() throws IOException {
         out.println("flight");
         out.println("findAll");
         return new Gson().fromJson(in.readLine(), new TypeToken<ArrayList<Flight>>(){}.getType());
     }
 
-    public Flight findFlight(int id) throws IOException, ClassNotFoundException {
+    public Flight findFlight(int id) throws IOException {
         out.println("flight");
         out.println("find");
         out.println(id);
