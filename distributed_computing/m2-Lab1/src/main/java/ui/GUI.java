@@ -18,7 +18,7 @@ import entities.Airline;
 import entities.Flight;
 
 public class GUI extends JFrame {
-    private final AppData appdata;
+    private AppData appdata;
     private Airline selectedAirline = null;
     private Flight selectedFlight = null;
 
@@ -51,6 +51,21 @@ public class GUI extends JFrame {
     private JLabel flightPriceLabel;
     private JButton flightUpdateBtn;
     private JButton flightRemoveBtn;
+    private JPanel createAirlinePanel;
+    private JTextField airlineCreateNameTextFiled;
+    private JTextField airlineCreateCountryTextField;
+    private JButton airlineCreateBtn;
+    private JLabel airlineCreateNameLabel;
+    private JLabel airlineCreateCountryLabel;
+    private JComboBox<Integer> flightCreateAirlineComboBox;
+    private JTextField flightCreateDepartureTextField;
+    private JTextField flightCreateArrivalTextField;
+    private JSpinner flightCreatePriceSpinner;
+    private JButton flightCreateBtn;
+    private JLabel flightCreateAirlineLabel;
+    private JLabel flightCreateDepartureLabel;
+    private JLabel flightCreateArrivalLabel;
+    private JLabel flightCreatePriceLabel;
 
     public GUI() {
         $$$setupUI$$$();
@@ -60,9 +75,11 @@ public class GUI extends JFrame {
         setContentPane(rootPanel);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(1000, 1000));
+        setMinimumSize(new Dimension(800, 500));
+
 
         flightPriceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
+        flightCreatePriceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
 
         initTable(airlineTable, new String[]{"id", "name", "country"});
         updateAirlinesTable(airlineTable);
@@ -161,6 +178,34 @@ public class GUI extends JFrame {
             clearSelectedFlight();
             updateFlightTable(flightTable);
         });
+
+        airlineCreateBtn.addActionListener(e -> {
+            var airline = new Airline();
+            airline.setName(airlineCreateNameTextFiled.getText());
+            airline.setCountry(airlineCreateCountryTextField.getText());
+
+            airlineCreateNameTextFiled.setText("");
+            airlineCreateCountryTextField.setText("");
+
+            appdata.getAirlineData().add(airline);
+            updateAirlinesTable(airlineTable);
+        });
+
+        flightCreateBtn.addActionListener(e -> {
+            var flight = new Flight();
+            flight.setAirlineId((int) flightCreateAirlineComboBox.getSelectedItem());
+            flight.setDepartureAirport(flightCreateDepartureTextField.getText());
+            flight.setArrivalAirport(flightCreateArrivalTextField.getText());
+            flight.setPrice((double) flightCreatePriceSpinner.getValue());
+
+            flightCreateAirlineComboBox.setSelectedIndex(0);
+            flightCreateDepartureTextField.setText("");
+            flightCreateArrivalTextField.setText("");
+            flightCreatePriceSpinner.setValue(0);
+
+            appdata.getFlightData().add(flight);
+            updateFlightTable(flightTable);
+        });
     }
 
     public void initTable(JTable table, String[] columnNames) {
@@ -198,6 +243,7 @@ public class GUI extends JFrame {
             });
         }
         flightAirlineComboBox.setModel(new DefaultComboBoxModel<>(airlineIDs));
+        flightCreateAirlineComboBox.setModel(new DefaultComboBoxModel<>(airlineIDs));
     }
 
     public void updateFlightTable(JTable table) {
@@ -339,13 +385,69 @@ public class GUI extends JFrame {
         final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
         panel2.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         createTab = new JPanel();
-        createTab.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        createTab.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane.addTab("Create", createTab);
+        createAirlinePanel = new JPanel();
+        createAirlinePanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 5, 0, 5), -1, -1));
+        createTab.add(createAirlinePanel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        createAirlinePanel.setBorder(BorderFactory.createTitledBorder(null, "Airline", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        airlineCreateNameLabel = new JLabel();
+        airlineCreateNameLabel.setText("name:");
+        createAirlinePanel.add(airlineCreateNameLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        airlineCreateNameTextFiled = new JTextField();
+        createAirlinePanel.add(airlineCreateNameTextFiled, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        airlineCreateCountryLabel = new JLabel();
+        airlineCreateCountryLabel.setText("country:");
+        createAirlinePanel.add(airlineCreateCountryLabel, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        airlineCreateCountryTextField = new JTextField();
+        createAirlinePanel.add(airlineCreateCountryTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        airlineCreateBtn = new JButton();
+        airlineCreateBtn.setText("Create");
+        createAirlinePanel.add(airlineCreateBtn, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer4 = new com.intellij.uiDesigner.core.Spacer();
+        createAirlinePanel.add(spacer4, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(6, 2, new Insets(0, 5, 0, 5), -1, -1));
+        createTab.add(panel3, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel3.setBorder(BorderFactory.createTitledBorder(null, "Flight", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        flightCreateAirlineLabel = new JLabel();
+        flightCreateAirlineLabel.setText("airline:");
+        panel3.add(flightCreateAirlineLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer5 = new com.intellij.uiDesigner.core.Spacer();
+        panel3.add(spacer5, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        flightCreateAirlineComboBox = new JComboBox();
+        panel3.add(flightCreateAirlineComboBox, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        flightCreateDepartureLabel = new JLabel();
+        flightCreateDepartureLabel.setText("from:");
+        panel3.add(flightCreateDepartureLabel, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        flightCreateDepartureTextField = new JTextField();
+        panel3.add(flightCreateDepartureTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        flightCreateArrivalLabel = new JLabel();
+        flightCreateArrivalLabel.setText("to:");
+        panel3.add(flightCreateArrivalLabel, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        flightCreatePriceLabel = new JLabel();
+        flightCreatePriceLabel.setText("price:");
+        panel3.add(flightCreatePriceLabel, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        flightCreateArrivalTextField = new JTextField();
+        panel3.add(flightCreateArrivalTextField, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        flightCreatePriceSpinner = new JSpinner();
+        panel3.add(flightCreatePriceSpinner, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        flightCreateBtn = new JButton();
+        flightCreateBtn.setText("Create");
+        panel3.add(flightCreateBtn, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer6 = new com.intellij.uiDesigner.core.Spacer();
+        createTab.add(spacer6, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         airlineNameLabel.setLabelFor(airlineNameTextField);
         airlineCountryLabel.setLabelFor(airlineCountryTextFiled);
         flightAirlineIdLabel.setLabelFor(flightAirlineComboBox);
         flightDepartureLabel.setLabelFor(flightDepartureTextField);
         flightArrivalLabel.setLabelFor(flightArrivalTextField);
+        airlineCreateNameLabel.setLabelFor(airlineCreateNameTextFiled);
+        airlineCreateCountryLabel.setLabelFor(airlineCreateCountryTextField);
+        flightCreateAirlineLabel.setLabelFor(flightCreateAirlineComboBox);
+        flightCreateDepartureLabel.setLabelFor(flightCreateDepartureTextField);
+        flightCreateArrivalLabel.setLabelFor(flightCreateArrivalTextField);
+        flightCreatePriceLabel.setLabelFor(flightCreatePriceSpinner);
     }
 
     /**
