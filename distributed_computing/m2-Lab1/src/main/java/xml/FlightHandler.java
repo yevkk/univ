@@ -55,6 +55,7 @@ public class FlightHandler extends BaseHandler {
 
     @Override
     public DataStorage<?> getDataStorage() {
+        data.correctMaxId();
         return data;
     }
 
@@ -113,11 +114,8 @@ public class FlightHandler extends BaseHandler {
     @Override
     public void proceedSavingElement(Document document, Element element, int index) {
         var flight = data.getAll().get(index);
+        element.setAttribute("airline_id", String.valueOf(flight.getAirlineId()));
         element.setAttribute("id", String.valueOf(flight.getId()));
-
-        var airlineId = document.createElement("airline_id");
-        airlineId.setTextContent( String.valueOf(flight.getAirlineId()));
-        element.appendChild(airlineId);
 
         var departure = document.createElement("departure");
         departure.setTextContent(flight.getDepartureAirport());

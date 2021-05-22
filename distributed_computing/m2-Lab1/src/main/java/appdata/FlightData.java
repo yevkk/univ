@@ -7,21 +7,36 @@ import java.util.List;
 
 public class FlightData implements DataStorage<Flight> {
     private final List<Flight> list;
-    private int maxIndex;
+    private int maxId;
 
     public FlightData(int initIndex, List<Flight> list) {
         this.list = list;
-        maxIndex = initIndex;
+        maxId = initIndex;
     }
 
     public FlightData() {
         this(0, new ArrayList<>());
     }
 
+    public void correctMaxId() {
+        maxId = 0;
+        for (var item : list) {
+            maxId = Math.max(maxId, item.getId());
+        }
+    }
+
     @Override
     public void add(Flight entity) {
-        maxIndex++;
-        entity.setId(maxIndex);
+        if (entity.getId() == -1) {
+            maxId++;
+            entity.setId(maxId);
+        } else {
+            for (var item : list) {
+                if (item.getId() == entity.getId()) {
+                    return;
+                }
+            }
+        }
         list.add(entity);
     }
 

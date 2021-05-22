@@ -48,6 +48,7 @@ public class AirlineHandler extends BaseHandler {
 
     @Override
     public DataStorage<?> getDataStorage() {
+        data.correctMaxId();
         return data;
     }
 

@@ -69,23 +69,40 @@ public class GUI extends JFrame {
 
     public GUI() {
         $$$setupUI$$$();
-        ResourceBundle resource = ResourceBundle.getBundle("xml");
-        appdata = AppData.loadFromFile(resource.getString("filename.airlines"), resource.getString("filename.flights"));
 
         setContentPane(rootPanel);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(800, 500));
 
+        var menubar = new JMenuBar();
+        var menu = new JMenu("data");
+        var loadMenuItem = new JMenuItem("load");
+        var saveMenuItem = new JMenuItem("save");
+
+        loadMenuItem.addActionListener(e -> {
+            var resource = ResourceBundle.getBundle("xml");
+            appdata = AppData.loadFromFile(resource.getString("filename.airlines"), resource.getString("filename.flights"));
+
+            updateAirlinesTable(airlineTable);
+            updateFlightTable(flightTable);
+        });
+
+        saveMenuItem.addActionListener(e -> {
+            var resource = ResourceBundle.getBundle("xml");
+            appdata.saveToFile(resource.getString("filename.airlines"), resource.getString("filename.flights"));
+        });
+
+        menu.add(loadMenuItem);
+        menu.add(saveMenuItem);
+        menubar.add(menu);
+        setJMenuBar(menubar);
 
         flightPriceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
         flightCreatePriceSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 50000.0, 0.1));
 
         initTable(airlineTable, new String[]{"id", "name", "country"});
-        updateAirlinesTable(airlineTable);
-
         initTable(flightTable, new String[]{"id", "airline id", "from", "to", "price"});
-        updateFlightTable(flightTable);
 
         airlineTable.addMouseListener(new MouseAdapter() {
             @Override
