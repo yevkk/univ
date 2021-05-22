@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Flight extends Entity {
     private int airlineId;
-    private String departureAirport;
-    private String arrivalAirport;
+    private String from;
+    private String to;
     private double price;
 
     public Flight(int id, int airlineId, String departureAirport, String arrivalAirport, double price) {
