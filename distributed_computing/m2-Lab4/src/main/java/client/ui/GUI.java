@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.util.logging.Logger;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -66,7 +67,7 @@ public class GUI extends JFrame {
     private JLabel flightCreateArrivalLabel;
     private JLabel flightCreatePriceLabel;
 
-    public GUI() throws IOException {
+    public GUI() throws IOException, NotBoundException {
 
         client = new Client();
 
@@ -308,7 +309,7 @@ public class GUI extends JFrame {
         flightPriceSpinner.setValue(0.0);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NotBoundException {
         FlatIntelliJLaf.setup();
         new GUI();
     }
