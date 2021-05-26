@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookStats extends Entity {
-    private Book book;
+    private int bookID;
     private int amount;
     private int totalRequests;
     private double rate;
 
-    public BookStats(int id, Book book, int amount, int totalRequests, double rate) {
-        this(book, amount, totalRequests, rate);
+    public BookStats(int id, int bookID, int amount, int totalRequests, double rate) {
+        this(bookID, amount, totalRequests, rate);
         setId(id);
     }
 }
