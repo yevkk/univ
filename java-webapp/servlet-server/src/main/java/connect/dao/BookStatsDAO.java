@@ -1,6 +1,5 @@
 package connect.dao;
 
-import entity.book.Book;
 import entity.book.BookStats;
 
 import java.sql.Connection;
@@ -105,7 +104,7 @@ public class BookStatsDAO implements BaseDAO<BookStats> {
             statement.executeUpdate();
             res = true;
         } catch (SQLException e) {
-            logger.warning("SQLException in update()");
+            logger.warning("SQLException in delete()");
         }
         return res;
     }

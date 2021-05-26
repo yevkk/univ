@@ -1,6 +1,7 @@
 package connect.dao;
 
 import entity.book.Book;
+import entity.misc.DeliveryType;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,29 +11,26 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class BookDAO implements BaseDAO<Book> {
+public class DeliveryTypeDAO implements BaseDAO<DeliveryType> {
     private final Connection conn;
     private final ResourceBundle resBundle = ResourceBundle.getBundle("database");
-    private final Logger logger = Logger.getLogger(BookDAO.class.getName());
+    private final Logger logger = Logger.getLogger(DeliveryTypeDAO.class.getName());
 
-    public BookDAO(Connection conn) {
+    public DeliveryTypeDAO(Connection conn) {
         this.conn = conn;
     }
 
-    private Book mapper(ResultSet rs) throws SQLException {
+    private DeliveryType mapper(ResultSet rs) throws SQLException {
         var id = rs.getInt("id");
-        var name = rs.getString("name");
-        var author = rs.getString("author");
-        var lang = rs.getString("lang");
-        var tags = (String[]) rs.getArray("tags").getArray();
-        return new Book(id, name, author, lang, tags);
+        var description = rs.getString("description");
+        return new DeliveryType(id, description);
     }
 
     @Override
-    public List<Book> findAll() {
+    public List<DeliveryType> findAll() {
         try (var statement = conn.createStatement()) {
-            try (var resultSet = statement.executeQuery(resBundle.getString("query.book.findAll"))) {
-                var list = new ArrayList<Book>();
+            try (var resultSet = statement.executeQuery(resBundle.getString("query.delivery_type.findAll"))) {
+                var list = new ArrayList<DeliveryType>();
                 while (resultSet.next()) {
                     list.add(mapper(resultSet));
                 }
@@ -45,8 +43,8 @@ public class BookDAO implements BaseDAO<Book> {
     }
 
     @Override
-    public Book find(int id) {
-        try (var statement = conn.prepareStatement(resBundle.getString("query.book.find"))) {
+    public DeliveryType find(int id) {
+        try (var statement = conn.prepareStatement(resBundle.getString("query.delivery_type.find"))) {
             statement.setInt(1, id);
 
             try (var resultSet = statement.executeQuery()) {
@@ -61,13 +59,10 @@ public class BookDAO implements BaseDAO<Book> {
     }
 
     @Override
-    public boolean create(Book entity) {
+    public boolean create(DeliveryType entity) {
         var res = false;
-        try (var statement = conn.prepareStatement(resBundle.getString("query.book.create"))) {
-            statement.setString(1, entity.getName());
-            statement.setString(2, entity.getAuthor());
-            statement.setString(3, entity.getLang());
-            statement.setArray(4, conn.createArrayOf("text", entity.getTags()));
+        try (var statement = conn.prepareStatement(resBundle.getString("query.delivery_type.create"))) {
+            statement.setString(1, entity.getDescription());
 
             statement.executeUpdate();
             res = true;
@@ -78,14 +73,11 @@ public class BookDAO implements BaseDAO<Book> {
     }
 
     @Override
-    public boolean update(Book entity) {
+    public boolean update(DeliveryType entity) {
         var res = false;
-        try (var statement = conn.prepareStatement(resBundle.getString("query.book.update"))) {
-            statement.setString(1, entity.getName());
-            statement.setString(2, entity.getAuthor());
-            statement.setString(3, entity.getLang());
-            statement.setArray(4, conn.createArrayOf("text", entity.getTags()));
-            statement.setInt(5, entity.getId());
+        try (var statement = conn.prepareStatement(resBundle.getString("query.delivery_type.update"))) {
+            statement.setString(1, entity.getDescription());
+            statement.setInt(2, entity.getId());
 
             statement.executeUpdate();
             res = true;
@@ -98,7 +90,7 @@ public class BookDAO implements BaseDAO<Book> {
     @Override
     public boolean delete(int id) {
         var res = false;
-        try (var statement = conn.prepareStatement(resBundle.getString("query.book.delete"))) {
+        try (var statement = conn.prepareStatement(resBundle.getString("query.delivery_type.delete"))) {
             statement.setInt(1, id);
 
             statement.executeUpdate();
