@@ -3,21 +3,18 @@ package connect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.PriorityQueue;
-import java.util.Properties;
-import java.util.Queue;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class ConnectionPool {
     private final int limit;
-    private final Queue<Connection> connections;
+    private final List<Connection> connections;
     private final Logger logger = Logger.getLogger(ConnectionPool.class.getName());
 
-    public ConnectionPool() {
-        var resource = ResourceBundle.getBundle("database");
+    public ConnectionPool(String setupResourceBundleName) {
+        var resource = ResourceBundle.getBundle(setupResourceBundleName);
         limit = Integer.parseInt(resource.getString("setup.maxConnections"));
-        connections = new PriorityQueue<>();
+        connections = new ArrayList<>();
 
         var url = resource.getString("setup.url");
         var props = new Properties();
@@ -37,8 +34,9 @@ public class ConnectionPool {
     public Connection getConnection() {
         if (connections.isEmpty()) {
             logger.warning("Connections limit exceeded");
+            return null;
         }
-        return connections.poll();
+        return connections.remove(connections.size() - 1);
     }
 
     public boolean putConnection(Connection conn) {
@@ -49,5 +47,9 @@ public class ConnectionPool {
 
         connections.add(conn);
         return true;
+    }
+
+    public int getLimit() {
+        return limit;
     }
 }
