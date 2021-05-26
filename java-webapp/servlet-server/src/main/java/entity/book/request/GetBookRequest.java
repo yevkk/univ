@@ -1,4 +1,4 @@
-package entity.book;
+package entity.book.request;
 
 import entity.Entity;
 import lombok.AllArgsConstructor;
