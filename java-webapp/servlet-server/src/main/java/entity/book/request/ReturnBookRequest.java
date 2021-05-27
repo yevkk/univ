@@ -6,16 +6,19 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReturnBookRequest extends Entity {
+    private LocalDateTime datetime;
     private int getBookRequestID;
     private RequestState state;
 
-    public ReturnBookRequest(int id, int getBookRequestID, RequestState state) {
-        this(getBookRequestID, state);
+    public ReturnBookRequest(int id, LocalDateTime datetime, int getBookRequestID, RequestState state) {
+        this(datetime, getBookRequestID, state);
         setId(id);
     }
 }
