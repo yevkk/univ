@@ -32,6 +32,7 @@ class BookStatsDAOTest {
         bookDao.create(new Book("book1", "author1", "ua", new String[]{}));
         bookDao.create(new Book("book2", "author2", "en", new String[]{}));
         bookDao.create(new Book("book3", "author3", "pl", new String[]{}));
+        pool.putConnection(conn);
     }
 
     @AfterAll

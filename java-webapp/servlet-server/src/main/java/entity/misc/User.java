@@ -12,7 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User extends Entity {
     public enum Role {
-        USER, ADMIN, UNDEFINED
+        USER, ADMIN, UNDEFINED;
+
+        @Override
+        public String toString() {
+            return switch (this) {
+                case USER -> "user";
+                case ADMIN -> "admin";
+                case UNDEFINED -> "undefined";
+            };
+        }
     }
 
     private String login;
