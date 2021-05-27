@@ -1,5 +1,6 @@
 package connect.dao;
 
+import connect.dao.interfaces.BaseDAO;
 import entity.book.Book;
 
 import java.sql.Connection;

@@ -1,5 +1,6 @@
 package connect.dao;
 
+import connect.dao.interfaces.InsertFindDAO;
 import entity.book.request.GetBookRequest;
 import entity.book.request.RequestState;
 

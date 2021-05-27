@@ -1,6 +1,8 @@
 package connect.dao;
 
 import connect.ConnectionPool;
+import connect.dao.interfaces.BaseDAO;
+import connect.dao.interfaces.InsertFindDAO;
 import entity.Entity;
 
 import java.sql.SQLException;

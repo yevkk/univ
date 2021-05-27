@@ -1,11 +1,9 @@
-package connect.dao;
+package connect.dao.interfaces;
 
 import entity.Entity;
 
-import java.util.List;
-
 /**
- * Provides definitions of CRUD operations
+ * Provides declarations of CRUD operations
  * @param <E> class of Entity object DAO is working with
  */
 public interface BaseDAO<E extends Entity> extends InsertFindDAO<E> {
