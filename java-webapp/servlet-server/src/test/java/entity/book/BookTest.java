@@ -6,6 +6,22 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookTest {
+    private void helper(Book book1, Book book2) {
+        assertEquals("Name1", book1.getName());
+        assertEquals("Author1", book1.getAuthor());
+        assertEquals("lang1", book1.getLang());
+        assertEquals(2, book1.getTags().length);
+        assertEquals("Tag1", book1.getTags()[0]);
+        assertEquals("Tag2", book1.getTags()[1]);
+
+        assertEquals("Name2", book2.getName());
+        assertEquals("Author2", book2.getAuthor());
+        assertEquals("lang2", book2.getLang());
+        assertEquals(3, book2.getTags().length);
+        assertEquals("Tag2", book2.getTags()[0]);
+        assertEquals("Tag3", book2.getTags()[1]);
+        assertEquals("Tag4", book2.getTags()[2]);
+    }
 
     @Test
     public void emptyConstructor() {
@@ -24,21 +40,8 @@ public class BookTest {
         var book2 = new Book(37, "Name2", "Author2", "lang2", new String[]{"Tag2", "Tag3", "Tag4"});
 
         assertEquals(4, book1.getId());
-        assertEquals("Name1", book1.getName());
-        assertEquals("Author1", book1.getAuthor());
-        assertEquals("lang1", book1.getLang());
-        assertEquals(2, book1.getTags().length);
-        assertEquals("Tag1", book1.getTags()[0]);
-        assertEquals("Tag2", book1.getTags()[1]);
-
         assertEquals(37, book2.getId());
-        assertEquals("Name2", book2.getName());
-        assertEquals("Author2", book2.getAuthor());
-        assertEquals("lang2", book2.getLang());
-        assertEquals(3, book2.getTags().length);
-        assertEquals("Tag2", book2.getTags()[0]);
-        assertEquals("Tag3", book2.getTags()[1]);
-        assertEquals("Tag4", book2.getTags()[2]);
+        helper(book1, book2);
     }
 
     @Test
@@ -47,21 +50,8 @@ public class BookTest {
         var book2 = new Book("Name2", "Author2", "lang2", new String[]{"Tag2", "Tag3", "Tag4"});
 
         assertEquals(-1, book1.getId());
-        assertEquals("Name1", book1.getName());
-        assertEquals("Author1", book1.getAuthor());
-        assertEquals("lang1", book1.getLang());
-        assertEquals(2, book1.getTags().length);
-        assertEquals("Tag1", book1.getTags()[0]);
-        assertEquals("Tag2", book1.getTags()[1]);
-
         assertEquals(-1, book2.getId());
-        assertEquals("Name2", book2.getName());
-        assertEquals("Author2", book2.getAuthor());
-        assertEquals("lang2", book2.getLang());
-        assertEquals(3, book2.getTags().length);
-        assertEquals("Tag2", book2.getTags()[0]);
-        assertEquals("Tag3", book2.getTags()[1]);
-        assertEquals("Tag4", book2.getTags()[2]);
+        helper(book1, book2);
     }
 
     @Test
@@ -81,21 +71,8 @@ public class BookTest {
         book2.setTags(new String[]{"Tag2", "Tag3", "Tag4"});
 
         assertEquals(4, book1.getId());
-        assertEquals("Name1", book1.getName());
-        assertEquals("Author1", book1.getAuthor());
-        assertEquals("lang1", book1.getLang());
-        assertEquals(2, book1.getTags().length);
-        assertEquals("Tag1", book1.getTags()[0]);
-        assertEquals("Tag2", book1.getTags()[1]);
-
         assertEquals(37, book2.getId());
-        assertEquals("Name2", book2.getName());
-        assertEquals("Author2", book2.getAuthor());
-        assertEquals("lang2", book2.getLang());
-        assertEquals(3, book2.getTags().length);
-        assertEquals("Tag2", book2.getTags()[0]);
-        assertEquals("Tag3", book2.getTags()[1]);
-        assertEquals("Tag4", book2.getTags()[2]);
+        helper(book1, book2);
     }
 
 }

@@ -7,6 +7,18 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookStatsTest {
+    private void helper(BookStats bookStats1, BookStats bookStats2) {
+        assertEquals(2, bookStats1.getBookID());
+        assertEquals(3, bookStats1.getAmount());
+        assertEquals(4, bookStats1.getTotalRequests());
+        assertEquals(5, bookStats1.getRate(), 0.001);
+
+        assertEquals(3, bookStats2.getBookID());
+        assertEquals(4, bookStats2.getAmount());
+        assertEquals(5, bookStats2.getTotalRequests());
+        assertEquals(6, bookStats2.getRate(), 0.001);
+    }
+
     @Test
     public void emptyConstructor() {
         var bookStats = new BookStats();
@@ -24,16 +36,8 @@ public class BookStatsTest {
         var bookStats2 = new BookStats(2, 3, 4, 5, 6.0);
 
         assertEquals(1, bookStats1.getId());
-        assertEquals(2, bookStats1.getBookID());
-        assertEquals(3, bookStats1.getAmount());
-        assertEquals(4, bookStats1.getTotalRequests());
-        assertEquals(5, bookStats1.getRate(), 0.001);
-
         assertEquals(2, bookStats2.getId());
-        assertEquals(3, bookStats2.getBookID());
-        assertEquals(4, bookStats2.getAmount());
-        assertEquals(5, bookStats2.getTotalRequests());
-        assertEquals(6, bookStats2.getRate(), 0.001);
+        helper(bookStats1, bookStats2);
     }
 
     @Test
@@ -42,16 +46,8 @@ public class BookStatsTest {
         var bookStats2 = new BookStats(3, 4, 5, 6);
 
         assertEquals(-1, bookStats1.getId());
-        assertEquals(2, bookStats1.getBookID());
-        assertEquals(3, bookStats1.getAmount());
-        assertEquals(4, bookStats1.getTotalRequests());
-        assertEquals(5, bookStats1.getRate(), 0.001);
-
         assertEquals(-1, bookStats2.getId());
-        assertEquals(3, bookStats2.getBookID());
-        assertEquals(4, bookStats2.getAmount());
-        assertEquals(5, bookStats2.getTotalRequests());
-        assertEquals(6, bookStats2.getRate(), 0.001);
+        helper(bookStats1, bookStats2);
     }
 
     @Test
@@ -71,15 +67,7 @@ public class BookStatsTest {
         bookStats2.setRate(6);
 
         assertEquals(1, bookStats1.getId());
-        assertEquals(2, bookStats1.getBookID());
-        assertEquals(3, bookStats1.getAmount());
-        assertEquals(4, bookStats1.getTotalRequests());
-        assertEquals(5, bookStats1.getRate(), 0.001);
-
         assertEquals(2, bookStats2.getId());
-        assertEquals(3, bookStats2.getBookID());
-        assertEquals(4, bookStats2.getAmount());
-        assertEquals(5, bookStats2.getTotalRequests());
-        assertEquals(6, bookStats2.getRate(), 0.001);
+        helper(bookStats1, bookStats2);
     }
 }
