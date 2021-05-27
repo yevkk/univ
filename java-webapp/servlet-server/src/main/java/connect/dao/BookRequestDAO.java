@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class BookRequestDAO {
+public class BookRequestDAO implements InsertFindDAO<GetBookRequest> {
     private final Connection conn;
     private final ResourceBundle resBundle = ResourceBundle.getBundle("database");
     private final Logger logger = Logger.getLogger(BookRequestDAO.class.getName());
@@ -22,7 +22,7 @@ public class BookRequestDAO {
     }
 
     private GetBookRequest mapper(ResultSet rs) throws SQLException {
-        var id  = rs.getInt("id");
+        var id = rs.getInt("id");
         var datetime = rs.getTimestamp("datetime").toLocalDateTime();
         var userID = rs.getInt("user_id");
         var bookID = rs.getInt("book_id");
@@ -30,9 +30,10 @@ public class BookRequestDAO {
         var contact = rs.getString("contact");
         var state = RequestState.valueOf(rs.getString("state").toUpperCase());
 
-        return  new GetBookRequest();
+        return new GetBookRequest(id, datetime, userID, bookID, deliveryTypeID, contact, state);
     }
 
+    @Override
     public List<GetBookRequest> findAll() {
         try (var statement = conn.createStatement()) {
             try (var resultSet = statement.executeQuery(resBundle.getString("query.request.findAll"))) {
@@ -48,7 +49,24 @@ public class BookRequestDAO {
         return null;
     }
 
-    public  List<GetBookRequest> findByUserID(int userID) {
+    @Override
+    public GetBookRequest find(int id) {
+        try (var statement = conn.prepareStatement(resBundle.getString("query.request.find"))) {
+            statement.setInt(1, id);
+
+            try (var resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapper(resultSet);
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.warning("SQLException in find()");
+        }
+        return null;
+    }
+
+    public List<GetBookRequest> findByUserID(int userID) {
         try (var statement = conn.prepareStatement(resBundle.getString("query.request.findByUserID"))) {
             statement.setInt(1, userID);
 
@@ -65,7 +83,7 @@ public class BookRequestDAO {
         return null;
     }
 
-    public  List<GetBookRequest> findByBookID(int bookID) {
+    public List<GetBookRequest> findByBookID(int bookID) {
         try (var statement = conn.prepareStatement(resBundle.getString("query.request.findByBookID"))) {
             statement.setInt(1, bookID);
 
@@ -82,6 +100,7 @@ public class BookRequestDAO {
         return null;
     }
 
+    @Override
     public boolean create(GetBookRequest entity) {
         var res = false;
         try (var statement = conn.prepareStatement(resBundle.getString("query.request.create"))) {

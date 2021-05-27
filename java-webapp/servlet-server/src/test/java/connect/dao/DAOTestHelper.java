@@ -15,7 +15,9 @@ public class DAOTestHelper {
         callableStatement.execute();
     }
 
-    public static <E extends Entity> void insertAndFindTest (BaseDAO<E> dao, E e1, E e2, E e3) {
+    public static <E extends Entity> void insertAndFindTest (InsertFindDAO<E> dao, E e1, E e2, E e3) {
+        assertEquals(0, dao.findAll().size());
+
         dao.create(e1);
         assertEquals(e1, dao.find(1));
         assertEquals(1, dao.findAll().size());

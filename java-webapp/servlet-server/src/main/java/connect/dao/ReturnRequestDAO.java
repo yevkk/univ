@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class ReturnRequestDAO {
+public class ReturnRequestDAO implements InsertFindDAO<ReturnBookRequest> {
     private final Connection conn;
     private final ResourceBundle resBundle = ResourceBundle.getBundle("database");
     private final Logger logger = Logger.getLogger(ReturnRequestDAO.class.getName());
@@ -31,6 +31,7 @@ public class ReturnRequestDAO {
         return new ReturnBookRequest(id, datetime, request_id, state);
     }
 
+    @Override
     public List<ReturnBookRequest> findAll() {
         try (var statement = conn.createStatement()) {
             try (var resultSet = statement.executeQuery(resBundle.getString("query.return_request.findAll"))) {
@@ -42,6 +43,23 @@ public class ReturnRequestDAO {
             }
         } catch (SQLException e) {
             logger.warning("SQLException in findAll()");
+        }
+        return null;
+    }
+
+    @Override
+    public ReturnBookRequest find(int id) {
+        try (var statement = conn.prepareStatement(resBundle.getString("query.return_request.find"))) {
+            statement.setInt(1, id);
+
+            try (var resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapper(resultSet);
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.warning("SQLException in find()");
         }
         return null;
     }
@@ -80,6 +98,7 @@ public class ReturnRequestDAO {
         return null;
     }
 
+    @Override
     public boolean create(ReturnBookRequest entity) {
         var res = false;
         try (var statement = conn.prepareStatement(resBundle.getString("query.return_request.create"))) {
@@ -95,7 +114,7 @@ public class ReturnRequestDAO {
         return res;
     }
 
-    public boolean updateState(GetBookRequest entity) {
+    public boolean updateState(ReturnBookRequest entity) {
         var res = false;
         try (var statement = conn.prepareStatement(resBundle.getString("query.return_request.updateState"))) {
             statement.setString(1, entity.getState().toString());

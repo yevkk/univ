@@ -1,7 +1,7 @@
 package entity.book.request;
 
 public enum RequestState {
-    SENT, IN_PROGRESS, PROCESSED, REJECTED;
+    SENT, IN_PROGRESS, PROCESSED, REJECTED, RETURNED;
 
     @Override
     public String toString() {
@@ -10,6 +10,7 @@ public enum RequestState {
             case PROCESSED -> "processed";
             case IN_PROGRESS -> "in_progress";
             case REJECTED -> "rejected";
+            case RETURNED -> "returned";
         };
     }
 }
