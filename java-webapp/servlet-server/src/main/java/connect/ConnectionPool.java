@@ -12,6 +12,12 @@ public class ConnectionPool {
     private final Logger logger = Logger.getLogger(ConnectionPool.class.getName());
 
     public ConnectionPool(String setupResourceBundleName) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            logger.warning("Driver not found");
+        }
+
         var resource = ResourceBundle.getBundle(setupResourceBundleName);
         limit = Integer.parseInt(resource.getString("setup.maxConnections"));
         connections = new ArrayList<>();
@@ -51,5 +57,11 @@ public class ConnectionPool {
 
     public int getLimit() {
         return limit;
+    }
+
+    private static final ConnectionPool pool = new ConnectionPool("database");
+
+    public static ConnectionPool getInstance() {
+        return pool;
     }
 }
