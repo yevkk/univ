@@ -19,9 +19,6 @@ import java.util.logging.Logger;
 
 @WebServlet(urlPatterns = "/books/update")
 public class BooksUpdateServlet extends HttpServlet {
-    private final Logger logger = Logger.getLogger(BooksUpdateServlet.class.getName());
-    private final Gson gson = new Gson();
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!AuthorizeHelper.authorizeAdmin(req, resp)) {
@@ -41,19 +38,19 @@ public class BooksUpdateServlet extends HttpServlet {
         var bookDao = new BookDAO(conn);
         var book = bookDao.find(Integer.parseInt(idVar[0]));
 
-        var nameArr =  req.getParameterValues("name");
-        var authorArr =  req.getParameterValues("author");
-        var langArr =  req.getParameterValues("lang");
+        var name =  req.getParameter("name");
+        var author =  req.getParameter("author");
+        var lang =  req.getParameter("lang");
         var tags =  req.getParameterValues("tag");
 
-        if (nameArr != null){
-            book.setName(nameArr[0]);
+        if (name != null){
+            book.setName(name);
         }
-        if (authorArr != null){
-            book.setAuthor(authorArr[0]);
+        if (author != null){
+            book.setAuthor(author);
         }
-        if (langArr != null){
-            book.setLang(langArr[0]);
+        if (lang != null){
+            book.setLang(lang);
         }
         if (tags != null){
             book.setTags(tags);

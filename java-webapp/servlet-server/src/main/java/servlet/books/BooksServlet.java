@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 @WebServlet(urlPatterns = "/books")
 public class BooksServlet extends HttpServlet {
-    private final Logger logger = Logger.getLogger(BooksServlet.class.getName());
     private final Gson gson = new Gson();
 
     @Override
@@ -25,17 +24,17 @@ public class BooksServlet extends HttpServlet {
             return;
         }
 
-        var idArr = req.getParameterValues("id");
+        var idStr = req.getParameter("id");
 
         var conn = ConnectionPool.getInstance().getConnection();
         var bookDAO = new BookDAO(conn);
         var out = resp.getWriter();
 
-        if (idArr == null || idArr[0].equals("-1")) {
+        if (idStr == null || idStr.equals("-1")) {
             var books = bookDAO.findAll();
             out.print(gson.toJson(books));
         } else {
-            var id = Integer.parseInt(idArr[0]);
+            var id = Integer.parseInt(idStr);
             var book = bookDAO.find(id);
             out.print(gson.toJson(book));
         }

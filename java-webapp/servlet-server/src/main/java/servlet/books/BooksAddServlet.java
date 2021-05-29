@@ -20,21 +20,18 @@ import java.util.logging.Logger;
 
 @WebServlet(urlPatterns = "/books/add")
 public class BooksAddServlet extends HttpServlet {
-    private final Logger logger = Logger.getLogger(BooksAddServlet.class.getName());
-    private final Gson gson = new Gson();
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!AuthorizeHelper.authorizeAdmin(req, resp)) {
             return;
         }
 
-        var nameArr =  req.getParameterValues("name");
-        var authorArr =  req.getParameterValues("author");
-        var langArr =  req.getParameterValues("lang");
+        var name =  req.getParameter("name");
+        var author =  req.getParameter("author");
+        var lang =  req.getParameter("lang");
         var tags =  req.getParameterValues("tag");
 
-        if (nameArr == null || authorArr == null || langArr == null) {
+        if (name == null || author == null || lang == null) {
             resp.sendError(400);
             return;
         }
@@ -45,7 +42,7 @@ public class BooksAddServlet extends HttpServlet {
         var bookDAO = new BookDAO(conn);
         var statsDAO = new BookStatsDAO(conn);
 
-        var book = new Book(nameArr[0], authorArr[0], langArr[0], tags);
+        var book = new Book(name, author, lang, tags);
         bookDAO.create(book);
 
         var book_id = bookDAO.findID(book);
