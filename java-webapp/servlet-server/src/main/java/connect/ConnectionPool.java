@@ -38,20 +38,26 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() {
-        if (connections.isEmpty()) {
-            logger.warning("Connections limit exceeded");
-            return null;
+        Connection conn;
+        synchronized (this) {
+            if (connections.isEmpty()) {
+                logger.warning("Connections limit exceeded");
+                return null;
+            }
+            conn = connections.remove(connections.size() - 1);
         }
-        return connections.remove(connections.size() - 1);
+        return conn;
     }
 
     public boolean putConnection(Connection conn) {
-        if (connections.size() == limit) {
-            logger.warning("Connection pool overfilled");
-            return false;
-        }
+        synchronized (this) {
+            if (connections.size() == limit) {
+                logger.warning("Connection pool overfilled");
+                return false;
+            }
 
-        connections.add(conn);
+            connections.add(conn);
+        }
         return true;
     }
 

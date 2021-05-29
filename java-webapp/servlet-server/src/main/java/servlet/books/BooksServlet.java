@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import connect.ConnectionPool;
 import connect.dao.BookDAO;
 import connect.dao.UserDAO;
+import servlet.AuthorizeHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,32 +19,9 @@ public class BooksServlet extends HttpServlet {
     private final Logger logger = Logger.getLogger(BooksServlet.class.getName());
     private final Gson gson = new Gson();
 
-    private boolean authorize(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var loginArr = req.getParameterValues("login");
-        var passwordArr = req.getParameterValues("password");
-
-        if (loginArr == null || passwordArr == null) {
-            resp.sendError(400);
-            return false;
-        }
-
-        ConnectionPool pool = new ConnectionPool("database");
-
-        var conn = pool.getConnection();
-        var user = new UserDAO(conn).find(loginArr[0], passwordArr[0]);
-        pool.putConnection(conn);
-
-        if (user == null) {
-            resp.sendError(401);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!authorize(req, resp)) {
+        if (!AuthorizeHelper.authorize(req, resp)) {
             return;
         }
 
