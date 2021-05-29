@@ -1,12 +1,8 @@
 package servlet.books;
 
-import com.google.gson.Gson;
 import connect.ConnectionPool;
 import connect.TransactionManager;
 import connect.dao.BookDAO;
-import connect.dao.BookStatsDAO;
-import entity.book.Book;
-import entity.book.BookStats;
 import servlet.AuthorizeHelper;
 
 import javax.servlet.ServletException;
@@ -15,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @WebServlet(urlPatterns = "/books/update")
 public class BooksUpdateServlet extends HttpServlet {

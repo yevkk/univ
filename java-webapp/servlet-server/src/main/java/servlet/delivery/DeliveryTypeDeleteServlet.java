@@ -1,11 +1,8 @@
-package servlet.books;
+package servlet.delivery;
 
 import connect.ConnectionPool;
 import connect.TransactionManager;
-import connect.dao.BookDAO;
-import connect.dao.BookStatsDAO;
-import entity.book.Book;
-import entity.book.BookStats;
+import connect.dao.DeliveryTypeDAO;
 import servlet.AuthorizeHelper;
 
 import javax.servlet.ServletException;
@@ -15,20 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/books/add")
-public class BooksAddServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/delivery_types/delete")
+public class DeliveryTypeDeleteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!AuthorizeHelper.authorizeAdmin(req, resp)) {
             return;
         }
 
-        var name =  req.getParameter("name");
-        var author =  req.getParameter("author");
-        var lang =  req.getParameter("lang");
-        var tags =  req.getParameterValues("tag");
+        var idStr = req.getParameter("id");
 
-        if (name == null || author == null || lang == null) {
+        if (idStr == null) {
             resp.sendError(400);
             return;
         }
@@ -36,14 +30,8 @@ public class BooksAddServlet extends HttpServlet {
         var conn = ConnectionPool.getInstance().getConnection();
         TransactionManager.begin(conn);
 
-        var bookDAO = new BookDAO(conn);
-        var statsDAO = new BookStatsDAO(conn);
-
-        var book = new Book(name, author, lang, tags);
-        bookDAO.create(book);
-
-        var book_id = bookDAO.findID(book);
-        statsDAO.create(new BookStats(book_id, 0, 0, 0));
+        var deliveryTypeDAO = new DeliveryTypeDAO(conn);
+        deliveryTypeDAO.delete(Integer.parseInt(idStr));
 
         TransactionManager.commit(conn);
         ConnectionPool.getInstance().putConnection(conn);

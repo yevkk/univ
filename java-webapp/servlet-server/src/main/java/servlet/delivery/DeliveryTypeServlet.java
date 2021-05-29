@@ -1,8 +1,8 @@
-package servlet.books;
+package servlet.delivery;
 
 import com.google.gson.Gson;
 import connect.ConnectionPool;
-import connect.dao.BookDAO;
+import connect.dao.DeliveryTypeDAO;
 import servlet.AuthorizeHelper;
 
 import javax.servlet.ServletException;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/books")
-public class BooksServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/delivery_types")
+public class DeliveryTypeServlet extends HttpServlet {
     private final Gson gson = new Gson();
 
     @Override
@@ -25,16 +25,16 @@ public class BooksServlet extends HttpServlet {
         var idStr = req.getParameter("id");
 
         var conn = ConnectionPool.getInstance().getConnection();
-        var bookDAO = new BookDAO(conn);
-        var out = resp.getWriter();
+        var deliveryTypeDAO = new DeliveryTypeDAO(conn);
+        var out= resp.getWriter();
 
         if (idStr == null || idStr.equals("-1")) {
-            var books = bookDAO.findAll();
-            out.print(gson.toJson(books));
+            var deliveryTypes = deliveryTypeDAO.findAll();
+            out.print(gson.toJson(deliveryTypes));
         } else {
             var id = Integer.parseInt(idStr);
-            var book = bookDAO.find(id);
-            out.print(gson.toJson(book));
+            var deliveryType = deliveryTypeDAO.find(id);
+            out.print(gson.toJson(deliveryType));
         }
 
         out.flush();

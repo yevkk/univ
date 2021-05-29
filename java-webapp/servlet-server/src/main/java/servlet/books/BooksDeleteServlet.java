@@ -1,6 +1,5 @@
 package servlet.books;
 
-import com.google.gson.Gson;
 import connect.ConnectionPool;
 import connect.TransactionManager;
 import connect.dao.BookDAO;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @WebServlet(urlPatterns = "/books/delete")
 public class BooksDeleteServlet extends HttpServlet {
@@ -33,7 +31,7 @@ public class BooksDeleteServlet extends HttpServlet {
         TransactionManager.begin(conn);
 
         var bookDao = new BookDAO(conn);
-        var book = bookDao.delete(Integer.parseInt(idStr));
+        bookDao.delete(Integer.parseInt(idStr));
 
         TransactionManager.commit(conn);
         ConnectionPool.getInstance().putConnection(conn);
