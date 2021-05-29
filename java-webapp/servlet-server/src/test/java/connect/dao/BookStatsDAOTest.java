@@ -53,6 +53,17 @@ class BookStatsDAOTest {
 
     @Test
     @Order(2)
+    public void findByBookID() {
+        var dao = new BookStatsDAO(conn);
+
+        assertEquals(dao.find(1), dao.findByBookID(1));
+        assertEquals(dao.find(2), dao.findByBookID(2));
+        assertEquals(dao.find(3), dao.findByBookID(3));
+        assertNull(dao.findByBookID(4));
+    }
+
+    @Test
+    @Order(3)
     public void update() {
         var dao = new BookStatsDAO(conn);
 
@@ -75,7 +86,7 @@ class BookStatsDAOTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void delete() {
         DAOTestHelper.deleteTest(new BookStatsDAO(conn));
     }
