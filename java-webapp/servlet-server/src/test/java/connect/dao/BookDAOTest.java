@@ -42,6 +42,22 @@ public class BookDAOTest {
 
     @Test
     @Order(2)
+    public void findID() {
+        var dao = new BookDAO(conn);
+
+        var book1 = new Book("name1", "author1", "lang1", new String[]{"Tag1", "Tag2"});
+        var book2 = new Book("name2", "author2", "lang2", new String[]{"Tag3"});
+        var book3 = new Book("name3", "author3", "lang3", new String[]{"Tag1"});
+        var book4 = new Book("name4", "author4", "lang4", new String[]{"Tag1"});
+
+        assertEquals(1,dao.findID(book1));
+        assertEquals(2,dao.findID(book2));
+        assertEquals(3,dao.findID(book3));
+        assertEquals(-1,dao.findID(book4));
+    }
+
+    @Test
+    @Order(3)
     public void update() {
         var dao = new BookDAO(conn);
 
@@ -64,7 +80,7 @@ public class BookDAOTest {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void delete() {
         DAOTestHelper.deleteTest(new BookDAO(conn));
     }

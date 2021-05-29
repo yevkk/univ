@@ -61,6 +61,24 @@ public class BookDAO implements BaseDAO<Book> {
         return null;
     }
 
+    public int findID(Book entity) {
+        int id = -1;
+        try (var statement = conn.prepareStatement(resBundle.getString("query.book.findID"))) {
+            statement.setString(1, entity.getName());
+            statement.setString(2, entity.getAuthor());
+            statement.setString(3, entity.getLang());
+
+            try (var resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    id = resultSet.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            logger.warning("SQLException in findID()");
+        }
+        return id;
+    }
+
     @Override
     public boolean create(Book entity) {
         var res = false;
