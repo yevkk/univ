@@ -41,6 +41,7 @@
     line-height: 2em;
     color: white;
 
+    user-select: none;
     transition: all 0.15s 0s ease-in-out;
     cursor: pointer;
 }
