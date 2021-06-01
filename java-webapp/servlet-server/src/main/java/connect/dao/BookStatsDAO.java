@@ -25,7 +25,7 @@ public class BookStatsDAO implements BaseDAO<BookStats> {
         var bookID = rs.getInt("book_id");
         var amount = rs.getInt("amount");
         var totalRequests = rs.getInt("total_requests");
-        var rate = rs.getInt("rate");
+        var rate = rs.getDouble("rate");
         return new BookStats(id, bookID, amount, totalRequests, rate);
     }
 
