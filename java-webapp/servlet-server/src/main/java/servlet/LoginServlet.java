@@ -16,6 +16,12 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var out = resp.getWriter();
-        out.print(gson.toJson(AuthorizeHelper.authorize(req, resp)));
+        var user = AuthorizeHelper.getUser(req, resp);
+
+        if (user == null) {
+            out.print(gson.toJson(null));
+        } else {
+            out.print(gson.toJson(user.getRole().toString()));
+        }
     }
 }
