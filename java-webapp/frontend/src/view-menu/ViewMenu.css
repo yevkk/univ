@@ -25,6 +25,7 @@
     padding: 5px;
     margin: 10px 20px;
     border-radius: 5px;
+    background: white;
     box-shadow: 1px 1px 4px #8695ac;
 
     transition: all 0.1s 0s ease-in-out;
