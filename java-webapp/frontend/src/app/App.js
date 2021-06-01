@@ -25,12 +25,6 @@ class App extends React.Component {
                     </Route>
                 </Switch>
             </BrowserRouter>
-
-            <header className="App-header">
-                <p>
-                    Edit and save to reload.
-                </p>
-            </header>
         </div>
     }
 }

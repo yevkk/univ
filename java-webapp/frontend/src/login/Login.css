@@ -2,7 +2,7 @@
     min-width: 400px;
     max-width: 500px;
     display: block;
-    margin: auto;
+    margin: 30px auto;
     padding: 15px 40px;
     box-sizing: border-box;
     box-shadow: 1px 1px 4px #8695ac;
@@ -41,7 +41,7 @@
     line-height: 2em;
     color: white;
 
-    transition: all 0.2s 0s ease-in-out;
+    transition: all 0.15s 0s ease-in-out;
     cursor: pointer;
 }
 
