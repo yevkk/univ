@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 public class ConnectionPool {
     private final int limit;
     private final List<Connection> connections;
+    private final List<Connection> acquiredConnections;
     private final Logger logger = Logger.getLogger(ConnectionPool.class.getName());
 
     public ConnectionPool(String setupResourceBundleName) {
@@ -21,6 +22,7 @@ public class ConnectionPool {
         var resource = ResourceBundle.getBundle(setupResourceBundleName);
         limit = Integer.parseInt(resource.getString("setup.maxConnections"));
         connections = new ArrayList<>();
+        acquiredConnections = new ArrayList<>();
 
         var url = resource.getString("setup.url");
         var props = new Properties();
@@ -45,18 +47,20 @@ public class ConnectionPool {
                 return null;
             }
             conn = connections.remove(connections.size() - 1);
+            acquiredConnections.add(conn);
         }
         return conn;
     }
 
     public boolean putConnection(Connection conn) {
         synchronized (this) {
-            if (connections.size() == limit) {
-                logger.warning("Connection pool overfilled");
+            if (acquiredConnections.contains(conn)) {
+                acquiredConnections.remove(conn);
+                connections.add(conn);
+            } else {
+                logger.warning("Connection is outside of pool");
                 return false;
             }
-
-            connections.add(conn);
         }
         return true;
     }
