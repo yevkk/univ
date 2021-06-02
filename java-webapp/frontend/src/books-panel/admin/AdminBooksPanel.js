@@ -28,7 +28,7 @@ class BookRow extends React.Component {
             <td>{this.props.book.tags.join(', ')}</td>
             <td>{this.props.book.stats.amount}</td>
             <td>{this.props.book.stats.totalRequests}</td>
-            <td>{this.props.book.stats.rate}</td>
+            <td>{this.props.book.stats.rate.toFixed(2)}</td>
             <td> <div className="AdminBooksPanel-update-button" onClick={() => this.openUpdateForm()}>update</div> </td>
         </tr>
     }

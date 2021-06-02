@@ -11,7 +11,7 @@ import {RateChangelogPanel} from "../history/RateLogPanel";
 
 export class AdminView extends React.Component {
     render() {
-        return <div className="AdminView">
+        return <div className="AdminView printable">
             <ViewHeader/>
             <BrowserRouter>
                 <ViewMenu/>

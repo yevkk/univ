@@ -27,13 +27,13 @@ class RequestRow extends React.Component {
         url.searchParams.set('id', this.requestID)
         url.searchParams.set('state', 'PROCESSED')
 
-        await fetch(url.toString(), {
+        fetch(url.toString(), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({})
-        })
+        }).then(() => this.setState({...this.state}))
     }
 
     render() {
@@ -76,13 +76,13 @@ class ReturnRequestRow extends React.Component {
         url.searchParams.set('id', this.returnRequestID)
         url.searchParams.set('state', 'PROCESSED')
 
-        await fetch(url.toString(), {
+        fetch(url.toString(), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({})
-        })
+        }).then(() => this.setState({...this.state}))
     }
 
     render() {

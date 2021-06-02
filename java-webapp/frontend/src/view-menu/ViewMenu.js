@@ -9,6 +9,7 @@ import listImg from './assets/list.svg'
 import statsImg from './assets/stats.svg'
 import boxImg from './assets/box.svg'
 import logImg from './assets/log.svg'
+import starImg from './assets/star.svg'
 
 export class ViewMenu extends React.Component {
     privilegedItems() {
@@ -24,7 +25,7 @@ export class ViewMenu extends React.Component {
                     <ViewMenuItem image={logImg} text="Balance changelog"/>
                 </Link>,
                 <Link to="/rate_log">
-                    <ViewMenuItem image={logImg} text="Rate changelog"/>
+                    <ViewMenuItem image={starImg} text="Rate changelog"/>
                 </Link>]
         }
     }

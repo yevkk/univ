@@ -4,7 +4,7 @@ import '../index.css'
 
 export class ViewHeader extends React.Component {
     render() {
-        return <header className="ViewHeader">
+        return <header className="ViewHeader" >
             <div className="ViewHeader-content content-wrapper">
                 <div className="ViewHeader-login-info">
                     user: <i>{localStorage.getItem('login')}</i> <br />
