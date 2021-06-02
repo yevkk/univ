@@ -32,7 +32,7 @@
     background-color: #dde8ff;
 }
 
-.HistoryPanel-table tr:nth-last-child(-n+4) {
+.HistoryPanel-table td:nth-last-child(-n+4) {
     text-align: center;
 }
 
