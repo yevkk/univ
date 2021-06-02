@@ -1,0 +1,41 @@
+.AdminRequestsPanel-submit-button {
+    padding: 2px;
+    width: 60px;
+    margin: auto;
+    border: 2px solid #3641b7;
+    border-radius: 5px;
+    color: #3641b7;
+    font-weight: bold;
+    text-align: center;
+
+    user-select: none;
+    transition: all 0.15s 0s ease-in-out;
+    cursor: pointer;
+}
+
+.AdminRequestsPanel-submit-button:hover {
+    background: #3641b7;
+    border-color: white;
+    color: white;
+}
+
+.AdminRequestsPanel-submit-button:active {
+    border-color: #fa7132;
+    color: #fa7132;
+}
+
+.AdminRequestsPanel-table td:nth-child(-n+5):not(:nth-child(2)) {
+    text-align: center;
+}
+
+.AdminRequestsPanel-return-table td:nth-child(-n+3):not(:nth-child(2)) {
+    text-align: center;
+}
+
+.AdminRequestsPanel-return-table td:nth-child(3) {
+    cursor: pointer;
+}
+
+.AdminRequestsPanel-return-table td:last-child {
+    background: white;
+}

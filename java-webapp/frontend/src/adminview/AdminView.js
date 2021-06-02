@@ -3,6 +3,7 @@ import {ViewHeader} from "../view-header/ViewHeader";
 import {ViewMenu} from "../view-menu/ViewMenu";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {AdminBooksPanel} from "../books-panel/admin/AdminBooksPanel";
+import {AdminRequestsPanel} from "../requests-panel/admin/AdminRequestsPanel";
 
 export class AdminView extends React.Component {
     render() {
@@ -15,7 +16,7 @@ export class AdminView extends React.Component {
                         <AdminBooksPanel/>
                     </Route>
                     <Route path="/requests">
-                        {/*<UserRequestsPanel />*/}
+                        <AdminRequestsPanel />
                     </Route>
                 </Switch>
             </BrowserRouter>
