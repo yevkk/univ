@@ -1,0 +1,105 @@
+.AdminBooksPanel-table td:nth-last-child(-n+4), .AdminBooksPanel-table td:first-child {
+    text-align: center;
+}
+
+.AdminBooksPanel-update-button {
+    padding: 2px;
+    width: 105px;
+    margin: auto;
+    border: 2px solid #3641b7;
+    border-radius: 5px;
+    color: #3641b7;
+    font-weight: bold;
+
+    user-select: none;
+    transition: all 0.15s 0s ease-in-out;
+    cursor: pointer;
+}
+
+.AdminBooksPanel-update-button:hover {
+    background: #3641b7;
+    border-color: white;
+    color: white;
+}
+
+.AdminBooksPanel-update-button:active {
+    border-color: #fa7132;
+    color: #fa7132;
+}
+
+.UpdateForm-holder , .CreateForm-holder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    background: rgba(37, 37, 57, 0.74);
+    z-index: 2;
+
+    display: none;
+}
+
+.UpdateForm, .CreateForm {
+    min-width: 400px;
+    max-width: 500px;
+    display: block;
+    margin: 30px auto;
+    padding: 15px 40px;
+    box-sizing: border-box;
+    background: white;
+    box-shadow: 1px 1px 4px #8695ac;
+    border-radius: 4px;
+}
+
+.UpdateForm-header, .CreateForm-header {
+    margin-bottom: 30px;
+    color: #3641b7;
+    font-size: 1.5em;
+    border-bottom: 3px solid #fab832;
+}
+
+.UpdateForm-label, .CreateForm-label {
+    display: inline-block;
+    min-width: 30%;
+}
+
+.UpdateForm-input, .CreateForm-inout {
+    margin-bottom: 20px;
+    display: inline-block;
+    min-width: 60%;
+    padding: 6px;
+    outline: none;
+    border: 1px solid #8695ac;
+    border-radius: 5px;
+}
+
+.UpdateForm-button, .CreateFrom-button {
+    width: 100px;
+    display: block;
+    margin: 15px auto 0;
+    background: #3641b7;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 2em;
+    color: white;
+
+    user-select: none;
+    transition: all 0.15s 0s ease-in-out;
+    cursor: pointer;
+}
+
+.UpdateForm-button:hover, .CreateFrom-button:hover {
+    background: #fab832;
+    color: #3641b7;
+}
+
+.UpdateForm-button:active, .CreateFrom-button:active {
+    background: #fa7132;
+    color: #3641b7;
+}
+
+.AdminBooksPanel-create-button {
+    float: right;
+    font-size: 0.6em;
+    text-align: center;
+}
