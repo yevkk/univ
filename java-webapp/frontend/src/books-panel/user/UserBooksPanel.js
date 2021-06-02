@@ -1,7 +1,7 @@
 import React from "react";
 import '../BooksPanel.css'
 import './UserBooksPanel.css'
-import {getBooks, getDeliveryTypes, getStats} from "../../api/api-for-user";
+import {getBooks, getDeliveryTypes, getStats} from "../../api/api";
 import {serverURL} from "../../index";
 
 let selectedBookID = 0;

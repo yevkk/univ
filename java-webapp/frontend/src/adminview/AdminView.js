@@ -5,6 +5,7 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {AdminBooksPanel} from "../books-panel/admin/AdminBooksPanel";
 import {AdminRequestsPanel} from "../requests-panel/admin/AdminRequestsPanel";
 import {DeliveryPanel} from "../delivery-panel/DeliveryPanel";
+import {HistoryPanel} from "../history-panel/HistoryPanel";
 
 export class AdminView extends React.Component {
     render() {
@@ -21,6 +22,9 @@ export class AdminView extends React.Component {
                     </Route>
                     <Route path="/requests">
                         <AdminRequestsPanel />
+                    </Route>
+                    <Route path="/stats_history">
+                        <HistoryPanel />
                     </Route>
                 </Switch>
             </BrowserRouter>

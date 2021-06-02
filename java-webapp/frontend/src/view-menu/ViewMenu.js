@@ -2,12 +2,13 @@ import React from "react";
 import './ViewMenu.css'
 import '../index.css'
 import {ViewMenuItem} from './ViewMenuItem';
-import {BrowserRouter, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import booksImg from './assets/books.svg'
 import listImg from './assets/list.svg'
 import statsImg from './assets/stats.svg'
 import boxImg from './assets/box.svg'
+import logImg from './assets/log.svg'
 
 export class ViewMenu extends React.Component {
     privilegedItems() {
@@ -16,8 +17,14 @@ export class ViewMenu extends React.Component {
                 <Link to="/delivery">
                     <ViewMenuItem image={boxImg} text="Delivery"/>
                 </Link>,
-                <Link to="/stats">
-                    <ViewMenuItem image={statsImg} text="Stats"/>
+                <Link to="/stats_history">
+                    <ViewMenuItem image={statsImg} text="History"/>
+                </Link>,
+                <Link to="/balance_log">
+                    <ViewMenuItem image={logImg} text="Balance changelog"/>
+                </Link>,
+                <Link to="/rate_log">
+                    <ViewMenuItem image={logImg} text="Rate changelog"/>
                 </Link>]
         }
     }

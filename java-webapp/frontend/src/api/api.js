@@ -29,3 +29,9 @@ export async function getDeliveryTypes() {
     let deliveryTypesResponse = await fetch(urlDeliveryTypes.toString())
     return await deliveryTypesResponse.json()
 }
+
+export async function getHistory() {
+    let urlHistory = new URL(`${serverURL}/stats/history?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
+    let historyResponse = await fetch(urlHistory.toString())
+    return await historyResponse.json()
+}

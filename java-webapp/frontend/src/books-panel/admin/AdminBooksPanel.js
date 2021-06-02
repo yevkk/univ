@@ -1,6 +1,6 @@
 import React from "react";
 import './AdminBookPanel.css'
-import {getBooks, getDeliveryTypes, getStats} from "../../api/api-for-user";
+import {getBooks, getDeliveryTypes, getStats} from "../../api/api";
 import {serverURL} from "../../index";
 
 let selectedBookID = 0;

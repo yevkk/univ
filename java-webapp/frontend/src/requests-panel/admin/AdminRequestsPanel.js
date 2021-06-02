@@ -1,6 +1,6 @@
 import React from "react";
 import './AdminRequestPanel.css'
-import {getRequests, getReturnRequests} from "../../api/api-for-user";
+import {getRequests, getReturnRequests} from "../../api/api";
 import {serverURL} from "../../index";
 
 class RequestRow extends React.Component {

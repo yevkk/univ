@@ -1,7 +1,7 @@
 import React from "react";
 import '../index.css'
 import  './DeliveryPanel.css'
-import {getDeliveryTypes} from "../api/api-for-user";
+import {getDeliveryTypes} from "../api/api";
 import {serverURL} from "../index";
 
 class DeliveryRow extends React.Component {

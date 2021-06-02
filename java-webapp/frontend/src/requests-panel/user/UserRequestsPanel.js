@@ -1,7 +1,7 @@
 import React from "react";
 import '../RequestsPanel.css'
 import './UserRequestsPanel.css'
-import {getBooks, getRequests, getReturnRequests, getDeliveryTypes} from "../../api/api-for-user";
+import {getBooks, getRequests, getReturnRequests, getDeliveryTypes} from "../../api/api";
 import {serverURL} from "../../index";
 
 let selectedRequestID;
