@@ -13,6 +13,10 @@
             <param-name>cors.allowed.origins</param-name>
             <param-value>*</param-value>
         </init-param>
+        <init-param>
+            <param-name>cors.supportedMethods</param-name>
+            <param-value>GET, POST, HEAD, OPTIONS</param-value>
+        </init-param>
 
     </filter>
 

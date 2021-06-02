@@ -19,8 +19,8 @@ class RequestRow extends React.Component {
             <td>{this.props.request.contact}</td>
             <td>{this.props.request.state}</td>
             {this.props.request.state === 'PROCESSED' ? <td> <div className="UserRequestsPanel-return-button">return</div> </td> : <td />}
-            <td>{this.convertDatetime(this.props.request.returnRequest.datetime)}</td>
-            <td>{this.props.request.returnRequest.state}</td>
+            {this.props.request.returnRequest !== undefined ? <td>{this.convertDatetime(this.props.request.returnRequest.datetime)}</td> : <td/>}
+            {this.props.request.returnRequest !== undefined ?  <td>{this.props.request.returnRequest.state}</td> : <td/>}
         </tr>
     }
 }

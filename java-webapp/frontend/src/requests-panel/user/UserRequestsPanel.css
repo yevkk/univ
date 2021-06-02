@@ -23,3 +23,7 @@
     border-color: #fa7132;
     color: #fa7132;
 }
+
+.UserRequestsPanel-table td:nth-last-child(1), .UserRequestsPanel-table td:nth-last-child(4) {
+    text-align: center;
+}
