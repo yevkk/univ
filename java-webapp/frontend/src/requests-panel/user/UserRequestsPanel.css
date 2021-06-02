@@ -27,3 +27,74 @@
 .UserRequestsPanel-table td:nth-last-child(1), .UserRequestsPanel-table td:nth-last-child(4) {
     text-align: center;
 }
+
+.ReturnRequestForm-holder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    background: rgba(37, 37, 57, 0.74);
+    z-index: 2;
+
+    display: none;
+}
+
+.ReturnRequestForm {
+    min-width: 400px;
+    max-width: 500px;
+    display: block;
+    margin: 30px auto;
+    padding: 15px 40px;
+    box-sizing: border-box;
+    background: white;
+    box-shadow: 1px 1px 4px #8695ac;
+    border-radius: 4px;
+}
+
+.ReturnRequestForm-header {
+    margin-bottom: 30px;
+    color: #3641b7;
+    font-size: 1.5em;
+    border-bottom: 3px solid #fab832;
+}
+
+.ReturnRequestForm-label {
+    display: inline-block;
+    min-width: 30%;
+}
+
+.ReturnRequestForm-input {
+    margin-bottom: 20px;
+    display: inline-block;
+    min-width: 60%;
+    padding: 6px;
+    outline: none;
+    border: 1px solid #8695ac;
+    border-radius: 5px;
+}
+
+.ReturnRequestForm-button {
+    width: 100px;
+    display: block;
+    margin: 15px auto 0;
+    background: #3641b7;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 2em;
+    color: white;
+
+    user-select: none;
+    transition: all 0.15s 0s ease-in-out;
+    cursor: pointer;
+}
+
+.ReturnRequestForm-button:hover {
+    background: #fab832;
+    color: #3641b7;
+}
+
+.ReturnRequestForm-button:active {
+    background: #fa7132;
+    color: #3641b7;
+}
