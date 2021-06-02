@@ -1,0 +1,28 @@
+.UserBooksPanel-table td:nth-last-child(-n+4) {
+    text-align: center;
+}
+
+.UserBooksPanel-request-button {
+    padding: 2px;
+    width: 105px;
+    margin: auto;
+    border: 2px solid #3641b7;
+    border-radius: 5px;
+    color: #3641b7;
+    font-weight: bold;
+
+    user-select: none;
+    transition: all 0.15s 0s ease-in-out;
+    cursor: pointer;
+}
+
+.UserBooksPanel-request-button:hover {
+    background: #3641b7;
+    border-color: white;
+    color: white;
+}
+
+.UserBooksPanel-request-button:active {
+    border-color: #fa7132;
+    color: #fa7132;
+}

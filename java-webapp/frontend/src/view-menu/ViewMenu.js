@@ -11,7 +11,7 @@ import statsImg from './assets/stats.svg'
 export class ViewMenu extends React.Component {
     privilegedItems() {
         if (localStorage.getItem('user-role') === 'admin') {
-            return <Link to="/stats">
+            return <Link to="/stats" onClick={() => window.location.reload()}>
                 <ViewMenuItem image={statsImg} text="Stats" />
             </Link>
         }
@@ -20,15 +20,13 @@ export class ViewMenu extends React.Component {
     render() {
         return <div className="ViewMenu">
             <div className="content-wrapper">
-                <BrowserRouter>
-                    <Link to="/books" style={{ textDecoration: 'none' }}>
+                    <Link to="/books">
                         <ViewMenuItem image={booksImg} text="Books" />
                     </Link>
                     <Link to="/requests">
                         <ViewMenuItem image={listImg} text="Requests" />
                     </Link>
                     {this.privilegedItems()}
-                </BrowserRouter>
             </div>
         </div>
     }

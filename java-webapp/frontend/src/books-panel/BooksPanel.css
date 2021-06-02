@@ -1,0 +1,37 @@
+.BooksPanel {
+    width: 100%;
+    padding: 20px;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 1px 1px 4px #8695ac;
+}
+
+.BooksPanel-header {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3641b7;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.BooksPanel-table {
+    width: 100%;
+    font-size: 0.9em;
+}
+
+.BooksPanel-table td {
+    padding: 3px 10px;
+}
+
+.BooksPanel-table tr:first-child{
+    background-color: #fab832;
+    text-align: center;
+}
+
+.BooksPanel-table tr:nth-child(2n+1):not(:first-child) {
+    background-color: #dde8ff;
+}
+
+.BooksPanel-info-icon {
+    height: 20px;
+}

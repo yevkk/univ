@@ -1,5 +1,6 @@
 body {
-    background: url("assets/maze-bg.png") repeat;
+    /*background: url("assets/maze-bg.png") repeat;*/
+    background: whitesmoke;
 }
 
 .content-wrapper {
