@@ -1,5 +1,7 @@
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 
+import java.io.ObjectInputStream;
 import java.math.BigInteger;
 import java.util.concurrent.Callable;
 
@@ -109,6 +111,40 @@ class LabTest {
             var A = Lab.randomBigInteger(lowerBound, upperBound);
             var B = Lab.randomBigInteger(lowerBound, upperBound);
             assertEquals(A.multiply(B), Lab.KaratsubaAlgorithm(A, B));
+        }
+    }
+
+    @Test
+    public void extendedEuclideanAlgorithmTest() {
+        @AllArgsConstructor
+        class TestData {
+            final BigInteger a;
+            final BigInteger b;
+            final BigInteger g;
+            final BigInteger x;
+            final BigInteger y;
+
+            TestData(String aStr, String bStr, String gStr, String xStr, String yStr) {
+                this(new BigInteger(aStr), new BigInteger(bStr), new BigInteger(gStr), new BigInteger(xStr), new BigInteger(yStr));
+            }
+        };
+
+        TestData[] testCases = new TestData[] {
+                new TestData("240", "46", "2", "-9", "47"),
+                new TestData("41846453336454588", "232816682494205655162", "106930686", "-337267062871", "60620357"),
+                new TestData("69621693624072", "12187710219337815294", "246246246", "7034984142", "-40187"),
+                new TestData("23424132314234", "14124312312", "2", "-2613584867", "4334438122490"),
+                new TestData("23424132314233", "14124312312", "1", "2819780761", "-4676398835126"),
+                new TestData("4170633856389", "813007002916159912991838708", "567567", "194392205428451127723", "-997210"),
+                new TestData("5687367407804832715989251503362", "1637007531226911205963628776646", "13264536713726", "8802521658741135", "-30582128569010864"),
+                new TestData("99999999989999990000000001", "77777769999999992222223", "9999999999999999", "2097653", "-2696982698"),
+        };
+
+        for (TestData testCase : testCases) {
+            var res = Lab.extendedEuclideanAlgorithm(testCase.a, testCase.b);
+            assertEquals(testCase.g, res[0]);
+            assertEquals(testCase.x, res[1]);
+            assertEquals(testCase.y, res[2]);
         }
     }
 }

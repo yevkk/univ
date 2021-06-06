@@ -109,8 +109,27 @@ public class Lab {
         return K.shiftLeft(2 * length).add(N.subtract(K).subtract(M).shiftLeft(length)).add(M);
     }
 
+    /**
+     * <b>6</b><br/>
+     * ax + by = g<br/>
+     * [0] = g, [1] = x, [2] = y
+     */
+    public static BigInteger[] extendedEuclideanAlgorithm(BigInteger a, BigInteger b) {
+        if (b.equals(BigInteger.ZERO)) {
+            return new BigInteger[]{a, BigInteger.ONE, BigInteger.ZERO};
+        }
+        var arr = extendedEuclideanAlgorithm(b, a.remainder(b));
+        var x = arr[2];
+        var y = arr[1].subtract(arr[2].multiply(a.divide(b)));
+
+        return new BigInteger[]{arr[0], x, y};
+    }
+
 
     public static void main(String[] args) {
+//        240 and 46
+        var res = extendedEuclideanAlgorithm(new BigInteger("240"), new BigInteger("46"));
+        System.out.println(res[1] + " " + res[2] + " " + res[0]);
     }
 
 }
