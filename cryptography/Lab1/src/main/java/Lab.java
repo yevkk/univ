@@ -86,11 +86,31 @@ public class Lab {
         }
     }
 
+    /**
+     * <b>4</b><br/>
+     * A = ax + b, B = cx + d <br/>
+     * ac = K, bd = M, (a+b)(c+d) = N <br/>
+     * AB = Kx^2 = (N - K - M)x + M
+     */
+    public static BigInteger KaratsubaAlgorithm(BigInteger A, BigInteger B) {
+        var fullLength = Math.max(A.bitLength(), B.bitLength());
+        var length = fullLength / 2;
+
+        var a = A.shiftRight(length);
+        var b = A.subtract(a.shiftLeft(length));
+
+        var c = B.shiftRight(length);
+        var d = B.subtract(c.shiftLeft(length));
+
+        var K = a.multiply(c);
+        var M = b.multiply(d);
+        var N = (a.add(b)).multiply(c.add(d));
+
+        return K.shiftLeft(2 * length).add(N.subtract(K).subtract(M).shiftLeft(length)).add(M);
+    }
+
 
     public static void main(String[] args) {
-        BigInteger n = new BigInteger("1281");
-
-
     }
 
 }

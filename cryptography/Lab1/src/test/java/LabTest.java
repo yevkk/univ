@@ -6,6 +6,10 @@ import java.util.concurrent.Callable;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LabTest {
+    private final int testSize = 10;
+    private final BigInteger lowerBound = BigInteger.ONE;
+    private final BigInteger upperBound =  new BigInteger("999999999999999999999999999999999999999999");
+
     @Test
     public void FermatTestNonPrimesTest() {
         assertFalse(Lab.FermatTest(new BigInteger("37846138746128376"), 5));
@@ -95,6 +99,16 @@ class LabTest {
             var exp = Lab.randomBigInteger(lowerBound, upperBound);
             var mod = Lab.randomBigInteger(lowerBound, upperBound);
             assertEquals(num.modPow(exp, mod), Lab.modPowBySquaring(num, exp, mod));
+        }
+    }
+
+    @Test
+    public void KaratsubaAlgorithmTest() {
+        var i = testSize * 3;
+        while (i-- > 0) {
+            var A = Lab.randomBigInteger(lowerBound, upperBound);
+            var B = Lab.randomBigInteger(lowerBound, upperBound);
+            assertEquals(A.multiply(B), Lab.KaratsubaAlgorithm(A, B));
         }
     }
 }
