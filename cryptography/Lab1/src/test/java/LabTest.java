@@ -67,4 +67,34 @@ class LabTest {
         assertTrue(Lab.MillerRabinTest(new BigInteger("523347633027360537213687137"), 5));
         assertTrue(Lab.MillerRabinTest(new BigInteger("43143988327398957279342419750374600193"), 5));
     }
+
+    @Test
+    public void modPowBySquaringTest() {
+        var testSize = 10;
+        var lowerBound = BigInteger.ONE;
+        var upperBound =  new BigInteger("999999999999999999999999999999999999999999");
+        int i;
+
+        i = testSize / 2;
+        while (i-- > 0) {
+            var num = Lab.randomBigInteger(lowerBound, upperBound);
+            var mod = Lab.randomBigInteger(lowerBound, upperBound);
+            assertEquals(BigInteger.ONE, Lab.modPowBySquaring(num, BigInteger.ZERO, mod));
+        }
+
+        i = testSize;
+        while (i-- > 0) {
+            var num = Lab.randomBigInteger(lowerBound, upperBound);
+            var mod = Lab.randomBigInteger(lowerBound, num);
+            assertEquals(num, Lab.modPowBySquaring(num, BigInteger.ONE, mod));
+        }
+
+        i = testSize;
+        while (i-- > 0) {
+            var num = Lab.randomBigInteger(lowerBound, upperBound);
+            var exp = Lab.randomBigInteger(lowerBound, upperBound);
+            var mod = Lab.randomBigInteger(lowerBound, upperBound);
+            assertEquals(num.modPow(exp, mod), Lab.modPowBySquaring(num, exp, mod));
+        }
+    }
 }

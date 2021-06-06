@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -64,6 +65,25 @@ public class Lab {
         }
 
         return true;
+    }
+
+    /**
+     * <b>3</b>
+     */
+    public static BigInteger modPowBySquaring(BigInteger x, BigInteger n, BigInteger mod) {
+        if (n.equals(BigInteger.ZERO)) {
+            return BigInteger.ONE;
+        }
+
+        if (n.equals(BigInteger.ONE)) {
+            return x;
+        }
+
+        if (n.divideAndRemainder(BigInteger.TWO)[1].equals(BigInteger.ZERO)) {
+            return modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.divide(BigInteger.TWO), mod);
+        } else {
+            return x.multiply(modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.subtract(BigInteger.ONE).divide(BigInteger.TWO), mod));
+        }
     }
 
 
