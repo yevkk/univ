@@ -33,12 +33,43 @@ public class Lab {
      * <b>2</b>
      */
     public static boolean MillerRabinTest(BigInteger n, int attempts) {
+        // (n-1) = t*2^s
+        var t = n.subtract(BigInteger.ONE);
+        var s = BigInteger.ZERO;
+        {
+            var divRem = t.divideAndRemainder(BigInteger.TWO);
+            while (divRem[1].equals(BigInteger.ZERO)) {
+                t = divRem[0];
+                s = s.add(BigInteger.ONE);
+                divRem = t.divideAndRemainder(BigInteger.TWO);
+            }
+        }
+
+        A: while (attempts-- > 0) {
+           var a = randomBigInteger(BigInteger.TWO, n.subtract(BigInteger.TWO));
+           var x = a.modPow(t, n);
+           if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE))) {
+               continue;
+           }
+
+           var sCounter = BigInteger.ONE;
+           while (sCounter.compareTo(s) < 0) {
+               x = x.modPow(BigInteger.TWO, n);
+               if (x.equals(n.subtract(BigInteger.ONE))) {
+                   continue A;
+               }
+               sCounter = sCounter.add(BigInteger.ONE);
+           }
+           return false;
+        }
 
         return true;
     }
 
 
     public static void main(String[] args) {
+        BigInteger n = new BigInteger("1281");
+
 
     }
 
