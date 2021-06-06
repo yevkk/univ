@@ -46,22 +46,23 @@ public class Lab {
             }
         }
 
-        A: while (attempts-- > 0) {
-           var a = randomBigInteger(BigInteger.TWO, n.subtract(BigInteger.TWO));
-           var x = a.modPow(t, n);
-           if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE))) {
-               continue;
-           }
+        A:
+        while (attempts-- > 0) {
+            var a = randomBigInteger(BigInteger.TWO, n.subtract(BigInteger.TWO));
+            var x = a.modPow(t, n);
+            if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE))) {
+                continue;
+            }
 
-           var sCounter = BigInteger.ONE;
-           while (sCounter.compareTo(s) < 0) {
-               x = x.modPow(BigInteger.TWO, n);
-               if (x.equals(n.subtract(BigInteger.ONE))) {
-                   continue A;
-               }
-               sCounter = sCounter.add(BigInteger.ONE);
-           }
-           return false;
+            var sCounter = BigInteger.ONE;
+            while (sCounter.compareTo(s) < 0) {
+                x = x.modPow(BigInteger.TWO, n);
+                if (x.equals(n.subtract(BigInteger.ONE))) {
+                    continue A;
+                }
+                sCounter = sCounter.add(BigInteger.ONE);
+            }
+            return false;
         }
 
         return true;
@@ -80,9 +81,9 @@ public class Lab {
         }
 
         if (n.divideAndRemainder(BigInteger.TWO)[1].equals(BigInteger.ZERO)) {
-            return modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.divide(BigInteger.TWO), mod);
+            return modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.shiftRight(1), mod);
         } else {
-            return x.multiply(modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.subtract(BigInteger.ONE).divide(BigInteger.TWO), mod));
+            return x.multiply(modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.subtract(BigInteger.ONE).shiftRight(1), mod));
         }
     }
 
