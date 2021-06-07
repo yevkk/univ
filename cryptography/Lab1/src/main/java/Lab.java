@@ -89,10 +89,11 @@ public class Lab {
             return x;
         }
 
+        var xSqr =  x.multiply(x).mod(mod);
         if (n.divideAndRemainder(BigInteger.TWO)[1].equals(BigInteger.ZERO)) {
-            return modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.shiftRight(1), mod);
+            return modPowBySquaring(xSqr, n.shiftRight(1), mod);
         } else {
-            return x.multiply(modPowBySquaring(x.modPow(BigInteger.TWO, mod), n.subtract(BigInteger.ONE).shiftRight(1), mod));
+            return x.multiply(modPowBySquaring(xSqr, n.subtract(BigInteger.ONE).shiftRight(1), mod));
         }
     }
 
