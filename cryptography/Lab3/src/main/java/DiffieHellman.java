@@ -55,13 +55,13 @@ public class DiffieHellman {
         }
     }
 
-    public Participant[] simulateRandom(BigInteger g, BigInteger p) {
-        var lowerBound = BigInteger.ONE;
-        var upperBound = new BigInteger("9999999999999");
-        return simulate(randomBigInteger(lowerBound, upperBound), randomBigInteger(lowerBound, upperBound));
+    static public Participant[] simulateRandom() {
+        var g = randomBigInteger(BigInteger.ONE, new BigInteger("999999999999"));
+        var p = randomBigInteger(BigInteger.ONE, new BigInteger("999999999999999999"));
+        return simulate(g, p);
     }
 
-    public Participant[] simulate(BigInteger g, BigInteger p) {
+    static public Participant[] simulate(BigInteger g, BigInteger p) {
         var exchanger = new Exchanger<BigInteger>();
         var participants = new Participant[]{
                 new Participant(exchanger, g, p),
