@@ -147,4 +147,36 @@ class LabTest {
             assertEquals(testCase.y, res[2]);
         }
     }
+
+    @Test
+    public void MontgomeryMultiplyTest() {
+        var i = testSize * 3;
+        while (i-- > 0) {
+            var a = Lab.randomBigInteger(lowerBound, upperBound);
+            var b = Lab.randomBigInteger(lowerBound, upperBound);
+            var mod = Lab.randomBigInteger(lowerBound, upperBound);
+
+            if (mod.testBit(0)) {
+                assertEquals(a.multiply(b).mod(mod), Lab.MontgomeryMultiply(a, b, mod));
+            } else {
+                assertThrows(IllegalArgumentException.class, () -> Lab.MontgomeryMultiply(a, b, mod));
+            }
+        }
+    }
+
+    @Test
+    public void MontgomeryPowTest() {
+        var i = testSize * 3;
+        while (i-- > 0) {
+            var a = Lab.randomBigInteger(lowerBound, upperBound);
+            var e = Lab.randomBigInteger(lowerBound, upperBound);
+            var mod = Lab.randomBigInteger(lowerBound, upperBound);
+
+            if (mod.testBit(0)) {
+                assertEquals(a.modPow(e, mod), Lab.MontgomeryPow(a, e, mod));
+            } else {
+                assertThrows(IllegalArgumentException.class, () -> Lab.MontgomeryPow(a, e, mod));
+            }
+        }
+    }
 }

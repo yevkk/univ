@@ -1,7 +1,16 @@
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Random;
 
+/**
+ * <ol>
+ *     <li>{@link #FermatTest}</li>
+ *     <li>{@link #MillerRabinTest}</li>
+ *     <li>{@link #modPowBySquaring}</li>
+ *     <li>{@link #KaratsubaAlgorithm}</li>
+ *     <li>{@link #MontgomeryMultiply}, {@link #MontgomeryPow}</li>
+ *     <li>{@link #extendedEuclideanAlgorithm}</li>
+ * </ol>
+ */
 public class Lab {
     public static BigInteger randomBigInteger(BigInteger lowerBound, BigInteger upperBound) {
         upperBound = upperBound.subtract(lowerBound);
@@ -111,6 +120,60 @@ public class Lab {
     }
 
     /**
+     * <b>5 (1)</b>
+     */
+    public static BigInteger MontgomeryMultiply(BigInteger a, BigInteger b, BigInteger mod) {
+        checkMod(mod);
+        var k = mod.bitLength();
+        var u1 = redc(a.shiftLeft(k).mod(mod), b.shiftLeft(k).mod(mod), mod);
+        return redc(u1, BigInteger.ONE, mod);
+    }
+
+    /**
+     * <b>5 (2)</b>
+     */
+    public static BigInteger MontgomeryPow(BigInteger a, BigInteger e, BigInteger mod) {
+        checkMod(mod);
+        var k = mod.bitLength();
+        var a1 = a.shiftLeft(k).mod(mod);
+        var x1 = BigInteger.ONE.shiftLeft(k).mod(mod);
+
+        for (int i = e.bitLength() - 1; i >= 0; i--) {
+            x1 = redc(x1, x1, mod);
+            if (e.testBit(i)) {
+                x1 = redc(x1, a1, mod);
+            }
+        }
+
+        return redc(x1, BigInteger.ONE, mod);
+    }
+
+    private static BigInteger redc(BigInteger a, BigInteger b, BigInteger mod) {
+        var k = mod.bitLength();
+        var r = BigInteger.TWO.shiftLeft(k);
+
+        var gcdExt = extendedEuclideanAlgorithm(r, mod);
+        var t = a.multiply(b);
+        var m = t.multiply(gcdExt[2].negate()).and(r.subtract(BigInteger.ONE));
+        var u = t.add(m.multiply(mod)).shiftRight(k);
+
+        if (u.compareTo(mod) >= 0) {
+            u = u.subtract(mod);
+        }
+
+        return u;
+    }
+
+    private static void checkMod(BigInteger mod) {
+        if (mod.compareTo(BigInteger.ZERO) <= 0) {
+            throw new IllegalArgumentException("mod should be positive");
+        }
+        if (!mod.testBit(0)) {
+            throw new IllegalArgumentException("mod should be odd");
+        }
+    }
+
+    /**
      * <b>6</b><br/>
      * ax + by = g<br/>
      * [0] = g, [1] = x, [2] = y
@@ -126,11 +189,6 @@ public class Lab {
         return new BigInteger[]{arr[0], x, y};
     }
 
-
-    public static void main(String[] args) {
-//        240 and 46
-        var res = extendedEuclideanAlgorithm(new BigInteger("240"), new BigInteger("46"));
-        System.out.println(res[1] + " " + res[2] + " " + res[0]);
-    }
+    public static void main(String[] args) {}
 
 }
