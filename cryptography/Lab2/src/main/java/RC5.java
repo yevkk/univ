@@ -22,4 +22,16 @@ public class RC5 {
             default -> throw new IllegalArgumentException("supported w in {16, 32}");
         };
     }
+
+    private static int lcs(int value, int count) {
+        return (value << count | value >> (32 - count));
+    }
+
+    private static int rcs(int value, int count) {
+        return (value >> count | value << (32 - count));
+    }
+
+    public static void main(String[] args) {
+
+    }
 }
