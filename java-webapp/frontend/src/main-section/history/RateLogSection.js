@@ -1,29 +1,13 @@
 import React from "react";
-import '../index.css'
-import './HistoryPanel.css'
-import {
-    getBalanceChangelog,
-    getBalanceChangelogByBookID, getBalanceChangelogInPeriod,
-    getHistory,
-    getHistoryByBookID,
-    getHistoryInPeriod, getRateChangelog, getRateChangelogByBookID, getRateChangelogInPeriod
-} from "../utils/api";
-import {serverURL} from "../index";
+import '../MainSection.css'
+import '../OverlayForm.css'
+import { getRateChangelog, getRateChangelogByBookID, getRateChangelogInPeriod, serverURL} from "../../utils/api";
+import {convertDatetime} from "../../utils/utils";
 
 class RateLogRow extends React.Component {
-    convertDatetime(datetime) {
-        let year = datetime.date.year
-        let month = datetime.date.month < 10 ? '0' + datetime.date.month : datetime.date.month
-        let day = datetime.date.day < 10 ? '0' + datetime.date.day : datetime.date.day
-        let hour = datetime.time.hour < 10 ? '0' + datetime.time.hour : datetime.time.hour
-        let minute = datetime.time.minute < 10 ? '0' + datetime.time.minute : datetime.time.minute
-
-        return [year, month, day].join('-') + ' ' + [hour, minute].join(':')
-    }
-
     render() {
         return <tr>
-            <td>{this.convertDatetime(this.props.logRecord.datetime)}</td>
+            <td>{convertDatetime(this.props.logRecord.datetime)}</td>
             <td>{this.props.logRecord.bookID}</td>
             <td>{this.props.logRecord.userID}</td>
             <td>{this.props.logRecord.contribution}</td>
@@ -31,7 +15,7 @@ class RateLogRow extends React.Component {
     }
 }
 
-export class RateChangelogPanel extends React.Component {
+export class RateLogSection extends React.Component {
     componentDidMount() {
         getRateChangelog().then(result => {
             this.setState({...this.state, rateChangelog: result})
@@ -68,14 +52,14 @@ export class RateChangelogPanel extends React.Component {
 
     render() {
         return <div className="content-wrapper">
-            <div className="HistoryPanel">
-                <header className="HistoryPanel-header">
+            <div className="MainSection">
+                <header className="MainSection-header">
                     Rate changelog
-                    <div className="HistoryPanel-button" onClick={() => this.showAll()}>all</div>
-                    <div className="HistoryPanel-button" onClick={() => this.showInPeriod()}>in period</div>
-                    <div className="HistoryPanel-button" onClick={() => this.showByBookID()}>by book ID</div>
+                    <div className="MainSection-header-button" onClick={() => this.showAll()}>all</div>
+                    <div className="MainSection-header-button" onClick={() => this.showInPeriod()}>in period</div>
+                    <div className="MainSection-header-button" onClick={() => this.showByBookID()}>by book ID</div>
                 </header>
-                <table className="HistoryPanel-table">
+                <table className="MainSection-table">
                     <colgroup>
                         <col span="1" style={{width: "25%"}}/>
                         <col span="1" style={{width: "25%"}}/>

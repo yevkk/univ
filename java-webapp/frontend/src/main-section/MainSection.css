@@ -52,6 +52,10 @@
     cursor: pointer;
 }
 
+.MainSection-header-button:not(:first-of-type) {
+    margin-right: 10px;
+}
+
 .MainSection-button:hover, .MainSection-header-button:hover {
     background: #3641b7;
     border-color: white;

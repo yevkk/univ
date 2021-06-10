@@ -7,3 +7,11 @@ export function convertDatetime(datetime) {
 
     return [year, month, day].join('-') + ' ' + [hour, minute].join(':')
 }
+
+export function convertDate(date) {
+    let year = date.year
+    let month = date.month < 10 ? '0' + date.month : date.month
+    let day = date.day < 10 ? '0' + date.day : date.day
+
+    return [year, month, day].join('-')
+}

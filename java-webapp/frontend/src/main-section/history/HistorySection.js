@@ -1,30 +1,23 @@
 import React from "react";
-import '../index.css'
-import './HistoryPanel.css'
-import {getHistory, getHistoryByBookID, getHistoryInPeriod} from "../utils/api";
-import {serverURL} from "../index";
+import { useHistory } from 'react-router'
+import '../MainSection.css';
+import '../OverlayForm.css';
+import {getHistory, getHistoryByBookID, getHistoryInPeriod, serverURL} from "../../utils/api";
+import {convertDate} from "../../utils/utils";
 
 class HistoryRow extends React.Component {
-    convertDate(date) {
-        let year = date.year
-        let month = date.month < 10 ? '0' + date.month : date.month
-        let day = date.day < 10 ? '0' + date.day : date.day
-
-        return [year, month, day].join('-')
-    }
-
     render() {
         return <tr>
-            <td>{this.convertDate(this.props.historyRecord.date)}</td>
+            <td>{convertDate(this.props.historyRecord.date)}</td>
             <td>{this.props.historyRecord.stats.bookID}</td>
             <td>{this.props.historyRecord.stats.amount}</td>
             <td>{this.props.historyRecord.stats.totalRequests}</td>
-            <td>{this.props.historyRecord.stats.rate}</td>
+            <td>{this.props.historyRecord.stats.rate.toFixed(2)}</td>
         </tr>
     }
 }
 
-export class HistoryPanel extends React.Component {
+export class HistorySection extends React.Component {
     componentDidMount() {
         getHistory().then(result => {
             this.setState({...this.state, history: result})
@@ -69,19 +62,20 @@ export class HistoryPanel extends React.Component {
             },
             body: JSON.stringify({})
         })
+        window.location.reload(false);
     }
 
     render() {
         return <div className="content-wrapper">
-            <div className="HistoryPanel">
-                <header className="HistoryPanel-header">
+            <div className="MainSection">
+                <header className="MainSection-header">
                     Stats history
-                    <div className="HistoryPanel-button" onClick={() => this.saveCurrent()}>save</div>
-                    <div className="HistoryPanel-button" onClick={() => this.showAll()}>all</div>
-                    <div className="HistoryPanel-button" onClick={() => this.showInPeriod()}>in period</div>
-                    <div className="HistoryPanel-button" onClick={() => this.showByBookID()}>by book ID</div>
+                    <div className="MainSection-header-button" onClick={() => this.saveCurrent()}>save</div>
+                    <div className="MainSection-header-button" onClick={() => this.showAll()}>all</div>
+                    <div className="MainSection-header-button" onClick={() => this.showInPeriod()}>in period</div>
+                    <div className="MainSection-header-button" onClick={() => this.showByBookID()}>by book ID</div>
                 </header>
-                <table className="HistoryPanel-table">
+                <table className="MainSection-table">
                     <colgroup>
                         <col span="1" style={{width: "20%"}}/>
                         <col span="1" style={{width: "20%"}}/>
