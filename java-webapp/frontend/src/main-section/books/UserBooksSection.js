@@ -28,7 +28,8 @@ class BookRow extends React.Component {
             <td className="centralized">{this.props.book.stats.amount}</td>
             <td className="centralized">{this.props.book.stats.totalRequests}</td>
             <td className="centralized">{this.props.book.stats.rate.toFixed(2)}</td>
-            <td> <div className="MainSection-button" onClick={() => this.openRequestForm()}>create request</div> </td>
+            {this.props.book.stats.amount > 0 ?
+            <td> <div className="MainSection-button" onClick={() => this.openRequestForm()}>create request</div> </td> : <td />}
         </tr>
     }
 }

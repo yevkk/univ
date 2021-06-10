@@ -38,6 +38,7 @@ export class Login extends React.Component {
 
         if (result === null) {
             alert('login failed');
+            return
         }
 
         localStorage.setItem('login', login)
