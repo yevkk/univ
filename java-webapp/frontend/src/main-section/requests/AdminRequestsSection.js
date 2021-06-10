@@ -1,9 +1,8 @@
 import React from "react";
 import '../MainSection.css'
 import '../OverlayForm.css'
-import {getRequests, getReturnRequests} from "../../utils/api";
+import {getRequests, getReturnRequests, serverURL} from "../../utils/api";
 import {convertDatetime} from "../../utils/utils";
-import {serverURL} from "../../index";
 
 class RequestRow extends React.Component {
     requestID

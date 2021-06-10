@@ -1,9 +1,8 @@
 import React from "react";
 import '../MainSection.css'
 import '../OverlayForm.css'
-import {getBooks, getRequests, getReturnRequests, getDeliveryTypes} from "../../utils/api";
+import {getBooks, getRequests, getReturnRequests, getDeliveryTypes, serverURL} from "../../utils/api";
 import {convertDatetime} from "../../utils/utils";
-import {serverURL} from "../../index";
 
 let selectedRequestID;
 
