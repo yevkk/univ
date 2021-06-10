@@ -8,7 +8,7 @@ class DeliveryRow extends React.Component {
         return <tr>
             <td className="centralized">{this.props.deliveryType.id}</td>
             <td>{this.props.deliveryType.description}</td>
-            <td />
+            <td className="white" />
         </tr>
     }
 }
@@ -95,7 +95,7 @@ export class DeliveryTypeSection extends React.Component {
                     <tr>
                         <td>ID</td>
                         <td>Description</td>
-                        <td />
+                        <td className="white" />
                     </tr>
                     {this.state.deliveryTypes.map(item => <DeliveryRow deliveryType={item}/>)}
                     </tbody>

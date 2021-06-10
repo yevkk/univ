@@ -26,7 +26,7 @@ class RequestRow extends React.Component {
             <td className="centralized">{this.props.request.bookName}</td>
             <td>{this.props.request.deliveryTypeText}</td>
             <td>{this.props.request.contact}</td>
-            <td>{this.props.request.state}</td>
+            <td className="centralized">{this.props.request.state}</td>
             {this.props.request.state === 'PROCESSED' ? <td>
                 <div className="MainSection-button" onClick={() => this.openRequestForm()}>return</div>
             </td> : <td/>}

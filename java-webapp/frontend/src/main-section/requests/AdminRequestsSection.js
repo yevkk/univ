@@ -81,7 +81,7 @@ class ReturnRequestRow extends React.Component {
             {this.props.returnRequest.state !== 'PROCESSED' && this.props.returnRequest.state !== 'RETURNED' ? <td>
                 <div className="MainSection-button" onClick={() => this.submitRequest()}>submit</div>
             </td> : <td/>}
-            <td/>
+            <td className="white" />
         </tr>
     }
 }
@@ -154,7 +154,7 @@ export class AdminRequestsSection extends React.Component {
                         <td>Request ID</td>
                         <td>State</td>
                         <td/>
-                        <td/>
+                        <td className="white" />
                     </tr>
                     {this.state.returnRequests.map(request => <ReturnRequestRow returnRequest={request}/>)}
                     </tbody>
