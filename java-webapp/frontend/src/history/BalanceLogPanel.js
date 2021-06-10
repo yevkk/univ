@@ -7,7 +7,7 @@ import {
     getHistory,
     getHistoryByBookID,
     getHistoryInPeriod
-} from "../api/api";
+} from "../utils/api";
 import {serverURL} from "../index";
 
 class BalanceLogRow extends React.Component {

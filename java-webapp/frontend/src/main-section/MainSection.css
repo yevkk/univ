@@ -6,6 +6,11 @@
     box-shadow: 1px 1px 4px #8695ac;
 }
 
+.MainSection:not(:last-of-type) {
+    margin-bottom: 30px;
+}
+
+
 .MainSection-header {
     padding-bottom: 10px;
     margin-bottom: 20px;

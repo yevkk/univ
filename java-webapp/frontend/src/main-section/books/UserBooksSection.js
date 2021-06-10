@@ -1,7 +1,7 @@
 import React from "react";
 import '../MainSection.css'
 import '../OverlayForm.css'
-import {getBooks, getDeliveryTypes, getStats, serverURL} from "../../api/api";
+import {getBooks, getDeliveryTypes, getStats, serverURL} from "../../utils/api";
 
 let selectedBookID = 0;
 

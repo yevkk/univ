@@ -7,7 +7,7 @@ import {
     getHistory,
     getHistoryByBookID,
     getHistoryInPeriod, getRateChangelog, getRateChangelogByBookID, getRateChangelogInPeriod
-} from "../api/api";
+} from "../utils/api";
 import {serverURL} from "../index";
 
 class RateLogRow extends React.Component {

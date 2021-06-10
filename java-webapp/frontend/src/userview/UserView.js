@@ -3,7 +3,7 @@ import {ViewHeader} from "../view-header/ViewHeader";
 import {ViewMenu} from "../view-menu/ViewMenu";
 import {Switch, Route, BrowserRouter} from "react-router-dom";
 import {UserBooksSection} from "../main-section/books/UserBooksSection";
-import {UserRequestsPanel} from "../requests-panel/user/UserRequestsPanel";
+import {UserRequestsSection} from "../main-section/requests/UserRequestsSection";
 
 export class UserView extends React.Component {
     render() {
@@ -16,7 +16,7 @@ export class UserView extends React.Component {
                         <UserBooksSection/>
                     </Route>
                     <Route path="/requests">
-                        <UserRequestsPanel />
+                        <UserRequestsSection />
                     </Route>
                 </Switch>
             </BrowserRouter>

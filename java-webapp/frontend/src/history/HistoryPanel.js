@@ -1,7 +1,7 @@
 import React from "react";
 import '../index.css'
 import './HistoryPanel.css'
-import {getHistory, getHistoryByBookID, getHistoryInPeriod} from "../api/api";
+import {getHistory, getHistoryByBookID, getHistoryInPeriod} from "../utils/api";
 import {serverURL} from "../index";
 
 class HistoryRow extends React.Component {

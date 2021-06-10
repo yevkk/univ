@@ -3,11 +3,11 @@ import {ViewHeader} from "../view-header/ViewHeader";
 import {ViewMenu} from "../view-menu/ViewMenu";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {AdminBooksSection} from "../main-section/books/AdminBooksSection";
-import {AdminRequestsPanel} from "../requests-panel/admin/AdminRequestsPanel";
 import {DeliveryPanel} from "../delivery-panel/DeliveryPanel";
 import {HistoryPanel} from "../history/HistoryPanel";
 import {BalanceChangelogPanel} from "../history/BalanceLogPanel";
 import {RateChangelogPanel} from "../history/RateLogPanel";
+import {AdminRequestsSection} from "../main-section/requests/AdminRequestsSection";
 
 export class AdminView extends React.Component {
     render() {
@@ -23,7 +23,7 @@ export class AdminView extends React.Component {
                         <AdminBooksSection />
                     </Route>
                     <Route path="/requests">
-                        <AdminRequestsPanel />
+                        <AdminRequestsSection />
                     </Route>
                     <Route path="/stats_history">
                         <HistoryPanel />
