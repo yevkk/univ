@@ -53,6 +53,7 @@ class UpdateBookForm extends React.Component {
             body: JSON.stringify({})
         })
         this.close();
+        window.location.reload(false);
     }
 
     render() {
@@ -93,7 +94,7 @@ class CreateBookForm extends React.Component {
         url.searchParams.set('name',  name)
         url.searchParams.set('author',  author)
         url.searchParams.set('lang',  lang)
-        tags.forEach(tag => url.searchParams.set('tag',  tag))
+        tags.forEach(tag => url.searchParams.append('tag',  tag))
 
         await fetch(url.toString(), {
             method: 'POST',
@@ -103,6 +104,7 @@ class CreateBookForm extends React.Component {
             body: JSON.stringify({})
         })
         this.close();
+        window.location.reload(false);
     }
 
     render() {
@@ -142,6 +144,7 @@ export class AdminBooksSection extends React.Component {
             getStats().then(result => {
                 let stats = result;
                 books.forEach(book => book.stats = stats.find(item => item.bookID === book.id))
+                console.log(books);
                 this.setState({...this.state, books})
             })
         })

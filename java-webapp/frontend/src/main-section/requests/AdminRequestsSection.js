@@ -24,7 +24,10 @@ class RequestRow extends React.Component {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({})
-        }).then(() => this.setState({...this.state}))
+        }).then(() => {
+            this.setState({...this.state})
+            window.location.reload(false);
+        })
     }
 
     render() {
@@ -63,7 +66,10 @@ class ReturnRequestRow extends React.Component {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({})
-        }).then(() => this.setState({...this.state}))
+        }).then(() => {
+            this.setState({...this.state})
+            window.location.reload(false);
+        })
     }
 
     render() {

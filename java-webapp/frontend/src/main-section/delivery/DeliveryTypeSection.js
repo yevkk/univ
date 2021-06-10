@@ -32,6 +32,7 @@ class CreateDeliveryTypeForm extends React.Component {
             body: JSON.stringify({})
         })
         this.close()
+        window.location.reload(false);
     }
 
     render() {

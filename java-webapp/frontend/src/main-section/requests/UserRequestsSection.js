@@ -38,6 +38,10 @@ class RequestRow extends React.Component {
 }
 
 class ReturnRequestForm extends React.Component {
+    close() {
+        document.getElementsByClassName('ReturnRequestForm-holder')[0].style.display = 'none'
+    }
+
     async sendReturnRequest() {
         let url = new URL(`${serverURL}/return_request/add?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
 
@@ -53,7 +57,8 @@ class ReturnRequestForm extends React.Component {
             },
             body: JSON.stringify({})
         })
-        document.getElementsByClassName('ReturnRequestForm-holder')[0].style.display = 'none'
+        this.close();
+        window.location.reload(false);
     }
 
     render() {

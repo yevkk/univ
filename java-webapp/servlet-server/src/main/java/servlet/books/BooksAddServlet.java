@@ -40,6 +40,13 @@ public class BooksAddServlet extends HttpServlet {
         var statsDAO = new BookStatsDAO(conn);
 
         var book = new Book(name, author, lang, tags);
+        if (bookDAO.findID(book) != -1) {
+            resp.sendError(409);
+            TransactionManager.rollback(conn);
+            ConnectionPool.getInstance().putConnection(conn);
+            return;
+        }
+
         bookDAO.create(book);
 
         var book_id = bookDAO.findID(book);
