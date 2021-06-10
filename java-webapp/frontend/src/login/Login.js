@@ -1,6 +1,6 @@
 import React from 'react'
 import './Login.css'
-import {serverURL} from "../index";
+import {serverURL} from "../utils/api";
 
 export class Login extends React.Component {
     render() {
