@@ -22,8 +22,8 @@ class RequestRow extends React.Component {
 
     render() {
         return <tr>
-            <td>{convertDatetime(this.props.request.datetime)}</td>
-            <td>{this.props.request.bookName}</td>
+            <td className="centralized">{convertDatetime(this.props.request.datetime)}</td>
+            <td className="centralized">{this.props.request.bookName}</td>
             <td>{this.props.request.deliveryTypeText}</td>
             <td>{this.props.request.contact}</td>
             <td>{this.props.request.state}</td>
@@ -31,8 +31,8 @@ class RequestRow extends React.Component {
                 <div className="MainSection-button" onClick={() => this.openRequestForm()}>return</div>
             </td> : <td/>}
             {this.props.request.returnRequest !== undefined ?
-                <td>{convertDatetime(this.props.request.returnRequest.datetime)}</td> : <td/>}
-            {this.props.request.returnRequest !== undefined ? <td>{this.props.request.returnRequest.state}</td> : <td/>}
+                <td className="centralized">{convertDatetime(this.props.request.returnRequest.datetime)}</td> : <td/>}
+            {this.props.request.returnRequest !== undefined ? <td className="centralized">{this.props.request.returnRequest.state}</td> : <td/>}
         </tr>
     }
 }

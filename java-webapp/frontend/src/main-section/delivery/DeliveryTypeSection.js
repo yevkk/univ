@@ -6,7 +6,7 @@ import {getDeliveryTypes, serverURL} from "../../utils/api";
 class DeliveryRow extends React.Component {
     render() {
         return <tr>
-            <td>{this.props.deliveryType.id}</td>
+            <td className="centralized">{this.props.deliveryType.id}</td>
             <td>{this.props.deliveryType.description}</td>
             <td />
         </tr>

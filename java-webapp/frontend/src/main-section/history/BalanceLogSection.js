@@ -9,9 +9,9 @@ import {convertDatetime} from "../../utils/utils";
 class BalanceLogRow extends React.Component {
     render() {
         return <tr>
-            <td>{convertDatetime(this.props.logRecord.datetime)}</td>
-            <td>{this.props.logRecord.bookID}</td>
-            <td>{this.props.logRecord.amount}</td>
+            <td className="centralized">{convertDatetime(this.props.logRecord.datetime)}</td>
+            <td className="centralized">{this.props.logRecord.bookID}</td>
+            <td className="centralized">{this.props.logRecord.amount}</td>
             <td>{this.props.logRecord.comment}</td>
         </tr>
     }

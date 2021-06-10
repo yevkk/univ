@@ -32,13 +32,13 @@ class RequestRow extends React.Component {
 
     render() {
         return <tr>
-            <td>{this.props.request.id}</td>
-            <td>{convertDatetime(this.props.request.datetime)}</td>
-            <td>{this.props.request.userID}</td>
-            <td>{this.props.request.bookID}</td>
-            <td>{this.props.request.deliveryTypeID}</td>
+            <td className="centralized">{this.props.request.id}</td>
+            <td className="centralized">{convertDatetime(this.props.request.datetime)}</td>
+            <td className="centralized">{this.props.request.userID}</td>
+            <td className="centralized">{this.props.request.bookID}</td>
+            <td className="centralized">{this.props.request.deliveryTypeID}</td>
             <td>{this.props.request.contact}</td>
-            <td>{this.props.request.state}</td>
+            <td className="centralized">{this.props.request.state}</td>
             {this.props.request.state !== 'PROCESSED' && this.props.request.state !== 'RETURNED' ? <td>
                 <div className="MainSection-button" onClick={() => this.submitRequest()}>submit</div>
             </td> : <td/>}
@@ -73,7 +73,7 @@ class ReturnRequestRow extends React.Component {
     }
 
     render() {
-        return <tr>
+        return <tr className="centralized">
             <td>{this.props.returnRequest.id}</td>
             <td>{convertDatetime(this.props.returnRequest.datetime)}</td>
             <td>{this.props.returnRequest.getBookRequestID}</td>

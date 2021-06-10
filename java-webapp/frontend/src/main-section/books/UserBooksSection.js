@@ -23,11 +23,11 @@ class BookRow extends React.Component {
         return <tr>
             <td>{this.props.book.name}</td>
             <td>{this.props.book.author}</td>
-            <td>{this.props.book.lang}</td>
+            <td className="centralized">{this.props.book.lang}</td>
             <td>{this.props.book.tags.join(', ')}</td>
-            <td>{this.props.book.stats.amount}</td>
-            <td>{this.props.book.stats.totalRequests}</td>
-            <td>{this.props.book.stats.rate.toFixed(2)}</td>
+            <td className="centralized">{this.props.book.stats.amount}</td>
+            <td className="centralized">{this.props.book.stats.totalRequests}</td>
+            <td className="centralized">{this.props.book.stats.rate.toFixed(2)}</td>
             <td> <div className="MainSection-button" onClick={() => this.openRequestForm()}>create request</div> </td>
         </tr>
     }

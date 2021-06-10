@@ -6,7 +6,7 @@ import {convertDatetime} from "../../utils/utils";
 
 class RateLogRow extends React.Component {
     render() {
-        return <tr>
+        return <tr className="centralized">
             <td>{convertDatetime(this.props.logRecord.datetime)}</td>
             <td>{this.props.logRecord.bookID}</td>
             <td>{this.props.logRecord.userID}</td>

@@ -7,7 +7,7 @@ import {convertDate} from "../../utils/utils";
 
 class HistoryRow extends React.Component {
     render() {
-        return <tr>
+        return <tr className="centralized">
             <td>{convertDate(this.props.historyRecord.date)}</td>
             <td>{this.props.historyRecord.stats.bookID}</td>
             <td>{this.props.historyRecord.stats.amount}</td>
