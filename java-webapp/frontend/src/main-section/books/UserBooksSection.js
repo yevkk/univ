@@ -1,8 +1,7 @@
 import React from "react";
-import '../BooksPanel.css'
-import './UserBooksPanel.css'
-import {getBooks, getDeliveryTypes, getStats} from "../../api/api";
-import {serverURL} from "../../index";
+import '../MainSection.css'
+import '../OverlayForm.css'
+import {getBooks, getDeliveryTypes, getStats, serverURL} from "../../api/api";
 
 let selectedBookID = 0;
 
@@ -10,7 +9,7 @@ class BookRow extends React.Component {
     bookID
 
     openRequestForm() {
-        let requestForm = document.getElementsByClassName('RequestForm-holder')[0]
+        let requestForm = document.getElementsByClassName('RequestBookForm-holder')[0]
         selectedBookID = this.bookID
         requestForm.style.display = 'block'
     }
@@ -29,7 +28,7 @@ class BookRow extends React.Component {
             <td>{this.props.book.stats.amount}</td>
             <td>{this.props.book.stats.totalRequests}</td>
             <td>{this.props.book.stats.rate.toFixed(2)}</td>
-            <td> <div className="UserBooksPanel-request-button" onClick={() => this.openRequestForm()}>create request</div> </td>
+            <td> <div className="MainSection-button" onClick={() => this.openRequestForm()}>create request</div> </td>
         </tr>
     }
 }
@@ -40,9 +39,9 @@ class DeliveryTypeOption extends React.Component {
     }
 }
 
-class RequestForm extends React.Component {
+class RequestBookForm extends React.Component {
     componentDidMount() {
-         getDeliveryTypes().then(result => {
+        getDeliveryTypes().then(result => {
             this.setState({...this.state, deliveryTypes: result})
         })
     }
@@ -54,11 +53,15 @@ class RequestForm extends React.Component {
         }
     }
 
+    close() {
+        document.getElementsByClassName('RequestBookForm-holder')[0].style.display = 'none'
+    }
+
     async sendRequest() {
         let url = new URL(`${serverURL}/request/add?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
 
-        let deliveryTypeID = document.forms.requestForm.elements.deliveryTypeID.value
-        let contact = document.forms.requestForm.elements.contact.value
+        let deliveryTypeID = document.forms.requestBookForm.elements.deliveryTypeID.value
+        let contact = document.forms.requestBookForm.elements.contact.value
         url.searchParams.set('book_id',  selectedBookID)
         url.searchParams.set('delivery_type_id',  deliveryTypeID)
         url.searchParams.set('contact', contact)
@@ -69,25 +72,28 @@ class RequestForm extends React.Component {
             },
             body: JSON.stringify({})
         })
-        document.getElementsByClassName('RequestForm-holder')[0].style.display = 'none'
+        this.close();
     }
 
     render() {
-        return <div className="RequestForm-holder">
-            <div className="RequestForm">
-                <header className="RequestForm-header">
+        return <div className="OverlayForm-holder RequestBookForm-holder">
+            <div className="OverlayForm">
+                <div className="OverlayForm-close-button" onClick={() => this.close()}>
+                    X
+                </div>
+                <header className="OverlayForm-header">
                     Request book
                 </header>
-                <form name="requestForm">
-                    <label className="RequestForm-label" htmlFor="RequestForm-deliveryTypeID-input">login: </label>
-                    <select className="RequestForm-input" id="RequestForm-deliveryTypeID-input" name="deliveryTypeID">
+                <form name="requestBookForm">
+                    <label className="OverlayForm-label" htmlFor="RequestBookForm-deliveryTypeID-input">login: </label>
+                    <select className="OverlayForm-input" id="RequestBookForm-deliveryTypeID-input" name="deliveryTypeID">
                         {this.state.deliveryTypes.map(item => <DeliveryTypeOption deliveryType={item} />)}
                     </select>
-                    <label className="RequestForm-label" htmlFor="RequestForm-contact-input">contact: </label>
-                    <input className="RequestForm-input" id="RequestForm-contact-input" name="contact" />
+                    <label className="OverlayForm-label" htmlFor="RequestBookForm-contact-input">contact: </label>
+                    <input className="OverlayForm-input" id="RequestBookForm-contact-input" name="contact" />
                 </form>
 
-                <div className="RequestForm-button" onClick={() => this.sendRequest()}>
+                <div className="OverlayForm-button" onClick={() => this.sendRequest()}>
                     send
                 </div>
             </div>
@@ -95,7 +101,7 @@ class RequestForm extends React.Component {
     }
 }
 
-export class UserBooksPanel extends React.Component {
+export class UserBooksSection extends React.Component {
     componentDidMount() {
         let books;
 
@@ -118,12 +124,12 @@ export class UserBooksPanel extends React.Component {
 
     render() {
         return <div className="content-wrapper">
-            <RequestForm id="BooksPanel-request-form" />
-            <div className="BooksPanel UserBooksPanel">
-                <header className="BooksPanel-header">
+            <RequestBookForm id="BooksPanel-request-form" />
+            <section className="MainSection">
+                <header className="MainSection-header">
                     Books
                 </header>
-                <table className="BooksPanel-table UserBooksPanel-table">
+                <table className="MainSection-table">
                     <colgroup>
                         <col span="1" style={{width: "20%"}} />
                         <col span="1" style={{width: "20%"}} />
@@ -144,12 +150,12 @@ export class UserBooksPanel extends React.Component {
                         <td>Amount</td>
                         <td>Readers</td>
                         <td>Rate</td>
-                        <td></td>
+                        <td/>
                     </tr>
                     {this.state.books.map(book => <BookRow book={book}/>)}
                     </tbody>
                 </table>
-            </div>
+            </section>
         </div>
     }
 }

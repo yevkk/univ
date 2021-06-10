@@ -2,7 +2,7 @@ import React from "react";
 import {ViewHeader} from "../view-header/ViewHeader";
 import {ViewMenu} from "../view-menu/ViewMenu";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import {AdminBooksPanel} from "../books-panel/admin/AdminBooksPanel";
+import {AdminBooksSection} from "../main-section/books/AdminBooksSection";
 import {AdminRequestsPanel} from "../requests-panel/admin/AdminRequestsPanel";
 import {DeliveryPanel} from "../delivery-panel/DeliveryPanel";
 import {HistoryPanel} from "../history/HistoryPanel";
@@ -20,7 +20,7 @@ export class AdminView extends React.Component {
                         <DeliveryPanel />
                     </Route>
                     <Route path="/books">
-                        <AdminBooksPanel/>
+                        <AdminBooksSection />
                     </Route>
                     <Route path="/requests">
                         <AdminRequestsPanel />

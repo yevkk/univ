@@ -1,33 +1,4 @@
-.UserBooksPanel-table td:nth-last-child(-n+4) {
-    text-align: center;
-}
-
-.UserBooksPanel-request-button {
-    padding: 2px;
-    width: 105px;
-    margin: auto;
-    border: 2px solid #3641b7;
-    border-radius: 5px;
-    color: #3641b7;
-    font-weight: bold;
-
-    user-select: none;
-    transition: all 0.15s 0s ease-in-out;
-    cursor: pointer;
-}
-
-.UserBooksPanel-request-button:hover {
-    background: #3641b7;
-    border-color: white;
-    color: white;
-}
-
-.UserBooksPanel-request-button:active {
-    border-color: #fa7132;
-    color: #fa7132;
-}
-
-.RequestForm-holder {
+.OverlayForm-holder {
     position: absolute;
     top: 0;
     left: 0;
@@ -39,10 +10,11 @@
     display: none;
 }
 
-.RequestForm {
+.OverlayForm {
     min-width: 400px;
     max-width: 500px;
     display: block;
+    position: relative;
     margin: 30px auto;
     padding: 15px 40px;
     box-sizing: border-box;
@@ -51,19 +23,19 @@
     border-radius: 4px;
 }
 
-.RequestForm-header {
+.OverlayForm-header {
     margin-bottom: 30px;
     color: #3641b7;
     font-size: 1.5em;
     border-bottom: 3px solid #fab832;
 }
 
-.RequestForm-label {
+.OverlayForm-label {
     display: inline-block;
     min-width: 30%;
 }
 
-.RequestForm-input {
+.OverlayForm-input {
     margin-bottom: 20px;
     display: inline-block;
     min-width: 60%;
@@ -71,9 +43,10 @@
     outline: none;
     border: 1px solid #8695ac;
     border-radius: 5px;
+    background: white;
 }
 
-.RequestForm-button {
+.OverlayForm-button {
     width: 100px;
     display: block;
     margin: 15px auto 0;
@@ -88,12 +61,32 @@
     cursor: pointer;
 }
 
-.RequestForm-button:hover {
+.OverlayForm-close-button {
+    width: 1em;
+    height: 1em;
+    padding: 4px;
+    position: absolute;
+    top: -0.5em;
+    right: -0.5em;
+    border-radius: 4px;
+    border: 0.5px solid white;
+    background: #3641b7;
+    font-size: 0.8em;
+    text-align: center;
+    line-height: 1em;
+    color: white;
+
+    user-select: none;
+    transition: all 0.15s 0s ease-in-out;
+    cursor: pointer;
+}
+
+.OverlayForm-button:hover, .OverlayForm-close-button:hover {
     background: #fab832;
     color: #3641b7;
 }
 
-.RequestForm-button:active {
+.OverlayForm-button:active, .OverlayForm-close-button:active {
     background: #fa7132;
     color: #3641b7;
 }

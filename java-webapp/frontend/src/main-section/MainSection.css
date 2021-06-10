@@ -1,0 +1,65 @@
+.MainSection {
+    width: 100%;
+    padding: 20px;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 1px 1px 4px #8695ac;
+}
+
+.MainSection-header {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3641b7;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.MainSection-table {
+    width: 100%;
+    font-size: 0.9em;
+}
+
+.MainSection-table td {
+    padding: 3px 10px;
+}
+
+.MainSection-table tr:first-child{
+    background-color: #fab832;
+    text-align: center;
+}
+
+.MainSection-table tr:nth-child(2n+1):not(:first-child) {
+    background-color: #dde8ff;
+}
+
+.MainSection-button, .MainSection-header-button {
+    padding: 2px;
+    width: 105px;
+    margin: auto;
+    border: 2px solid #3641b7;
+    border-radius: 5px;
+    color: #3641b7;
+    font-weight: bold;
+    text-align: center;
+
+    user-select: none;
+    transition: all 0.15s 0s ease-in-out;
+    cursor: pointer;
+}
+
+.MainSection-button:hover, .MainSection-header-button:hover {
+    background: #3641b7;
+    border-color: white;
+    color: white;
+}
+
+.MainSection-button:active, .MainSection-header-button:active {
+    border-color: #fa7132;
+    color: #fa7132;
+}
+
+.MainSection-header-button {
+    float: right;
+    font-size: 0.6em;
+    text-align: center;
+}

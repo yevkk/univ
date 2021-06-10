@@ -1,4 +1,4 @@
-import {serverURL} from "../index";
+export let serverURL = 'http://192.168.1.26:8010'
 
 export async function getBooks() {
     let urlBooks = new URL(`${serverURL}/books?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
