@@ -27,9 +27,9 @@ class BooksServletTest extends Mockito {
     private PrintWriter writer;
 
     private final Book[] books = {
-            new Book("book1", "author1", "lang1", new String[]{"tag1", "tag2"}),
-            new Book("book2", "author2", "lang2", new String[]{"tag1"}),
-            new Book("book3", "author3", "lang3", new String[]{"tag2", "tag3"}),
+            new Book(1, "book1", "author1", "lang1", new String[]{"tag1", "tag2"}),
+            new Book(2, "book2", "author2", "lang2", new String[]{"tag1"}),
+            new Book(3, "book3", "author3", "lang3", new String[]{"tag2", "tag3"}),
     };
 
 //    @BeforeEach
@@ -47,19 +47,19 @@ class BooksServletTest extends Mockito {
 
 //    @Test
     public void findAllTest() throws ServletException, IOException {
+        when(request.getParameter("id")).thenReturn(null);
+        
+        var dao = mock(BookDAO.class);
+        when(dao.findAll()).thenReturn(Arrays.asList(books));
+
         new BooksServlet().doGet(request, response);
 
-        var dao = mock(BookDAO.class);
-
-        when(request.getParameter("id")).thenReturn(null);
-        when(dao.findAll()).thenReturn(Arrays.asList(books));
         writer.flush();
+//        System.out.println(stringWriter.toString());
 
-        System.out.println(stringWriter.toString());
-
-        assertTrue(stringWriter.toString().contains("{\"name\":\"book1\",\"author\":\"author1\",\"lang\":\"lang1\",\"tags\":[\"tag1\",\"tag2\"],\"id\":4}"));
-        assertTrue(stringWriter.toString().contains("{\"name\":\"book2\",\"author\":\"author2\",\"lang\":\"lang2\",\"tags\":[\"tag1\"],\"id\":5}"));
-        assertTrue(stringWriter.toString().contains("{\"name\":\"book3\",\"author\":\"author3\",\"lang\":\"lang3\",\"tags\":[\"tag2\",\"tag3\"],\"id\":6}"));
+        assertTrue(stringWriter.toString().contains("{\"name\":\"book1\",\"author\":\"author1\",\"lang\":\"lang1\",\"tags\":[\"tag1\",\"tag2\"],\"id\":1}"));
+        assertTrue(stringWriter.toString().contains("{\"name\":\"book2\",\"author\":\"author2\",\"lang\":\"lang2\",\"tags\":[\"tag1\"],\"id\":2}"));
+        assertTrue(stringWriter.toString().contains("{\"name\":\"book3\",\"author\":\"author3\",\"lang\":\"lang3\",\"tags\":[\"tag2\",\"tag3\"],\"id\":3}"));
     }
 
 //    @Test
