@@ -15,7 +15,6 @@ public class BookRequestReturn {
     @Column
     private LocalDateTime datetime;
 
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "request_id")
     private BookRequestGet request;

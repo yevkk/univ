@@ -27,6 +27,9 @@ public class BookRequestGet {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @Column(name = "user_id")
+    private long userID;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_type_id")
     private DeliveryType deliveryType;
