@@ -22,8 +22,12 @@ public class BookRequestGetService {
         return requestGetRepository.findAll();
     }
 
-    public List<BookRequestGet> findByUserId() {
-        return requestGetRepository.findAll();
+    public BookRequestGet findById(long id) {
+        return requestGetRepository.getById(id);
+    }
+
+    public List<BookRequestGet> findByUserId(long userId) {
+        return requestGetRepository.findAllByUserID(userId);
     }
 
     @Transactional

@@ -24,7 +24,7 @@ create table book_stats (
     book_id serial not null,
 
     primary key (id),
-    foreign key (book_id) references book (id)
+    foreign key (book_id) references book (id) on delete cascade
 );
 
 create table delivery_type (
@@ -44,9 +44,9 @@ create table book_request (
     state text not null,
 
     primary key (id),
-    foreign key (book_id) references book (id),
-    foreign key (user_id) references users (id),
-    foreign key (delivery_type_id) references delivery_type (id)
+    foreign key (book_id) references book (id) on delete cascade,
+    foreign key (user_id) references users (id) on delete cascade,
+    foreign key (delivery_type_id) references delivery_type (id) on delete cascade
 );
 
 create table book_request_return (
@@ -56,7 +56,7 @@ create table book_request_return (
     state text not null,
 
     primary key (id),
-    foreign key (request_id) references book_request (id)
+    foreign key (request_id) references book_request (id) on delete cascade
 );
 
 create table book_rate_changelog (
@@ -67,8 +67,8 @@ create table book_rate_changelog (
     contribution double precision not null,
 
     primary key (id),
-    foreign key (book_id) references book (id),
-    foreign key (user_id) references users (id)
+    foreign key (book_id) references book (id) on delete cascade,
+    foreign key (user_id) references users (id) on delete cascade
 );
 
 create table book_balance_changelog (
@@ -79,5 +79,5 @@ create table book_balance_changelog (
     comment text not null,
 
     primary key (id),
-    foreign key (book_id) references book (id)
+    foreign key (book_id) references book (id) on delete cascade
 );
