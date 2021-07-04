@@ -35,6 +35,6 @@ public class User {
     @Column
     private String password;
 
-    @Column
+    @Column(columnDefinition = "text")
     private Role role;
 }
