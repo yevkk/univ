@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface BookRequestGetRepository extends JpaRepository<BookRequestGet, Long> {
-    List<BookRequestGet> findByUserID(long userID);
+    List<BookRequestGet> findAllByUserID(long userID);
 }

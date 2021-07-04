@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface RateLogRecordRepository extends JpaRepository<RateLogRecord, Long> {
-    public List<RateLogRecord> findByBookId(long bookID);
+    public List<RateLogRecord> findAllByBookId(long bookID);
 
-    public List<RateLogRecord> findByDatetimeGreaterThanAndDatetimeLessThan(LocalDateTime periodStart, LocalDateTime periodEnd);
+    public List<RateLogRecord> findAllByDatetimeGreaterThanAndDatetimeLessThan(LocalDateTime periodStart, LocalDateTime periodEnd);
 }

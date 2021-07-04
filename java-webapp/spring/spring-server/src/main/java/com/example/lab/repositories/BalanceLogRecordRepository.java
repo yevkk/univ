@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BalanceLogRecordRepository extends JpaRepository<BalanceLogRecord, Long> {
-    public List<BalanceLogRecord> findByBookId(long bookID);
+    public List<BalanceLogRecord> findAllByBookId(long bookID);
 
-    public List<BalanceLogRecord> findByDatetimeGreaterThanAndDatetimeLessThan(LocalDateTime periodStart, LocalDateTime periodEnd);
+    public List<BalanceLogRecord> findAllByDatetimeGreaterThanAndDatetimeLessThan(LocalDateTime periodStart, LocalDateTime periodEnd);
 }
