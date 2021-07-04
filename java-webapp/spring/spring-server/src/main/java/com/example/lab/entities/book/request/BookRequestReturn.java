@@ -1,12 +1,18 @@
 package com.example.lab.entities.book.request;
 
 import com.example.lab.entities.book.request.misc.RequestState;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "book_request_return")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookRequestReturn {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

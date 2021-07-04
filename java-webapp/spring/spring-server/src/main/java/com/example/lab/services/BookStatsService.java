@@ -5,6 +5,7 @@ import com.example.lab.entities.book.changelogs.BalanceLogRecord;
 import com.example.lab.repositories.BalanceLogRecordRepository;
 import com.example.lab.repositories.BookRepository;
 import com.example.lab.repositories.BookStatsRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,16 +14,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BookStatsService {
     private final BookStatsRepository statsRepository;
     private final BookRepository bookRepository;
     private final BalanceLogRecordRepository balanceLogRepository;
-    
-    public BookStatsService(BookStatsRepository statsRepository, BookRepository bookRepository, BalanceLogRecordRepository balanceLogRepository) {
-        this.statsRepository = statsRepository;
-        this.bookRepository = bookRepository;
-        this.balanceLogRepository = balanceLogRepository;
-    }
 
     public List<BookStats> findAll() {
         return statsRepository.findAll();
