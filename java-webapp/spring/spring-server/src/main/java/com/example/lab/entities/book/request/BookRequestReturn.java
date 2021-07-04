@@ -1,6 +1,6 @@
-package entities.book.request;
+package com.example.lab.entities.book.request;
 
-import entities.book.request.misc.RequestState;
+import com.example.lab.entities.book.request.misc.RequestState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

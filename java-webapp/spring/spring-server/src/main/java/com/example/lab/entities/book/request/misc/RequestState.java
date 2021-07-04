@@ -1,4 +1,4 @@
-package entities.book.request.misc;
+package com.example.lab.entities.book.request.misc;
 
 public enum RequestState {
     SENT, IN_PROGRESS, PROCESSED, REJECTED, RETURNED;

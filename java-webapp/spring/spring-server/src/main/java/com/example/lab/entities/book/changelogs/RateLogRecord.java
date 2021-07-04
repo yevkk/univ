@@ -1,6 +1,6 @@
-package entities.book.changelogs;
+package com.example.lab.entities.book.changelogs;
 
-import entities.book.Book;
+import com.example.lab.entities.book.Book;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +9,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "book_balance_changelog")
+@Table(name = "book_rate_changelog")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BalanceLogRecord {
+public class RateLogRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,9 +25,9 @@ public class BalanceLogRecord {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @Column
-    private int amount;
+    @Column(name = "user_id")
+    private int userID;
 
     @Column
-    private String comment;
+    private double contribution;
 }

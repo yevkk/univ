@@ -1,4 +1,4 @@
-package entities.book;
+package com.example.lab.entities.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,4 +28,8 @@ public class BookStats {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     private Book book;
+
+    public BookStats(Book book) {
+        this.book = book;
+    }
 }
