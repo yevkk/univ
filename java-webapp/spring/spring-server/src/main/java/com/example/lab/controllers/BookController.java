@@ -2,28 +2,49 @@ package com.example.lab.controllers;
 
 import com.example.lab.entities.book.Book;
 import com.example.lab.services.BookStatsService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.lab.services.BookService;
 
 @RestController
-//@RequestMapping("/")
+@RequestMapping("/books")
+@CrossOrigin(originPatterns = "*")
+@AllArgsConstructor
 public class BookController {
     private final BookService bookService;
-    private final BookStatsService statsService;
 
-    public BookController(BookService bookService, BookStatsService statsService) {
-        this.bookService = bookService;
-        this.statsService = statsService;
-    }
-
-    @GetMapping("/")
-    public ResponseEntity hello() {
-        bookService.create(new Book(0, "book1", "auth1", "ua"));
-        bookService.create(new Book(0, "book2", "auth2", "en"));
-        var books = statsService.findAll();
+    @GetMapping("")
+    public ResponseEntity getAll() {
+        var books = bookService.findAll();
         return ResponseEntity.ok(books);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity get(@PathVariable("id") long id) {
+        var book = bookService.find(id);
+        return ResponseEntity.ok(book);
+    }
+
+    @PostMapping("")
+    public void create(@RequestParam String name,
+                       @RequestParam String author,
+                       @RequestParam String lang) {
+        var book = new Book(0, name, author, lang);
+        bookService.create(book);
+    }
+
+    @PatchMapping("/{id}")
+    public void update(@PathVariable("id") long id,
+                       @RequestParam String name,
+                       @RequestParam String author,
+                       @RequestParam String lang) {
+        var book = new Book(id, name, author, lang);
+        bookService.update(book);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") long id) {
+        bookService.delete(id);
+    }
 }
