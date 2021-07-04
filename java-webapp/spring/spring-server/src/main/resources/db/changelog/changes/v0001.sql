@@ -38,12 +38,14 @@ create table book_request (
     id serial not null,
     datetime timestamp with time zone not null,
     book_id serial not null,
+    user_id serial not null,
     delivery_type_id serial not null,
     contact text not null,
     state text not null,
 
     primary key (id),
     foreign key (book_id) references book (id),
+    foreign key (user_id) references users (id),
     foreign key (delivery_type_id) references delivery_type (id)
 );
 
