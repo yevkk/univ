@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class BookRequestReturnController {
     private final BookRequestGetService requestService;
 
     @GetMapping("")
+    @RolesAllowed({"library-user", "library-admin"})
     public ResponseEntity get(@RequestParam(value = "user_id", required = false) Long userId) {
         List<BookRequestReturn> requests;
 
@@ -34,6 +36,7 @@ public class BookRequestReturnController {
     }
 
     @PostMapping("")
+    @RolesAllowed({"library-user", "library-admin"})
     public void create(@RequestParam("request_id") long requestId) {
         var request = requestService.findById(requestId);
         var requestReturn = new BookRequestReturn(0, LocalDateTime.now(), request, RequestState.SENT);
@@ -41,6 +44,7 @@ public class BookRequestReturnController {
     }
 
     @PatchMapping("/{id}")
+    @RolesAllowed({"library-admin"})
     public void update(@PathVariable("id") long id,
                        @RequestParam String state) {
         requestReturnService.update(id, RequestState.valueOf(state.toUpperCase()));

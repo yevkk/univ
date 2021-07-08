@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class BalanceLogRecordController {
     private final BalanceLogRecordService balanceLogService;
 
     @GetMapping("")
+    @RolesAllowed("library-admin")
     public ResponseEntity get(@RequestParam(value = "book_id", required = false) Long bookId,
                               @RequestParam(value = "from", required = false) String periodStart,
                               @RequestParam(value = "to", required = false) String periodEnd) {

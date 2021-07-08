@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
+
 @RestController
 @RequestMapping("/stats")
 @CrossOrigin(originPatterns = "*")
@@ -13,6 +15,7 @@ public class BookStatsController {
     private final BookStatsService statsService;
 
     @GetMapping("")
+    @RolesAllowed({"library-user", "library-admin"})
     public ResponseEntity getAll(@RequestParam(value = "book_id", required = false) Long bookId) {
         if (bookId == null) {
             var stats = statsService.findAll();
@@ -24,8 +27,9 @@ public class BookStatsController {
     }
 
     @PatchMapping("")
-    public void getByBookId(@RequestParam("book_id") long bookId,
-                            @RequestParam int amount) {
+    @RolesAllowed({"library-admin"})
+    public void updateAmount(@RequestParam("book_id") long bookId,
+                             @RequestParam int amount) {
         statsService.update(bookId, amount, "manual update");
     }
 }

@@ -26,7 +26,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    @RolesAllowed("library-admin")
+    @RolesAllowed({"library-user", "library-admin"})
     public ResponseEntity get(@PathVariable("id") long id) {
         var book = bookService.find(id);
         return ResponseEntity.ok(book);
@@ -42,6 +42,7 @@ public class BookController {
     }
 
     @PatchMapping("/{id}")
+    @RolesAllowed("library-admin")
     public void update(@PathVariable("id") long id,
                        @RequestParam String name,
                        @RequestParam String author,
@@ -51,6 +52,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @RolesAllowed("library-admin")
     public void delete(@PathVariable("id") long id) {
         bookService.delete(id);
     }
