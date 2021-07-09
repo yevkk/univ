@@ -21,7 +21,7 @@ public class BookRequestReturnController {
     private final BookRequestGetService requestService;
 
     @GetMapping("")
-    public ResponseEntity get(@RequestParam(value = "user_id", required = false) Long userId) {
+    public ResponseEntity get(@RequestParam(value = "user_id", required = false) String userId) {
         List<BookRequestReturn> requests;
 
         if (userId == null) {

@@ -25,7 +25,7 @@ public class BookRequestReturnService {
         return requestReturnRepository.findAll();
     }
 
-    public List<BookRequestReturn> findByUserId(long userId) {
+    public List<BookRequestReturn> findByUserId(String userId) {
         return requestReturnRepository.findAllByRequestUserID(userId);
     }
 

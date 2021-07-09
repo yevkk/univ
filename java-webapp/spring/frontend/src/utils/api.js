@@ -13,13 +13,25 @@ export async function getStats() {
 }
 
 export async function getRequests() {
-    let urlRequest = new URL(`${serverURL}/request`)
+    let urlRequest = new URL(`${serverURL}/requests`)
+    let requestsResponse = await fetch(urlRequest.toString())
+    return await requestsResponse.json();
+}
+
+export async function getRequestsByUser(id) {
+    let urlRequest = new URL(`${serverURL}/requests?user_id=${id}`)
     let requestsResponse = await fetch(urlRequest.toString())
     return await requestsResponse.json();
 }
 
 export async function getReturnRequests() {
     let urlReturnRequests = new URL(`${serverURL}/return_requests`)
+    let returnRequestsResponse = await fetch(urlReturnRequests.toString())
+    return await returnRequestsResponse.json()
+}
+
+export async function getReturnRequestsByUser(id) {
+    let urlReturnRequests = new URL(`${serverURL}/return_requests?user_id=${id}`)
     let returnRequestsResponse = await fetch(urlReturnRequests.toString())
     return await returnRequestsResponse.json()
 }

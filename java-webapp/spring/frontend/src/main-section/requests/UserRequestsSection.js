@@ -1,13 +1,16 @@
 import React from "react";
 import '../MainSection.css'
 import '../OverlayForm.css'
-import {getBooks, getRequests, getReturnRequests, getDeliveryTypes, serverURL} from "../../utils/api";
-import {convertDatetime} from "../../utils/utils";
+import {
+    serverURL,
+    getRequestsByUser, getReturnRequestsByUser
+} from "../../utils/api";
 
 let selectedRequestID;
 
 class RequestRow extends React.Component {
     requestID
+    returnRequest
 
     openRequestForm() {
         let returnRequestForm = document.getElementsByClassName('ReturnRequestForm-holder')[0]
@@ -18,21 +21,24 @@ class RequestRow extends React.Component {
     constructor(props) {
         super(props);
         this.requestID = this.props.request.id
+        console.log(props)
+        console.log(props.returnRequest)
+        console.log(this.props.returnRequest)
     }
 
     render() {
         return <tr>
-            <td className="centralized">{convertDatetime(this.props.request.datetime)}</td>
-            <td className="centralized">{this.props.request.bookName}</td>
-            <td>{this.props.request.deliveryTypeText}</td>
+            <td className="centralized">{this.props.request.datetime}</td>
+            <td className="centralized">{this.props.request.book.name + ', ' + this.props.request.book.lang}</td>
+            <td>{this.props.request.deliveryType.description}</td>
             <td>{this.props.request.contact}</td>
             <td className="centralized">{this.props.request.state}</td>
-            {this.props.request.state === 'PROCESSED' ? <td>
+            {this.props.request.state.toUpperCase() === 'PROCESSED' && this.props.returnRequest === undefined ? <td>
                 <div className="MainSection-button" onClick={() => this.openRequestForm()}>return</div>
             </td> : <td/>}
-            {this.props.request.returnRequest !== undefined ?
-                <td className="centralized">{convertDatetime(this.props.request.returnRequest.datetime)}</td> : <td/>}
-            {this.props.request.returnRequest !== undefined ? <td className="centralized">{this.props.request.returnRequest.state}</td> : <td/>}
+            {this.props.returnRequest !== undefined ?
+                <td className="centralized">{this.props.returnRequest.datetime}</td> : <td/>}
+            {this.props.returnRequest !== undefined ? <td className="centralized">{this.props.returnRequest.state}</td> : <td/>}
         </tr>
     }
 }
@@ -43,7 +49,7 @@ class ReturnRequestForm extends React.Component {
     }
 
     async sendReturnRequest() {
-        let url = new URL(`${serverURL}/return_request/add?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
+        let url = new URL(`${serverURL}/return_requests`)
 
         let rate = document.forms.returnRequestForm.elements.rate.value
 
@@ -65,7 +71,7 @@ class ReturnRequestForm extends React.Component {
         return <div className="OverlayForm-holder ReturnRequestForm-holder">
             <div className="OverlayForm">
                 <header className="OverlayForm-header">
-                    Request book
+                    Return book
                 </header>
                 <div className="OverlayForm-close-button" onClick={() => this.close()}>
                     X
@@ -84,31 +90,26 @@ class ReturnRequestForm extends React.Component {
 }
 
 export class UserRequestsSection extends React.Component {
-    componentDidMount() {
-        let requests;
 
-        getRequests().then(result => {
-            requests = result
-            getReturnRequests().then(result => {
-                let returnRequests = result;
-                requests.forEach(request => request.returnRequest = returnRequests.find(item => item.getBookRequestID === request.id))
-                getBooks().then(result => {
-                    let books = result;
-                    requests.forEach(request => request.bookName = books.find(item => item.id === request.bookID).name)
-                    getDeliveryTypes().then(result => {
-                        let deliveryTypes = result;
-                        requests.forEach(request => request.deliveryTypeText = deliveryTypes.find(item => item.id === request.deliveryTypeID).description)
-                        this.setState({...this.state, requests})
-                    })
-                })
+
+    componentDidMount() {
+        getRequestsByUser(localStorage.getItem('user-id')).then(result => {
+            let requests = result
+            getReturnRequestsByUser(localStorage.getItem('user-id')).then(result => {
+                let returnRequests = result
+                console.log(returnRequests)
+                this.setState({...this.state, requests, returnRequests})
             })
         })
+
+        console.log(this.state.returnRequests)
     }
 
     constructor(props) {
         super(props)
         this.state = {
             requests: [],
+            returnRequests: []
         }
     }
 
@@ -142,7 +143,7 @@ export class UserRequestsSection extends React.Component {
                         <td>Return Datetime</td>
                         <td>Return state</td>
                     </tr>
-                    {this.state.requests.map(request => <RequestRow request={request}/>)}
+                    {this.state.requests.map(request => <RequestRow request={request} returnRequest={this.state.returnRequests.find(item => item.request.id === request.id)} />)}
                     </tbody>
                 </table>
             </section>
