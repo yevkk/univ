@@ -22,7 +22,7 @@ public class BookRequestGetController {
     private final DeliveryTypeService deliveryTypeService;
 
     @GetMapping("")
-    public ResponseEntity get(@RequestParam(value = "user_id", required = false) Long userId) {
+    public ResponseEntity get(@RequestParam(value = "user_id", required = false) String userId) {
         List<BookRequestGet> requests;
 
         if (userId == null) {
@@ -36,7 +36,7 @@ public class BookRequestGetController {
 
     @PostMapping("")
     public void create(@RequestParam("book_id") long bookId,
-                       @RequestParam("user_id") long userId,
+                       @RequestParam("user_id") String userId,
                        @RequestParam("delivery_type_id") long deliveryTypeId,
                        @RequestParam String contact) {
         var book = bookService.find(bookId);

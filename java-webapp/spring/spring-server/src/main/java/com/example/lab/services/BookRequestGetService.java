@@ -28,7 +28,7 @@ public class BookRequestGetService {
         return requestGetRepository.getById(id);
     }
 
-    public List<BookRequestGet> findByUserId(long userId) {
+    public List<BookRequestGet> findByUserId(String userId) {
         return requestGetRepository.findAllByUserID(userId);
     }
 

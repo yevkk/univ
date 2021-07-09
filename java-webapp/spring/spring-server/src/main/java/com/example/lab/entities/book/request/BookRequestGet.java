@@ -28,7 +28,7 @@ public class BookRequestGet {
     private Book book;
 
     @Column(name = "user_id")
-    private long userID;
+    private String userID;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_type_id")
