@@ -8,17 +8,17 @@ import {UserRequestsSection} from "../main-section/requests/UserRequestsSection"
 export class UserView extends React.Component {
     render() {
         return <div className="UserView">
-            <ViewHeader/>
+            <ViewHeader keycloak={this.props.keycloak} />
             <BrowserRouter>
             <ViewMenu/>
-                <Switch>
-                    <Route path="/books">
-                        <UserBooksSection/>
-                    </Route>
-                    <Route path="/requests">
-                        <UserRequestsSection />
-                    </Route>
-                </Switch>
+                {/*<Switch>*/}
+                {/*    <Route path="/books">*/}
+                {/*        <UserBooksSection/>*/}
+                {/*    </Route>*/}
+                {/*    <Route path="/requests">*/}
+                {/*        <UserRequestsSection />*/}
+                {/*    </Route>*/}
+                {/*</Switch>*/}
             </BrowserRouter>
         </div>
     }

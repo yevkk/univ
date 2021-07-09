@@ -10,23 +10,23 @@ import {BalanceLogSection} from "../main-section/history/BalanceLogSection";
 export class AdminView extends React.Component {
     render() {
         return <div className="AdminView printable">
-            <ViewHeader/>
+            <ViewHeader keycloak={this.props.keycloak}/>
             <BrowserRouter>
-                <ViewMenu/>
-                <Switch>
-                    <Route path="/books">
-                        <AdminBooksSection />
-                    </Route>
-                    <Route path="/requests">
-                        <AdminRequestsSection />
-                    </Route>
-                    <Route path="/delivery">
-                        <DeliveryTypeSection />
-                    </Route>
-                    <Route path="/balance_log">
-                        <BalanceLogSection />
-                    </Route>
-                </Switch>
+                <ViewMenu />
+                {/*<Switch>*/}
+                {/*    <Route path="/books">*/}
+                {/*        <AdminBooksSection />*/}
+                {/*    </Route>*/}
+                {/*    <Route path="/requests">*/}
+                {/*        <AdminRequestsSection />*/}
+                {/*    </Route>*/}
+                {/*    <Route path="/delivery">*/}
+                {/*        <DeliveryTypeSection />*/}
+                {/*    </Route>*/}
+                {/*    <Route path="/balance_log">*/}
+                {/*        <BalanceLogSection />*/}
+                {/*    </Route>*/}
+                {/*</Switch>*/}
             </BrowserRouter>
         </div>
     }

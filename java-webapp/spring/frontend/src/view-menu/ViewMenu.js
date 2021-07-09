@@ -13,19 +13,13 @@ import starImg from './assets/star.svg'
 
 export class ViewMenu extends React.Component {
     privilegedItems() {
-        if (localStorage.getItem('user-role') === 'admin') {
+        if (localStorage.getItem('is-admin') === 'true') {
             return [
                 <Link to="/delivery">
                     <ViewMenuItem image={boxImg} text="Delivery"/>
                 </Link>,
-                <Link to="/stats_history">
-                    <ViewMenuItem image={statsImg} text="History"/>
-                </Link>,
                 <Link to="/balance_log">
                     <ViewMenuItem image={logImg} text="Balance changelog"/>
-                </Link>,
-                <Link to="/rate_log">
-                    <ViewMenuItem image={starImg} text="Rate changelog"/>
                 </Link>]
         }
     }
