@@ -16,19 +16,18 @@ class BookRow extends React.Component {
 
     constructor(props) {
         super(props);
-        this.bookID = this.props.book.id
+        this.bookID = this.props.stats.book.id
     }
 
     render() {
         return <tr>
-            <td>{this.props.book.name}</td>
-            <td>{this.props.book.author}</td>
-            <td className="centralized">{this.props.book.lang}</td>
-            <td>{this.props.book.tags.join(', ')}</td>
-            <td className="centralized">{this.props.book.stats.amount}</td>
-            <td className="centralized">{this.props.book.stats.totalRequests}</td>
-            <td className="centralized">{this.props.book.stats.rate.toFixed(2)}</td>
-            {this.props.book.stats.amount > 0 ?
+            <td>{this.props.stats.book.name}</td>
+            <td>{this.props.stats.book.author}</td>
+            <td className="centralized">{this.props.stats.book.lang}</td>
+            <td className="centralized">{this.props.stats.amount}</td>
+            <td className="centralized">{this.props.stats.totalRequests}</td>
+            <td className="centralized">{this.props.stats.rate.toFixed(2)}</td>
+            {this.props.stats.amount > 0 ?
             <td> <div className="MainSection-button" onClick={() => this.openRequestForm()}>create request</div> </td> : <td />}
         </tr>
     }
@@ -59,11 +58,12 @@ class RequestBookForm extends React.Component {
     }
 
     async sendRequest() {
-        let url = new URL(`${serverURL}/request/add?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
+        let url = new URL(`${serverURL}/requests`)
 
         let deliveryTypeID = document.forms.requestBookForm.elements.deliveryTypeID.value
         let contact = document.forms.requestBookForm.elements.contact.value
         url.searchParams.set('book_id',  selectedBookID)
+        url.searchParams.set('user_id',  localStorage.getItem('user-id'))
         url.searchParams.set('delivery_type_id',  deliveryTypeID)
         url.searchParams.set('contact', contact)
         await fetch(url.toString(), {
@@ -86,7 +86,7 @@ class RequestBookForm extends React.Component {
                     Request book
                 </header>
                 <form name="requestBookForm">
-                    <label className="OverlayForm-label" htmlFor="RequestBookForm-deliveryTypeID-input">login: </label>
+                    <label className="OverlayForm-label" htmlFor="RequestBookForm-deliveryTypeID-input">delivery: </label>
                     <select className="OverlayForm-input" id="RequestBookForm-deliveryTypeID-input" name="deliveryTypeID">
                         {this.state.deliveryTypes.map(item => <DeliveryTypeOption deliveryType={item} />)}
                     </select>
@@ -104,22 +104,16 @@ class RequestBookForm extends React.Component {
 
 export class UserBooksSection extends React.Component {
     componentDidMount() {
-        let books;
-
-        getBooks().then(result => {
-            books = result
             getStats().then(result => {
                 let stats = result;
-                books.forEach(book => book.stats = stats.find(item => item.bookID === book.id))
-                this.setState({...this.state, books})
+                this.setState({...this.state, stats})
             })
-        })
     }
 
     constructor(props) {
         super(props)
         this.state = {
-            books: [],
+            stats: [],
         }
     }
 
@@ -135,7 +129,6 @@ export class UserBooksSection extends React.Component {
                         <col span="1" style={{width: "20%"}} />
                         <col span="1" style={{width: "20%"}} />
                         <col span="1" style={{width: "10%"}} />
-                        <col span="1" style={{width: "20%"}} />
                         <col span="1" style={{width: "5%"}} />
                         <col span="1" style={{width: "5%"}} />
                         <col span="1" style={{width: "5%"}} />
@@ -147,13 +140,12 @@ export class UserBooksSection extends React.Component {
                         <td>Name</td>
                         <td>Author</td>
                         <td>Language</td>
-                        <td>Tags</td>
                         <td>Amount</td>
                         <td>Readers</td>
                         <td>Rate</td>
                         <td/>
                     </tr>
-                    {this.state.books.map(book => <BookRow book={book}/>)}
+                    {this.state.stats.map(stats => <BookRow stats={stats}/>)}
                     </tbody>
                 </table>
             </section>

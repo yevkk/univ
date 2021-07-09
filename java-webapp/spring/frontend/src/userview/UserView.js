@@ -11,14 +11,14 @@ export class UserView extends React.Component {
             <ViewHeader keycloak={this.props.keycloak} />
             <BrowserRouter>
             <ViewMenu/>
-                {/*<Switch>*/}
-                {/*    <Route path="/books">*/}
-                {/*        <UserBooksSection/>*/}
-                {/*    </Route>*/}
-                {/*    <Route path="/requests">*/}
-                {/*        <UserRequestsSection />*/}
-                {/*    </Route>*/}
-                {/*</Switch>*/}
+                <Switch>
+                    <Route path="/books">
+                        <UserBooksSection/>
+                    </Route>
+                    <Route path="/requests">
+                        <UserRequestsSection />
+                    </Route>
+                </Switch>
             </BrowserRouter>
         </div>
     }
