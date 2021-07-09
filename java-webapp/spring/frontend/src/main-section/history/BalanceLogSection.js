@@ -9,8 +9,8 @@ import {convertDatetime} from "../../utils/utils";
 class BalanceLogRow extends React.Component {
     render() {
         return <tr>
-            <td className="centralized">{convertDatetime(this.props.logRecord.datetime)}</td>
-            <td className="centralized">{this.props.logRecord.bookID}</td>
+            <td className="centralized">{this.props.logRecord.datetime}</td>
+            <td className="centralized">{this.props.logRecord.book.name + ', ' + this.props.logRecord.book.lang}</td>
             <td className="centralized">{this.props.logRecord.amount}</td>
             <td>{this.props.logRecord.comment}</td>
         </tr>
@@ -45,8 +45,8 @@ export class BalanceLogSection extends React.Component {
     }
 
     showInPeriod() {
-        let start = prompt('Enter start of period (format yyyy-mm-dd): ');
-        let end = prompt('Enter end of period (format yyyy-mm-dd): ');
+        let start = prompt('Enter start of period (format yyyy-mm-ddThh:mm:ss): ');
+        let end = prompt('Enter end of period (format yyyy-mm-ddThh:mm:ss): ');
         getBalanceChangelogInPeriod(start, end).then(result => {
             this.setState({...this.state, balanceChangelog: result})
         })
@@ -72,7 +72,7 @@ export class BalanceLogSection extends React.Component {
                     <tbody>
                     <tr>
                         <td>Datetime</td>
-                        <td>Book ID</td>
+                        <td>Book</td>
                         <td>Amount</td>
                         <td>Comment</td>
                     </tr>

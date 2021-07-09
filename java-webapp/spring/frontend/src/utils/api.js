@@ -31,20 +31,20 @@ export async function getDeliveryTypes() {
 }
 
 export async function getBalanceChangelog() {
-    let urlLog = new URL(`${serverURL}/changelog/balance_log`)
+    let urlLog = new URL(`${serverURL}/balance_log`)
     let historyResponse = await fetch(urlLog.toString())
     return await historyResponse.json()
 }
 
 export async function getBalanceChangelogByBookID(bookID) {
-    let urlLog = new URL(`${serverURL}/changelog/balance_log`)
+    let urlLog = new URL(`${serverURL}/balance_log`)
     urlLog.searchParams.set('book_id', bookID)
     let logResponse = await fetch(urlLog.toString())
     return await logResponse.json()
 }
 
 export async function getBalanceChangelogInPeriod(start, end) {
-    let urlLog = new URL(`${serverURL}/changelog/balance_log`)
+    let urlLog = new URL(`${serverURL}/balance_log`)
     urlLog.searchParams.set('from', start)
     urlLog.searchParams.set('to', end)
     let logResponse = await fetch(urlLog.toString())
@@ -52,20 +52,20 @@ export async function getBalanceChangelogInPeriod(start, end) {
 }
 
 export async function getRateChangelog() {
-    let urlLog = new URL(`${serverURL}/changelog/rate_log`)
+    let urlLog = new URL(`${serverURL}/rate_log`)
     let historyResponse = await fetch(urlLog.toString())
     return await historyResponse.json()
 }
 
 export async function getRateChangelogByBookID(bookID) {
-    let urlLog = new URL(`${serverURL}/changelog/rate_log`)
+    let urlLog = new URL(`${serverURL}/rate_log`)
     urlLog.searchParams.set('book_id', bookID)
     let logResponse = await fetch(urlLog.toString())
     return await logResponse.json()
 }
 
 export async function getRateChangelogInPeriod(start, end) {
-    let urlLog = new URL(`${serverURL}/changelog/rate_log`)
+    let urlLog = new URL(`${serverURL}/rate_log`)
     urlLog.searchParams.set('from', start)
     urlLog.searchParams.set('to', end)
     let logResponse = await fetch(urlLog.toString())
