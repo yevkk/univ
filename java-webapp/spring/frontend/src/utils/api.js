@@ -1,4 +1,4 @@
-export let serverURL = 'http://192.168.1.26:8015'
+export let serverURL = 'http://localhost:8015'
 
 export async function getBooks() {
     let urlBooks = new URL(`${serverURL}/books`)

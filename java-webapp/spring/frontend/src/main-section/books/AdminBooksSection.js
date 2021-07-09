@@ -16,20 +16,21 @@ class BookRow extends React.Component {
 
     constructor(props) {
         super(props);
-        this.bookID = this.props.book.id
+        this.bookID = this.props.stats.book.id
     }
 
     render() {
         return <tr>
-            <td className="centralized">{this.props.book.id}</td>
-            <td>{this.props.book.name}</td>
-            <td>{this.props.book.author}</td>
-            <td className="centralized">{this.props.book.lang}</td>
-            <td>{this.props.book.tags.join(', ')}</td>
-            <td className="centralized">{this.props.book.stats.amount}</td>
-            <td className="centralized">{this.props.book.stats.totalRequests}</td>
-            <td className="centralized">{this.props.book.stats.rate.toFixed(2)}</td>
-            <td> <div className="MainSection-button" onClick={() => this.openUpdateForm()}>update</div> </td>
+            <td className="centralized">{this.props.stats.book.id}</td>
+            <td>{this.props.stats.book.name}</td>
+            <td>{this.props.stats.book.author}</td>
+            <td className="centralized">{this.props.stats.book.lang}</td>
+            <td className="centralized">{this.props.stats.amount}</td>
+            <td className="centralized">{this.props.stats.totalRequests}</td>
+            <td className="centralized">{this.props.stats.rate.toFixed(2)}</td>
+            <td>
+                <div className="MainSection-button" onClick={() => this.openUpdateForm()}>update</div>
+            </td>
         </tr>
     }
 }
@@ -40,13 +41,13 @@ class UpdateBookForm extends React.Component {
     }
 
     async updateAmount() {
-        let url = new URL(`${serverURL}/stats/update?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
+        let url = new URL(`${serverURL}/stats`)
 
         let amount = document.forms.updateBookForm.elements.amount.value
-        url.searchParams.set('book_id',  selectedBookID)
-        url.searchParams.set('amount',  amount)
+        url.searchParams.set('book_id', selectedBookID)
+        url.searchParams.set('amount', amount)
         await fetch(url.toString(), {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
@@ -67,7 +68,8 @@ class UpdateBookForm extends React.Component {
                 </div>
                 <form name="updateBookForm">
                     <label className="OverlayForm-label" htmlFor="UpdateBookForm-amount-input">amount: </label>
-                    <input className="OverlayForm-input" id="UpdateBookForm-amount-input" name="amount" type="number" min="0" max="100" step="1"/>
+                    <input className="OverlayForm-input" id="UpdateBookForm-amount-input" name="amount" type="number"
+                           min="0" max="100" step="1"/>
                 </form>
 
                 <div className="OverlayForm-button" onClick={() => this.updateAmount()}>
@@ -84,17 +86,15 @@ class CreateBookForm extends React.Component {
     }
 
     async create() {
-        let url = new URL(`${serverURL}/books/add?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
+        let url = new URL(`${serverURL}/books`)
 
         let name = document.forms.createBookForm.elements.name.value
         let author = document.forms.createBookForm.elements.author.value
         let lang = document.forms.createBookForm.elements.lang.value
-        let tags = document.forms.createBookForm.elements.tags.value.split(',')
 
-        url.searchParams.set('name',  name)
-        url.searchParams.set('author',  author)
-        url.searchParams.set('lang',  lang)
-        tags.forEach(tag => url.searchParams.append('tag',  tag))
+        url.searchParams.set('name', name)
+        url.searchParams.set('author', author)
+        url.searchParams.set('lang', lang)
 
         await fetch(url.toString(), {
             method: 'POST',
@@ -123,8 +123,6 @@ class CreateBookForm extends React.Component {
                     <input className="OverlayForm-input" id="CreateBookForm-author-input" name="author"/>
                     <label className="OverlayForm-label" htmlFor="CreateBookForm-lang-input">lang: </label>
                     <input className="OverlayForm-input" id="CreateBookForm-lang-input" name="lang"/>
-                    <label className="OverlayForm-label" htmlFor="CreateBookForm-tags-input">tags: </label>
-                    <input className="OverlayForm-input" id="CreateBookForm-tags-input" name="tags"/>
                 </form>
 
                 <div className="OverlayForm-button" onClick={() => this.create()}>
@@ -137,23 +135,17 @@ class CreateBookForm extends React.Component {
 
 export class AdminBooksSection extends React.Component {
     componentDidMount() {
-        let books;
-
-        getBooks().then(result => {
-            books = result
-            getStats().then(result => {
-                let stats = result;
-                books.forEach(book => book.stats = stats.find(item => item.bookID === book.id))
-                console.log(books);
-                this.setState({...this.state, books})
-            })
+        getStats().then(result => {
+            let stats = result;
+            console.log(stats)
+            this.setState({...this.state, stats})
         })
     }
 
     constructor(props) {
         super(props)
         this.state = {
-            books: [],
+            stats: [],
         }
     }
 
@@ -162,10 +154,10 @@ export class AdminBooksSection extends React.Component {
         requestForm.style.display = 'block'
     }
 
-    render () {
+    render() {
         return <div className="content-wrapper">
-            <UpdateBookForm />
-            <CreateBookForm />
+            <UpdateBookForm/>
+            <CreateBookForm/>
             <div className="MainSection">
                 <header className="MainSection-header">
                     Books
@@ -173,15 +165,14 @@ export class AdminBooksSection extends React.Component {
                 </header>
                 <table className="MainSection-table">
                     <colgroup>
-                        <col span="1" style={{width: "5%"}} />
-                        <col span="1" style={{width: "20%"}} />
-                        <col span="1" style={{width: "15%"}} />
-                        <col span="1" style={{width: "15%"}} />
-                        <col span="1" style={{width: "20%"}} />
-                        <col span="1" style={{width: "5%"}} />
-                        <col span="1" style={{width: "5%"}} />
-                        <col span="1" style={{width: "5%"}} />
-                        <col span="1" style={{width: "15%"}} />
+                        <col span="1" style={{width: "5%"}}/>
+                        <col span="1" style={{width: "20%"}}/>
+                        <col span="1" style={{width: "15%"}}/>
+                        <col span="1" style={{width: "20%"}}/>
+                        <col span="1" style={{width: "5%"}}/>
+                        <col span="1" style={{width: "5%"}}/>
+                        <col span="1" style={{width: "5%"}}/>
+                        <col span="1" style={{width: "15%"}}/>
                     </colgroup>
 
                     <tbody>
@@ -190,13 +181,12 @@ export class AdminBooksSection extends React.Component {
                         <td>Name</td>
                         <td>Author</td>
                         <td>Language</td>
-                        <td>Tags</td>
                         <td>Amount</td>
                         <td>Readers</td>
                         <td>Rate</td>
-                        <td />
+                        <td/>
                     </tr>
-                    {this.state.books.map(book => <BookRow book={book}/>)}
+                    {this.state.stats.map(stats => <BookRow stats={stats}/>)}
                     </tbody>
                 </table>
             </div>
