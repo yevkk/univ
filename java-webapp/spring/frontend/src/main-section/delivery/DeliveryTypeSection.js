@@ -19,7 +19,7 @@ class CreateDeliveryTypeForm extends React.Component {
     }
 
     async create() {
-        let url = new URL(`${serverURL}/delivery_types/add?login=${localStorage.getItem('login')}&password=${localStorage.getItem('password')}`)
+        let url = new URL(`${serverURL}/delivery_types`)
 
         let description = document.forms.createDeliveryTypeForm.elements.description.value
 
