@@ -45,10 +45,11 @@ class Board:
 
         return False
 
+    def check_failed(self):
+        pass
 
-def check_failed(self):
-    pass
+    def check_solved(self):
+        pass
 
-
-def check_solved(self):
-    pass
+    def __str__(self):
+        pass
