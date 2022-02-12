@@ -18,6 +18,10 @@ class Board:
     def size(self):
         return self.__size
 
+    @property
+    def cells(self):
+        return self.__cells
+
     def move(self, from_position, to_position):
         if (from_position in self.__cells.keys()) and (to_position in self.__cells.keys()):
             if from_position[0] == to_position[0]:
