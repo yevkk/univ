@@ -46,10 +46,18 @@ class Board:
         return False
 
     def check_failed(self):
-        pass
+        def check_neighbors(pos):
+            return True if (
+                self.__cells.get((pos[0] + 1, pos[1]), 0) == 1 or
+                self.__cells.get((pos[0], pos[1] + 1), 0) == 1 or
+                self.__cells.get((pos[0] - 1, pos[1]), 0) == 1 or
+                self.__cells.get((pos[0], pos[1] - 1), 0) == 1
+            ) else False
+
+        return any([check_neighbors for pos in self.__cells if self.__cells[pos] == 1])
 
     def check_solved(self):
-        pass
+        return len(self.__cells) == 1
 
     def __str__(self):
         string = ''
