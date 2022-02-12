@@ -12,7 +12,7 @@ class Board:
         for cell in template.cells:
             self.__cells[cell] = 1
 
-        self.__cells[empty or template.cells.default_empty] = 0
+        self.__cells[empty or template.default_empty] = 0
 
     @property
     def size(self):
