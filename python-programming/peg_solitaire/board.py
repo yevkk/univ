@@ -52,4 +52,9 @@ class Board:
         pass
 
     def __str__(self):
-        pass
+        string = ''
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                string += str(self.__cells.get((i, j), ' '))
+            string += '\n'
+        return string
