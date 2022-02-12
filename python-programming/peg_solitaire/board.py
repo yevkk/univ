@@ -18,16 +18,37 @@ class Board:
     def size(self):
         return self.__size
 
-    def move(self, what, where):
-        pass
+    def move(self, from_position, to_position):
+        if (from_position in self.__cells.keys()) and (to_position in self.__cells.keys()):
+            if from_position[0] == to_position[0]:
+                eq_i, neq_i = 0, 1
+            elif from_position[1] == to_position[1]:
+                eq_i, neq_i = 1, 0
+            else:
+                return False
 
-    def check_failed(self):
-        pass
+            mid_position = (
+                int((from_position[0] + to_position[0]) / 2),
+                int((from_position[1] + to_position[1]) / 2)
+            )
 
-    def check_solved(self):
-        pass
+            if (
+                    abs(from_position[neq_i] - to_position[neq_i]) == 2 and
+                    self.__cells[from_position] == 1 and
+                    self.__cells[to_position] == 0 and
+                    self.__cells[mid_position] == 1
+            ):
+                self.__cells[from_position] = 0
+                self.__cells[to_position] = 1
+                self.__cells[mid_position] = 0
+                return True
+
+        return False
 
 
+def check_failed(self):
+    pass
 
 
-
+def check_solved(self):
+    pass
