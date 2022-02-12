@@ -16,36 +16,36 @@ class BoardSurface(pygame.sprite.Sprite):
 
         self.__selected = None
 
+    def __center(self, pos):
+        x = self.__x_offset + pos[1] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+        y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+        return x, y
+
     def draw(self):
         self.surf.fill(self.__colors[0])
 
         for pos in self.__board.cells:
-            center_x = self.__x_offset + pos[1] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
-            center_y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+            center_x, center_y = self.__center(pos)
             pygame.draw.circle(self.surf, self.__colors[1], [center_x, center_y], self.__cell_radius, 3)
 
             if self.__board.cells[pos]:
                 pygame.draw.circle(self.surf, self.__colors[1], [center_x, center_y], 0.6 * self.__cell_radius)
 
         if self.__selected:
-            pos = self.__selected
-            center_x = self.__x_offset + pos[1] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
-            center_y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+            center_x, center_y = self.__center(self.__selected)
             pygame.draw.circle(self.surf, self.__colors[3], [center_x, center_y], self.__cell_radius, 3)
             pygame.draw.circle(self.surf, self.__colors[3], [center_x, center_y], 0.6 * self.__cell_radius)
 
     def mouse_highlight(self, mouse_pos):
         for pos in self.__board.cells:
-            center_x = self.__x_offset + pos[1] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
-            center_y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+            center_x, center_y = self.__center(pos)
             if (mouse_pos[0] - center_x) ** 2 + (mouse_pos[1] - center_y) ** 2 < self.__cell_radius ** 2:
                 pygame.draw.circle(self.surf, self.__colors[2], [center_x, center_y], self.__cell_radius, 3)
 
     def mouse_click(self, mouse_pos):
         clicked = None
         for pos in self.__board.cells:
-            center_x = self.__x_offset + pos[1] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
-            center_y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+            center_x, center_y = self.__center(pos)
             if (mouse_pos[0] - center_x) ** 2 + (mouse_pos[1] - center_y) ** 2 < self.__cell_radius ** 2:
                 clicked = pos
                 break
