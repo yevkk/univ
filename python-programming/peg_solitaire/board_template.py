@@ -31,7 +31,7 @@ templates = {
         [(0, 2),
          *[(1, i) for i in range(0, 3)],
          *[(2, i) for i in range(1, 4)],
-         (2, 1)
+         (3, 1)
          ],
         (1, 0)
     ),
