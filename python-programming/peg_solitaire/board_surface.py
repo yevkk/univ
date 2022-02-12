@@ -19,8 +19,15 @@ class BoardSurface(pygame.sprite.Sprite):
         for pos in self.__board.cells:
             center_x = self.__x_offset + pos[1] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
             center_y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
-            pygame.draw.circle(self.surf, self.__colors[1], [center_x, center_y], self.__cell_radius, 2)
+            pygame.draw.circle(self.surf, self.__colors[1], [center_x, center_y], self.__cell_radius, 3)
 
             if self.__board.cells[pos]:
                 pygame.draw.circle(self.surf, self.__colors[1], [center_x, center_y], 0.6 * self.__cell_radius)
 
+    def mouse_highlight(self, mouse_pos):
+        print(mouse_pos)
+        for pos in self.__board.cells:
+            center_x = self.__x_offset + pos[1] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+            center_y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
+            if (mouse_pos[0] - center_x) ** 2 + (mouse_pos[1] - center_y) ** 2 < self.__cell_radius ** 2:
+                pygame.draw.circle(self.surf, self.__colors[2], [center_x, center_y], self.__cell_radius, 3)
