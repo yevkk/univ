@@ -21,6 +21,12 @@ class BoardSurface(pygame.sprite.Sprite):
         y = self.__y_offset + pos[0] * (2 * self.__cell_radius + self.__cell_margin) + self.__cell_radius
         return x, y
 
+    def check_failed(self):
+        return self.__board.check_failed()
+
+    def check_solved(self):
+        return self.__board.check_solved()
+
     def draw(self):
         self.surf.fill(self.__colors[0])
 
