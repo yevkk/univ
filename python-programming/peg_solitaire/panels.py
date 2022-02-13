@@ -7,17 +7,37 @@ WHITE = (255, 255, 255)
 HIGHLIGHT_COLOR_1 = (0, 215, 135)
 HIGHLIGHT_COLOR_2 = (255, 200, 0)
 
+FONT_FILE = 'Cambria.ttf'
+
+
+class Button(pygame.sprite.Sprite):
+    def __init__(self, size, text):
+        super(Button, self).__init__()
+        self.surf = pygame.Surface(size)
+
+        self.__text = text
+        self.__message_font = pygame.font.SysFont(FONT_FILE, 20)
+
+    def draw(self, mouse_over):
+        if self.surf.get_rect().collidepoint(pygame.mouse.get_pos()):
+            self.surf.fill(HIGHLIGHT_COLOR_1)
+        else:
+            self.surf.fill(WHITE)
+
+    def is_mouse_over(self):
+        return self.surf.get_rect().collidepoint(pygame.mouse.get_pos())
+
 
 class GamePanel(pygame.sprite.Sprite):
     def __init__(self, size):
         super(GamePanel, self).__init__()
         self.surf = pygame.Surface(size)
 
-        self.__board = None;
+        self.__board = None
         self.__template_name = ''
         self.__BOARD_OFFSET = (100, 200)
 
-        self.__message_font = pygame.font.SysFont('Cambria.ttf', 40)
+        self.__message_font = pygame.font.SysFont(FONT_FILE, 40)
 
     def update(self, mouse_pos):
         self.surf.fill(BG_COLOR)
