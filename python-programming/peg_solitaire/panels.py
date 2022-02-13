@@ -89,6 +89,8 @@ class GamePanel(pygame.sprite.Sprite):
         self.__board.mouse_click(relative_mouse_pos(mouse_pos, self.__BOARD_OFFSET))
         if self.__undo_button.is_mouse_over:
             self.__board.undo()
+        elif self.__menu_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(OPEN_MENU))
 
     def __mouse_over(self, mouse_pos):
         self.__board.mouse_highlight(relative_mouse_pos(mouse_pos, self.__BOARD_OFFSET))
@@ -128,7 +130,14 @@ class MenuPanel(pygame.sprite.Sprite):
         self.surf.blit(self.__eur_st_button.surf, self.__EUR_ST_BUTTON_OFFSET)
 
     def mouse_click(self, mouse_pos):
-        pass
+        if self.__min_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_MIN))
+        elif self.__easy_pw_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_EASY_PW))
+        elif self.__eng_st_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_ENG_STYLE))
+        elif self.__eur_st_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_EUR_STYLE))
 
     def __mouse_over(self, mouse_pos):
         self.__min_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__MIN_BUTTON_OFFSET))
