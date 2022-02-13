@@ -8,11 +8,14 @@ pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption('Peg Solitaire (Lab 1)')
 
+clock = pygame.time.Clock()
+
 game_panel = GamePanel(WINDOW_SIZE)
 game_panel.new_board('english style')
 
 running = True
 while running:
+    clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             game_panel.mouse_click(pygame.mouse.get_pos())
