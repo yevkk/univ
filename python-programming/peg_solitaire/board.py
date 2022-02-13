@@ -115,13 +115,16 @@ class Board:
     def check_failed(self):
         def check_neighbors(pos):
             return True if (
-                self.__cells.get((pos[0] + 1, pos[1]), 0) == 1 or
-                self.__cells.get((pos[0], pos[1] + 1), 0) == 1 or
-                self.__cells.get((pos[0] - 1, pos[1]), 0) == 1 or
-                self.__cells.get((pos[0], pos[1] - 1), 0) == 1
+                    self.__cells.get((pos[0] + 1, pos[1]), 0) == 1 or
+                    self.__cells.get((pos[0], pos[1] + 1), 0) == 1 or
+                    self.__cells.get((pos[0] - 1, pos[1]), 0) == 1 or
+                    self.__cells.get((pos[0], pos[1] - 1), 0) == 1
             ) else False
 
-        return not any([check_neighbors(pos) for pos in self.__cells if self.__cells[pos] == 1])
+        return (
+                not any([check_neighbors(pos) for pos in self.__cells if self.__cells[pos] == 1]) and
+                not self.check_solved()
+        )
 
     def check_solved(self):
         return len([pos for pos in self.__cells if self.__cells[pos] == 1]) == 1
