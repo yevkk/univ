@@ -121,10 +121,10 @@ class Board:
                 self.__cells.get((pos[0], pos[1] - 1), 0) == 1
             ) else False
 
-        return any([check_neighbors for pos in self.__cells if self.__cells[pos] == 1])
+        return not any([check_neighbors(pos) for pos in self.__cells if self.__cells[pos] == 1])
 
     def check_solved(self):
-        return len(self.__cells) == 1
+        return len([pos for pos in self.__cells if self.__cells[pos] == 1]) == 1
 
     def __str__(self):
         string = ''
