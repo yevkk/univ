@@ -12,17 +12,34 @@ class GamePanel(pygame.sprite.Sprite):
     def __init__(self, size):
         super(GamePanel, self).__init__()
         self.surf = pygame.Surface(size)
-        self.surf.fill(BG_COLOR)
 
         self.__board = None;
+        self.__template_name = ''
         self.__BOARD_OFFSET = (100, 200)
 
+        self.__message_font = pygame.font.SysFont('Cambria.ttf', 40)
+
     def update(self, mouse_pos):
+        self.surf.fill(BG_COLOR)
+
+        if self.__board.check_solved():
+            message_text, message_color = 'Solved!', HIGHLIGHT_COLOR_1
+        elif self.__board.check_failed():
+            message_text, message_color = 'Failed!', HIGHLIGHT_COLOR_2
+        else:
+            message_text, message_color = self.__template_name.title(), WHITE
+        message = self.__message_font.render(message_text, True, message_color)
+        message_rect = message.get_rect()
+        message_rect.center = (300, 150)
+
         self.__board.draw()
         self.__mouse_over(mouse_pos)
+
+        self.surf.blit(message, message_rect)
         self.surf.blit(self.__board.surf, self.__BOARD_OFFSET)
 
     def new_board(self, template_name):
+        self.__template_name = template_name
         self.__board = BoardSurface(Board(template_name), 400, [BG_COLOR, WHITE, HIGHLIGHT_COLOR_1, HIGHLIGHT_COLOR_2])
 
     def mouse_click(self, mouse_pos):
