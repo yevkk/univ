@@ -1,5 +1,7 @@
 import pygame
 
+WINDOW_SIZE = (600, 750)
+
 BG_COLOR = (18, 18, 24)
 WHITE = (255, 255, 255)
 HIGHLIGHT_COLOR_1 = (0, 215, 135)
