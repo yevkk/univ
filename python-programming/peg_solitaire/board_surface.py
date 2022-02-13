@@ -27,6 +27,9 @@ class BoardSurface(pygame.sprite.Sprite):
     def check_solved(self):
         return self.__board.check_solved()
 
+    def undo(self):
+        self.__board.undo()
+
     def draw(self):
         self.surf.fill(self.__colors[0])
 

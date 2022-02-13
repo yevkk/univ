@@ -77,6 +77,8 @@ class Board:
 
         self.__cells[empty or template.default_empty] = 0
 
+        self.__history = []
+
     @property
     def size(self):
         return self.__size
@@ -108,6 +110,8 @@ class Board:
                 self.__cells[from_position] = 0
                 self.__cells[to_position] = 1
                 self.__cells[mid_position] = 0
+
+                self.__history.append((from_position, to_position, mid_position))
                 return True
 
         return False
@@ -128,6 +132,13 @@ class Board:
 
     def check_solved(self):
         return len([pos for pos in self.__cells if self.__cells[pos] == 1]) == 1
+
+    def undo(self):
+        if self.__history:
+            from_position, to_position, mid_position = self.__history.pop()
+            self.__cells[from_position] = 1
+            self.__cells[to_position] = 0
+            self.__cells[mid_position] = 1
 
     def __str__(self):
         string = ''
