@@ -30,11 +30,13 @@ char *f(int *keys, int *values, int size) {
         char_count++;
     }
 
-    char *res = (char *) malloc(char_count * sizeof(char));
+    char *res = (char *) malloc((char_count + 1) * sizeof(char));
+    char char_digits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     for (int i = 0; i < char_count; i++) {
-        res[char_count - 1 - i] = max % 10;
+        res[char_count - 1 - i] = char_digits[max % 10];
         max /= 10;
     }
+    res[char_count - 1] = 0;
 
     return res;
 }
