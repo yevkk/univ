@@ -12,7 +12,7 @@ def compute(input_data):
         keys[i] = key
         values[i] = input_data[key]
 
-    cdef object cresult
+    cdef char *cresult
     cresult = f(keys, values, size)
 
-    return str(cresult)
+    return str(cresult.decode("utf-8"))
