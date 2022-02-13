@@ -6,6 +6,7 @@ WINDOW_SIZE = (600, 800)
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
+pygame.display.set_caption('Peg Solitaire (Lab 1)')
 
 game_panel = GamePanel(WINDOW_SIZE)
 game_panel.new_board('english style')
