@@ -7,7 +7,7 @@ WHITE = (255, 255, 255)
 HIGHLIGHT_COLOR_1 = (0, 215, 135)
 HIGHLIGHT_COLOR_2 = (255, 200, 0)
 
-FONT_FILE = 'Cambria.ttf'
+FONT_FILE = './src/IndieFlower-Regular.ttf'
 
 
 class Button(pygame.sprite.Sprite):
@@ -16,16 +16,26 @@ class Button(pygame.sprite.Sprite):
         self.surf = pygame.Surface(size)
 
         self.__text = text
-        self.__message_font = pygame.font.SysFont(FONT_FILE, 20)
+        self.__font = pygame.font.Font(FONT_FILE, 30)
 
-    def draw(self, mouse_over):
-        if self.surf.get_rect().collidepoint(pygame.mouse.get_pos()):
-            self.surf.fill(HIGHLIGHT_COLOR_1)
-        else:
-            self.surf.fill(WHITE)
+        self.__is_mouse_over = False
 
+    @property
     def is_mouse_over(self):
-        return self.surf.get_rect().collidepoint(pygame.mouse.get_pos())
+        return self.__is_mouse_over
+
+    def draw(self):
+        color = HIGHLIGHT_COLOR_1 if self.is_mouse_over else WHITE
+
+        pygame.draw.rect(self.surf, color, self.surf.get_rect(),  4, 20)
+
+        text = self.__font.render(self.__text, True, color)
+        text_rect = text.get_rect()
+        text_rect.center = (self.surf.get_width() / 2, self.surf.get_height() / 2)
+        self.surf.blit(text, text_rect)
+
+    def mouse_highlight(self, mouse_pos):
+        self.__is_mouse_over = mouse_pos[0] < self.surf.get_width() and mouse_pos[1] < self.surf.get_height()
 
 
 class GamePanel(pygame.sprite.Sprite):
@@ -37,7 +47,10 @@ class GamePanel(pygame.sprite.Sprite):
         self.__template_name = ''
         self.__BOARD_OFFSET = (100, 200)
 
-        self.__message_font = pygame.font.SysFont(FONT_FILE, 40)
+        self.__test_button = Button((125, 75), 'test')
+        self.__TEST_BUTTON_OFFSET = (50, 50)
+
+        self.__message_font = pygame.font.Font(FONT_FILE, 40)
 
     def update(self, mouse_pos):
         self.surf.fill(BG_COLOR)
@@ -55,8 +68,11 @@ class GamePanel(pygame.sprite.Sprite):
         self.__board.draw()
         self.__mouse_over(mouse_pos)
 
+        self.__test_button.draw()
+
         self.surf.blit(message, message_rect)
         self.surf.blit(self.__board.surf, self.__BOARD_OFFSET)
+        self.surf.blit(self.__test_button.surf, self.__TEST_BUTTON_OFFSET)
 
     def new_board(self, template_name):
         self.__template_name = template_name
@@ -68,8 +84,12 @@ class GamePanel(pygame.sprite.Sprite):
     def __board_mouse_pos(self, mouse_position):
         return mouse_position[0] - self.__BOARD_OFFSET[0], mouse_position[1] - self.__BOARD_OFFSET[1]
 
+    def __test_button_pos(self, mouse_position):
+        return mouse_position[0] - self.__TEST_BUTTON_OFFSET[0], mouse_position[1] - self.__TEST_BUTTON_OFFSET[1]
+
     def __mouse_over(self, mouse_pos):
         self.__board.mouse_highlight(self.__board_mouse_pos(mouse_pos))
+        self.__test_button.mouse_highlight(self.__test_button_pos(mouse_pos))
 
 
 class MenuPanel(pygame.sprite.Sprite):
