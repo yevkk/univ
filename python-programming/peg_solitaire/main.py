@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from panels import GamePanel
 
-WINDOW_SIZE = (600, 800)
+WINDOW_SIZE = (600, 750)
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
