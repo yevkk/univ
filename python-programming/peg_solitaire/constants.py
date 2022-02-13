@@ -1,0 +1,14 @@
+import pygame
+
+BG_COLOR = (18, 18, 24)
+WHITE = (255, 255, 255)
+HIGHLIGHT_COLOR_1 = (0, 215, 135)
+HIGHLIGHT_COLOR_2 = (255, 200, 0)
+
+FONT_FILE = './src/IndieFlower-Regular.ttf'
+
+OPEN_MENU = pygame.USEREVENT + 1
+START_MIN = pygame.USEREVENT + 2
+START_EASY_PW = pygame.USEREVENT + 3
+START_ENG_STYLE = pygame.USEREVENT + 4
+START_EUR_STYLE = pygame.USEREVENT + 5
