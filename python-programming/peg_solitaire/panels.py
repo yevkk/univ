@@ -1,13 +1,7 @@
 import pygame
 from board_surface import BoardSurface
 from board import Board
-
-BG_COLOR = (18, 18, 24)
-WHITE = (255, 255, 255)
-HIGHLIGHT_COLOR_1 = (0, 215, 135)
-HIGHLIGHT_COLOR_2 = (255, 200, 0)
-
-FONT_FILE = './src/IndieFlower-Regular.ttf'
+from constants import *
 
 
 class Button(pygame.sprite.Sprite):
@@ -89,6 +83,8 @@ class GamePanel(pygame.sprite.Sprite):
 
     def mouse_click(self, mouse_pos):
         self.__board.mouse_click(self.__board_mouse_pos(mouse_pos))
+        if self.__undo_button.is_mouse_over:
+            self.__board.undo()
 
     def __board_mouse_pos(self, mouse_position):
         return mouse_position[0] - self.__BOARD_OFFSET[0], mouse_position[1] - self.__BOARD_OFFSET[1]
