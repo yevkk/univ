@@ -15,5 +15,7 @@ namespace DDBLab6.Data
         }
 
         public DbSet<DDBLab6.Models.Car> cars { get; set; } = default!;
+
+        public DbSet<DDBLab6.Models.Lecturer> lecturers { get; set; } = default!;
     }
 }
