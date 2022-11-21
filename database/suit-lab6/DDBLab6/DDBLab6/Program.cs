@@ -1,4 +1,11 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using DDBLab6.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<DDBLab6Context>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DDBLab6Context")));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
