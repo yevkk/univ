@@ -21,5 +21,7 @@ namespace DDBLab6.Data
         public DbSet<DDBLab6.Models.Group> groups { get; set; } = default!;
 
         public DbSet<DDBLab6.Models.Instructor> instructors { get; set; } = default!;
+
+        public DbSet<DDBLab6.Models.Student> students { get; set; } = default!;
     }
 }
