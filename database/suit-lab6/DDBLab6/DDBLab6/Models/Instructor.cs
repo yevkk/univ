@@ -21,8 +21,11 @@ namespace DDBLab6.Models
         [Column("phone")]
         public string? Phone { get; set; }
 
+        [ForeignKey("Car")]
         [Column("dedicated_car_id")]
         [Display(Name = "Dedicated Car")]
         public int? DedicatedCarId { get; set; }
+
+        public Car? Car { get; set; }
     }
 }

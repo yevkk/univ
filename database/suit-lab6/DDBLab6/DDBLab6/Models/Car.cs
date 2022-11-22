@@ -23,5 +23,7 @@ namespace DDBLab6.Models
 
         [Column("gearbox")]
         public char Gearbox { get; set; }
+
+        public string Desc => string.Format("{0} {1}, {2}", Manufacturer, Model, LicensePlate);
     }
 }

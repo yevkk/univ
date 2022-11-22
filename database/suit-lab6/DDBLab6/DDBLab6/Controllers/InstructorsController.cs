@@ -22,8 +22,9 @@ namespace DDBLab6.Controllers
         // GET: Instructors
         public async Task<IActionResult> Index()
         {
-              return _context.instructors != null ? 
-                          View(await _context.instructors.ToListAsync()) :
+            var db_context = _context.instructors.Include(m => m.Car);
+            return _context.instructors != null ? 
+                          View(await db_context.ToListAsync()) :
                           Problem("Entity set 'DDBLab6Context.Instructor'  is null.");
         }
 
@@ -36,6 +37,7 @@ namespace DDBLab6.Controllers
             }
 
             var instructor = await _context.instructors
+                .Include(m => m.Car)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (instructor == null)
             {
@@ -48,6 +50,8 @@ namespace DDBLab6.Controllers
         // GET: Instructors/Create
         public IActionResult Create()
         {
+            ViewData["carsSL"] = new SelectList(_context.Set<Car>(), "Id", "Desc");
+
             return View();
         }
 
@@ -80,6 +84,8 @@ namespace DDBLab6.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["carsSL"] = new SelectList(_context.Set<Car>(), "Id", "Desc");
             return View(instructor);
         }
 
