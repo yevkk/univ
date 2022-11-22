@@ -12,7 +12,11 @@ namespace DDBLab6.Models
         [Display(Name = "Lectures Completed")]
         public int LecturesCompleted { get; set; }
 
+        [ForeignKey("Lecturer")]
         [Column("lecturer_id")]
+        [Display(Name = "Lecturer")]
         public int? LecturerId { get; set; }
+
+        public Lecturer? Lecturer { get; set; }
     }
 }

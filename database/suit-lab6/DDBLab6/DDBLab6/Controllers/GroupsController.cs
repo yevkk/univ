@@ -22,8 +22,9 @@ namespace DDBLab6.Controllers
         // GET: Groups
         public async Task<IActionResult> Index()
         {
-              return _context.groups != null ? 
-                          View(await _context.groups.ToListAsync()) :
+            var db_context = _context.groups.Include(m => m.Lecturer);
+            return _context.groups != null ? 
+                          View(await db_context.ToListAsync()) :
                           Problem("Entity set 'DDBLab6Context.Group'  is null.");
         }
 
@@ -36,6 +37,7 @@ namespace DDBLab6.Controllers
             }
 
             var @group = await _context.groups
+                .Include(m => m.Lecturer)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@group == null)
             {
@@ -48,6 +50,8 @@ namespace DDBLab6.Controllers
         // GET: Groups/Create
         public IActionResult Create()
         {
+            ViewData["lecturersSL"] = new SelectList(_context.Set<Lecturer>(), "Id", "Desc");
+
             return View();
         }
 
@@ -80,6 +84,8 @@ namespace DDBLab6.Controllers
             {
                 return NotFound();
             }
+            ViewData["lecturersSL"] = new SelectList(_context.Set<Lecturer>(), "Id", "Desc");
+
             return View(@group);
         }
 
@@ -127,6 +133,7 @@ namespace DDBLab6.Controllers
             }
 
             var @group = await _context.groups
+                .Include(m => m.Lecturer)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@group == null)
             {

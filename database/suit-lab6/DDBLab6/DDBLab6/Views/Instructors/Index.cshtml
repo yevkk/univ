@@ -32,6 +32,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+     var str = item.Car != null ? item.Car.Desc : "null";
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -46,7 +47,7 @@
                 @Html.DisplayFor(modelItem => item.Phone)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Car.Desc)
+                @Html.DisplayFor(modelItem => str)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -133,6 +133,7 @@ namespace DDBLab6.Controllers
             }
 
             var instructor = await _context.instructors
+                .Include(m => m.Car)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (instructor == null)
             {
