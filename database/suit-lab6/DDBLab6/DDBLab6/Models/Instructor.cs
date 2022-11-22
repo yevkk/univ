@@ -27,5 +27,7 @@ namespace DDBLab6.Models
         public int? DedicatedCarId { get; set; }
 
         public Car? Car { get; set; }
+
+        public string Desc => string.Format("{0}, {1}", Name, Phone);
     }
 }

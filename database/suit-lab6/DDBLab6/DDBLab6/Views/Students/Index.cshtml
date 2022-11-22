@@ -41,7 +41,8 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            var str = item.Instructor != null ? item.Instructor.Desc : "null";
+            <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -61,7 +62,7 @@
                 @Html.DisplayFor(modelItem => item.PracticalExamPass)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DedicatedInstructorId)
+                @Html.DisplayFor(modelItem => str)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.GroupId)

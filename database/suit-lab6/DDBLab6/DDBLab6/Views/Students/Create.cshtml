@@ -44,12 +44,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="DedicatedInstructorId" class="control-label"></label>
-                <input asp-for="DedicatedInstructorId" class="form-control" />
+                <select asp-for="DedicatedInstructorId" class="form-control" asp-items="ViewBag.instructorsSL"></select>
                 <span asp-validation-for="DedicatedInstructorId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GroupId" class="control-label"></label>
-                <input asp-for="GroupId" class="form-control" />
+                <select asp-for="GroupId" class="form-control" asp-items="ViewBag.groupsSL"></select>
                 <span asp-validation-for="GroupId" class="text-danger"></span>
             </div>
             <div class="form-group">

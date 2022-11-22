@@ -22,8 +22,9 @@ namespace DDBLab6.Controllers
         // GET: Students
         public async Task<IActionResult> Index()
         {
-              return _context.students != null ? 
-                          View(await _context.students.ToListAsync()) :
+            var db_context = _context.students.Include(m => m.Instructor);
+            return _context.students != null ? 
+                          View(await db_context.ToListAsync()) :
                           Problem("Entity set 'DDBLab6Context.Student'  is null.");
         }
 
@@ -36,6 +37,7 @@ namespace DDBLab6.Controllers
             }
 
             var student = await _context.students
+                .Include(m => m.Instructor)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {
@@ -48,6 +50,9 @@ namespace DDBLab6.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
+            ViewData["instructorsSL"] = new SelectList(_context.Set<Instructor>(), "Id", "Desc");
+            ViewData["groupsSL"] = new SelectList(_context.Set<Group>(), "Id", "Id");
+
             return View();
         }
 
@@ -80,6 +85,9 @@ namespace DDBLab6.Controllers
             {
                 return NotFound();
             }
+            ViewData["instructorsSL"] = new SelectList(_context.Set<Instructor>(), "Id", "Desc");
+            ViewData["groupsSL"] = new SelectList(_context.Set<Group>(), "Id", "Id");
+
             return View(student);
         }
 
@@ -127,6 +135,7 @@ namespace DDBLab6.Controllers
             }
 
             var student = await _context.students
+                .Include(m => m.Instructor)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (student == null)
             {

@@ -30,6 +30,7 @@ namespace DDBLab6.Models
         [Display(Name = "Practical Exam Pass")]
         public bool PracticalExamPass { get; set; }
 
+        [ForeignKey("Instructor")]
         [Column("dedicated_instructor_id")]
         [Display(Name = "Dedicated Instructor")]
         public int? DedicatedInstructorId { get; set; }
@@ -37,5 +38,7 @@ namespace DDBLab6.Models
         [Column("group_id")]
         [Display(Name = "Group No.")]
         public int? GroupId { get; set; }
+
+        public Instructor? Instructor { get; set; }
     }
 }
