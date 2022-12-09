@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using DDB_CW.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<DDB_CWContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DDBCWContext")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
