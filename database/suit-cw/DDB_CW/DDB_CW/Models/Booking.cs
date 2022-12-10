@@ -36,7 +36,6 @@ namespace DDB_CW.Models
 
         public Row? Row { get; set; }
 
-
-        //public string Desc => string.Format("Row {0}: {2}, from {3}, to {4}; {5}", RowId, Place, StartTs.ToString(), EndTs.ToString(), Employee.Desc);
+        public string Desc => string.Format("{0}: {1}; {2}; from {3}, to {4}", Row != null ? Row.Desc : "null", Place, Employee != null ? Employee.Desc : "null", StartTs.ToString(), EndTs.ToString());
     }
 }

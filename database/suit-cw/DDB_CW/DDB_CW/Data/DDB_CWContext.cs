@@ -22,5 +22,7 @@ namespace DDB_CW.Data
 
         public DbSet<DDB_CW.Models.Booking> bookings { get; set; } = default!;
 
+        public DbSet<DDB_CW.Models.CheckIn> check_ins { get; set; } = default!;
+
     }
 }

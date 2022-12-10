@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<DDB_CW.Models.Booking>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Bookings";
 }
 
-<h1>Index</h1>
+<h1>Bookings</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RowId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Place)
             </th>
@@ -27,9 +30,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.EmployeeId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RowId)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -38,6 +38,9 @@
         var str_e = item.Employee != null ? item.Employee.Desc : "null";
         var str_r = item.Row != null ? item.Row.Desc : "null";
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => str_r)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Place)
             </td>
@@ -52,9 +55,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => str_e)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => str_r)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
