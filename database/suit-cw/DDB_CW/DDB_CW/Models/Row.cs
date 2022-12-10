@@ -22,6 +22,6 @@ namespace DDB_CW.Models
 
         public Hall? Hall { get; set; }
 
-        public string Desc => string.Format("{0}", Mnemonic);
+        public string Desc => string.Format("{0}: {1}", Hall != null ? Hall.Name : "null", Mnemonic);
     }
 }

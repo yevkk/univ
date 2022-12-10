@@ -22,7 +22,7 @@ namespace DDB_CW.Controllers
         // GET: Bookings
         public async Task<IActionResult> Index()
         {
-              var  db_context = _context.bookings.Include(m => m.Employee).Include(m => m.Row);
+              var  db_context = _context.bookings.Include(m => m.Employee).Include(m => m.Row).Include(m => m.Row.Hall);
               return _context.bookings != null ? 
                           View(await db_context.ToListAsync()) :
                           Problem("Entity set 'DDB_CWContext.bookings'  is null.");
@@ -39,6 +39,7 @@ namespace DDB_CW.Controllers
             var booking = await _context.bookings
                 .Include(m => m.Employee)
                 .Include(m => m.Row)
+                .Include(m => m.Row.Hall)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {
@@ -52,7 +53,7 @@ namespace DDB_CW.Controllers
         public IActionResult Create()
         {
             ViewData["employeesSL"] = new SelectList(_context.Set<Employee>(), "Id", "Desc");
-            ViewData["rowsSL"] = new SelectList(_context.Set<Row>(), "Id", "Desc");
+            ViewData["rowsSL"] = new SelectList(_context.Set<Row>().Include(m => m.Hall), "Id", "Desc");
             return View();
         }
 
@@ -86,7 +87,7 @@ namespace DDB_CW.Controllers
                 return NotFound();
             }
             ViewData["employeesSL"] = new SelectList(_context.Set<Employee>(), "Id", "Desc");
-            ViewData["rowsSL"] = new SelectList(_context.Set<Row>(), "Id", "Desc");
+            ViewData["rowsSL"] = new SelectList(_context.Set<Row>().Include(m => m.Hall), "Id", "Desc");
             return View(booking);
         }
 
@@ -136,6 +137,7 @@ namespace DDB_CW.Controllers
             var booking = await _context.bookings
                 .Include(m => m.Employee)
                 .Include(m => m.Row)
+                .Include(m => m.Row.Hall)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {
