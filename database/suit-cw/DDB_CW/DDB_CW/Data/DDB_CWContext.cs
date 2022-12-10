@@ -15,5 +15,7 @@ namespace DDB_CW.Data
         }
 
         public DbSet<DDB_CW.Models.Hall> halls { get; set; } = default!;
+
+        public DbSet<DDB_CW.Models.Row> rows { get; set; } = default!;
     }
 }
