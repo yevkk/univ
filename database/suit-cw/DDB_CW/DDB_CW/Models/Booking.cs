@@ -27,11 +27,14 @@ namespace DDB_CW.Models
         [Display(Name = "Employee")]
         public int EmployeeId { get; set; }
 
-        public Employee? Employee;
+        public Employee? Employee { get; set; }
 
+        [ForeignKey("Row")]
         [Column("row_id")]
         [Display(Name = "Row")]
         public int RowId { get; set; }
+
+        public Row? Row { get; set; }
 
 
         //public string Desc => string.Format("Row {0}: {2}, from {3}, to {4}; {5}", RowId, Place, StartTs.ToString(), EndTs.ToString(), Employee.Desc);

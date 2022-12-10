@@ -22,8 +22,9 @@ namespace DDB_CW.Controllers
         // GET: Bookings
         public async Task<IActionResult> Index()
         {
+              var  db_context = _context.bookings.Include(m => m.Employee).Include(m => m.Row);
               return _context.bookings != null ? 
-                          View(await _context.bookings.ToListAsync()) :
+                          View(await db_context.ToListAsync()) :
                           Problem("Entity set 'DDB_CWContext.bookings'  is null.");
         }
 
@@ -36,6 +37,7 @@ namespace DDB_CW.Controllers
             }
 
             var booking = await _context.bookings
+                .Include(m => m.Employee)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {
@@ -48,6 +50,7 @@ namespace DDB_CW.Controllers
         // GET: Bookings/Create
         public IActionResult Create()
         {
+            ViewData["employeesSL"] = new SelectList(_context.Set<Employee>(), "Id", "Desc");
             return View();
         }
 
@@ -80,6 +83,7 @@ namespace DDB_CW.Controllers
             {
                 return NotFound();
             }
+            ViewData["employeesSL"] = new SelectList(_context.Set<Employee>(), "Id", "Desc");
             return View(booking);
         }
 
@@ -127,6 +131,7 @@ namespace DDB_CW.Controllers
             }
 
             var booking = await _context.bookings
+                .Include(m => m.Employee)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {

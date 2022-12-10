@@ -21,5 +21,7 @@ namespace DDB_CW.Models
         public int HallId { get; set; }
 
         public Hall? Hall { get; set; }
+
+        public string Desc => string.Format("{0}", Mnemonic);
     }
 }

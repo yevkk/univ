@@ -35,6 +35,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+        var str = item.Employee != null ? item.Employee.Desc : "null";
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Place)
@@ -49,7 +50,7 @@
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EmployeeId)
+                @Html.DisplayFor(modelItem => str)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RowId)
