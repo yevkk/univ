@@ -38,6 +38,7 @@ namespace DDB_CW.Controllers
 
             var booking = await _context.bookings
                 .Include(m => m.Employee)
+                .Include(m => m.Row)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {
@@ -51,6 +52,7 @@ namespace DDB_CW.Controllers
         public IActionResult Create()
         {
             ViewData["employeesSL"] = new SelectList(_context.Set<Employee>(), "Id", "Desc");
+            ViewData["rowsSL"] = new SelectList(_context.Set<Row>(), "Id", "Desc");
             return View();
         }
 
@@ -84,6 +86,7 @@ namespace DDB_CW.Controllers
                 return NotFound();
             }
             ViewData["employeesSL"] = new SelectList(_context.Set<Employee>(), "Id", "Desc");
+            ViewData["rowsSL"] = new SelectList(_context.Set<Row>(), "Id", "Desc");
             return View(booking);
         }
 
@@ -132,6 +135,7 @@ namespace DDB_CW.Controllers
 
             var booking = await _context.bookings
                 .Include(m => m.Employee)
+                .Include(m => m.Row)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (booking == null)
             {
