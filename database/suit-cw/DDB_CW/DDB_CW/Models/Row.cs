@@ -15,12 +15,8 @@ namespace DDB_CW.Models
         [Display(Name = "Number of places")]
         public int? PlacesNumber { get; set; }
 
-        [ForeignKey("Hall")]
         [Column("hall_id")]
+        [Display(Name = "Hall")]
         public int HallId { get; set; }
-
-        public Hall? Hall { get; set; }
-
-        public string Desc => string.Format("{0}: {1}", Hall.Name, Mnemonic);
     }
 }

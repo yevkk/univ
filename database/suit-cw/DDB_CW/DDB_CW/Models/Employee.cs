@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DDB_CW.Models
 {
@@ -20,6 +21,7 @@ namespace DDB_CW.Models
         public string? Position { get; set; }
 
         [Column("hire_year")]
+        [Display(Name = "Hire Year")]
         public int? HireYear { get; set; }
 
         public string Desc => string.Format("{0}, {1}", Fullname, Email);
