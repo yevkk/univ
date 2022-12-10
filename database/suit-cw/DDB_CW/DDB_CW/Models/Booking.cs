@@ -24,16 +24,16 @@ namespace DDB_CW.Models
 
         [ForeignKey("Employee")]
         [Column("employee_id")]
+        [Display(Name = "Employee")]
         public int EmployeeId { get; set; }
 
-        public Employee Employee { get; set; }
+        public Employee? Employee;
 
-        [ForeignKey("Row")]
         [Column("row_id")]
+        [Display(Name = "Row")]
         public int RowId { get; set; }
 
-        public Row Row { get; set; }
 
-        public string Desc => string.Format("Row {0}: {2}, from {3}, to {4}; {5}", RowId, Place, StartTs.ToString(), EndTs.ToString(), Employee.Desc);
+        //public string Desc => string.Format("Row {0}: {2}, from {3}, to {4}; {5}", RowId, Place, StartTs.ToString(), EndTs.ToString(), Employee.Desc);
     }
 }
