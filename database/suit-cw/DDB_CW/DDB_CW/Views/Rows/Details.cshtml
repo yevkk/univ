@@ -1,0 +1,36 @@
+﻿@model DDB_CW.Models.Row
+
+@{
+    ViewData["Title"] = "Row details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Row</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Mnemonic)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Mnemonic)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PlacesNumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PlacesNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HallId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Hall.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
