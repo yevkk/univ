@@ -25,7 +25,7 @@ public class HashTable {
         StringBuilder res = new StringBuilder();
         var i_len_max = String.valueOf(size).length();
 
-        res.append("HASH TABLE\n").append("-".repeat(50)).append('\n');
+        res.append(String.format("HASH TABLE (%d)\n", size())).append("-".repeat(50)).append('\n');
         for (int i = 0; i < size; i++) {
             if (table[i] == null) continue;
             var i_len = String.valueOf(i).length();
