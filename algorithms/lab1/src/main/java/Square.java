@@ -32,7 +32,7 @@ public class Square {
 
     public Square() {
         var rand = new Random();
-        var half_side_length = rand.nextDouble() * SIDE_LENGTH_RAND_MAX / 2;
+        var half_side_length = rand.nextDouble() * SIDE_LENGTH_RAND_MAX / 2 + 1;
         var center = new Point(rand.nextDouble() * X_RANGE_RAND_MAX, rand.nextDouble() * Y_RANGE_RAND_MAX);
         var rotate_deg = rand.nextDouble() * Math.PI / 2;
 
@@ -70,13 +70,13 @@ public class Square {
     }
 
     public String toString() {
-        return String.format("(%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f); P: %.3f; S: %.3f;",
+        return String.format("P(key): %.3f; S: %.3f; (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f);",
+                perimeter(),
+                square(),
                 points[0].x, points[0].y,
                 points[1].x, points[1].y,
                 points[2].x, points[2].y,
-                points[3].x, points[3].y,
-                perimeter(),
-                square()
+                points[3].x, points[3].y
         );
     }
 
