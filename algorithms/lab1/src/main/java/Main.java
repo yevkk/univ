@@ -8,6 +8,7 @@ public class Main {
     static final String CREATE_CMD_STR = "create";
     static final String INSERT_CMD_STR = "insert";
     static final String SHOW_CMD_STR = "show";
+    static final String HELP_CMD_STR = "help";
 
     static HashTable ht;
 
@@ -75,9 +76,17 @@ public class Main {
                         System.out.println(ht.toString());
                     }
                     break;
+                case HELP_CMD_STR:
+                    System.out.println("\texit");
+                    System.out.println("\treset");
+                    System.out.println("\tcreate <size>");
+                    System.out.println("\tinsert <number>");
+                    System.out.println("\tshow");
+                    break;
                 default:
                     System.out.println("Unknown command, use \"help\"");
             }
+            System.out.println();
         }
     }
 }
