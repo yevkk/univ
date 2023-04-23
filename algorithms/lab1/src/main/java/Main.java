@@ -64,8 +64,8 @@ public class Main {
                         var square = new Square();
                         var res = ht.insert(square);
 
-                        System.out.printf("Inserting %s\n", square.toString());
-                        System.out.printf("Result %s\n", String.valueOf(res));
+                        System.out.printf("Insert: %s\n", square.toString());
+                        System.out.printf("Result: %s\n", String.valueOf(res));
                     }
                     break;
                 case SHOW_CMD_STR:
