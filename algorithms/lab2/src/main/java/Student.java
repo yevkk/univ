@@ -1,10 +1,14 @@
-import java.lang.invoke.StringConcatFactory;
+import java.util.Random;
 
 public class Student {
-    String name;
-    String surname;
-    int student_card_no;
-    int group_no;
+    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final int MAX_GROUP_NO = 10;
+    private static final int MAX_CARD_NO = 999999999;
+
+    private final String name;
+    private final String surname;
+    private final int student_card_no;
+    private final int group_no;
 
     public Student(String name, String surname, int student_card_no, int group_no) {
         this.name = name;
@@ -13,9 +17,28 @@ public class Student {
         this.group_no = group_no;
     }
 
-    static Student genRandom() {
-        //TODO: implement this
-        return new Student("", "", 0, 0);
+    static Student genRandom(Student[] students) {
+        var rand = new Random();
+        var flag = false;
+
+        var name = String.format("%s.", ALPHABET.charAt(rand.nextInt(ALPHABET.length())));
+        var surname = String.format("%s.", ALPHABET.charAt(rand.nextInt(ALPHABET.length())));
+        int group_no = rand.nextInt(MAX_GROUP_NO) + 1;
+        int student_card_no = 0;
+
+        while (!flag) {
+            student_card_no = rand.nextInt(MAX_CARD_NO) + 1;
+            flag = true;
+            if (students == null) break;
+            for (var student : students) {
+                if (student_card_no == student.getStudentCardNo()) {
+                    flag = false;
+                    break;
+                }
+            }
+        }
+
+        return new Student(name, surname, student_card_no, group_no);
     }
 
     public String getName() {
