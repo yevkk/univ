@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Student {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final int MAX_GROUP_NO = 10;
+    private static final int MAX_GROUP_NO = 15;
     private static final int MAX_CARD_NO = 999999999;
 
     private final String name;
@@ -17,7 +17,7 @@ public class Student {
         this.group_no = group_no;
     }
 
-    static Student genRandom(Student[] students) {
+    public static Student genRandom(Student[] students) {
         var rand = new Random();
         var flag = false;
 
@@ -31,6 +31,7 @@ public class Student {
             flag = true;
             if (students == null) break;
             for (var student : students) {
+                if (student == null) continue;
                 if (student_card_no == student.getStudentCardNo()) {
                     flag = false;
                     break;
