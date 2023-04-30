@@ -8,6 +8,7 @@ public class Main {
     static final String CREATE_CMD_STR = "create";
     static final String INSERT_CMD_STR = "insert";
     static final String SHOW_CMD_STR = "show";
+    static final String REMOVE_CMD_STR = "remove";
     static final String HELP_CMD_STR = "help";
 
     static HashTable ht;
@@ -48,7 +49,7 @@ public class Main {
                             enhanced = true;
                         }
                         ht = new HashTable(size, enhanced);
-                        System.out.printf("Created hash table of size %d\n", size);
+                        System.out.printf("Created hash table of size %d, enhanced: %s\n", size, String.valueOf(enhanced));
                     }
                     break;
                 case INSERT_CMD_STR:
@@ -74,6 +75,48 @@ public class Main {
                         System.out.printf("Result: %s\n", String.valueOf(res));
                     }
                     break;
+                case REMOVE_CMD_STR:
+                    HashTable.CompParam comp_param;
+                    HashTable.CompType comp_type;
+                    double value;
+                    if (ht == null) {
+                        System.out.println("No hash table created");
+                        break;
+                    }
+
+                    if (cmd_args.length < 4) {
+                        System.out.println("Invalid number of arguments");
+                        break;
+                    }
+
+                    if (cmd_args[1].equals("P")) {
+                        comp_param = HashTable.CompParam.PERIMETER;
+                    } else if (cmd_args[1].equals("S")) {
+                        comp_param = HashTable.CompParam.SQUARE;
+                    } else {
+                        System.out.println("Invalid param argument");
+                        break;
+                    }
+
+                    if (cmd_args[2].equals("G")) {
+                        comp_type = HashTable.CompType.GREATER;
+                    } else if (cmd_args[2].equals("S")) {
+                        comp_type = HashTable.CompType.SMALLER;
+                    } else {
+                        System.out.println("Invalid comp type argument");
+                        break;
+                    }
+
+                    try {
+                        value = Double.parseDouble(cmd_args[3]);
+                    } catch (Exception e) {
+                        System.out.println("Invalid value argument");
+                        break;
+                    }
+
+                    ht.conditionalRemove(comp_param, comp_type, value);
+
+                    break;
                 case SHOW_CMD_STR:
                     if (ht == null) {
                         System.out.println("No hash table created");
@@ -86,6 +129,7 @@ public class Main {
                     System.out.println("\treset");
                     System.out.println("\tcreate <size> <enhanced (Y/y for true)>");
                     System.out.println("\tinsert <number>");
+                    System.out.println("\tremove <param P/S> <comp type G/S> <than value>");
                     System.out.println("\tshow");
                     break;
                 default:
