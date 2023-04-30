@@ -1,6 +1,16 @@
 import java.util.LinkedList;
 
 public class HashTable {
+    public enum CompParam {
+        PERIMETER,
+        SQUARE
+    }
+
+    public enum CompType {
+        GREATER,
+        SMALLER
+    }
+
     Square[] table;
     LinkedList<Square>[] table_enhanced;
     int size;
@@ -35,6 +45,49 @@ public class HashTable {
 
     public int size() {
         return size;
+    }
+
+    void conditionalRemoveInternal(Square square, CompParam param, CompType type, double val) {
+        boolean flag = false;
+        double value_to_compare;
+
+        switch (param) {
+            case PERIMETER:
+                value_to_compare = square.perimeter();
+                break;
+            case SQUARE:
+                value_to_compare = square.square();
+                break;
+            default:
+                return;
+        }
+
+        switch (type) {
+            case GREATER:
+                flag = value_to_compare > val;
+                break;
+            case SMALLER:
+                flag = value_to_compare < val;
+                break;
+            default:
+                return;
+        }
+
+        if (flag) {
+            square.reverseValid();
+        }
+    }
+
+    public void conditionalRemove(CompParam param, CompType type, double val) {
+        for (int i = 0; i < size; i ++) {
+            if (enhanced) {
+                for (int j = 0; j < table_enhanced[i].size(); j++) {
+                    conditionalRemoveInternal(table_enhanced[i].get(j), param, type, val);
+                }
+            } else {
+                conditionalRemoveInternal(table[i], param, type, val);
+            }
+        }
     }
 
     public String toString() {
