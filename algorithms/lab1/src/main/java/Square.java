@@ -7,6 +7,7 @@ public class Square {
     static final double Y_RANGE_RAND_MAX = 5000;
 
     Point[] points = new Point[4];
+    boolean valid = true;
 
     public static class Point {
         public double x;
@@ -69,15 +70,27 @@ public class Square {
         return Math.pow(side_length(), 2);
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void reverseValid() {
+        valid = !valid;
+    }
+
     public String toString() {
-        return String.format("P(key): %.3f; S: %.3f; (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f);",
-                perimeter(),
-                square(),
-                points[0].x, points[0].y,
-                points[1].x, points[1].y,
-                points[2].x, points[2].y,
-                points[3].x, points[3].y
-        );
+        if (valid) {
+            return String.format("P(key): %.3f; S: %.3f; (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f), (%.3f, %.3f);",
+                    perimeter(),
+                    square(),
+                    points[0].x, points[0].y,
+                    points[1].x, points[1].y,
+                    points[2].x, points[2].y,
+                    points[3].x, points[3].y
+            );
+        } else {
+            return "Deleted;";
+        }
     }
 
 }
