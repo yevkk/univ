@@ -30,6 +30,7 @@ public class Main {
                     System.out.println("Hash table was reset");
                     break;
                 case CREATE_CMD_STR:
+                    boolean enhanced = false;
                     if (ht != null) {
                         System.out.println("Reset current hash table first");
                     } else if (cmd_args.length < 2) {
@@ -42,7 +43,11 @@ public class Main {
                             System.out.println("Invalid argument");
                             break;
                         }
-                        ht = new HashTable(size);
+
+                        if (cmd_args.length > 2 && (cmd_args[2].equals("Y") || cmd_args[2].equals("y"))) {
+                            enhanced = true;
+                        }
+                        ht = new HashTable(size, enhanced);
                         System.out.printf("Created hash table of size %d\n", size);
                     }
                     break;
@@ -79,7 +84,7 @@ public class Main {
                 case HELP_CMD_STR:
                     System.out.println("\texit");
                     System.out.println("\treset");
-                    System.out.println("\tcreate <size>");
+                    System.out.println("\tcreate <size> <enhanced (Y/y for true)>");
                     System.out.println("\tinsert <number>");
                     System.out.println("\tshow");
                     break;
