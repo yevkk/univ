@@ -1,4 +1,17 @@
 public class Sort {
+    public enum Type {
+        MERGE, SHELL, SHELL_KNUTH, QUICK
+    }
+
+    public static String typeString(Type type) {
+        return switch (type) {
+            case MERGE -> "MERGE";
+            case SHELL -> "SHELL";
+            case SHELL_KNUTH -> "SHELL KNUTH SEQ";
+            case QUICK -> "QUICK";
+        };
+    }
+
     private static void swap(int[] arr, int first, int second) {
         var tmp = arr[first];
         arr[first] = arr[second];
