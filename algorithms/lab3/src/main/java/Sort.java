@@ -1,4 +1,10 @@
 public class Sort {
+    private static void swap(int[] arr, int first, int second) {
+        var tmp = arr[first];
+        arr[first] = arr[second];
+        arr[second] = tmp;
+    }
+
     // merge sort
     private static void merge(int[] arr, int first, int middle, int last) {
         int[] left = new int[middle - first + 1];
@@ -67,5 +73,46 @@ public class Sort {
 
             gap /= use_knuth_seq ? 3 : 2;
         }
+    }
+
+    // quick sort
+    private static int[] quickSortPartition(int[] arr, int first, int last) {
+        if (last - first <= 1) {
+            if (arr[last] < arr[first]) {
+                swap(arr, first, last);
+            }
+            return new int[]{first, last};
+        }
+
+        int i = first;
+        int j = last;
+        int middle = first;
+        int pivot_val = arr[last];
+        while (middle <= last) {
+            if (arr[middle] < pivot_val) {
+                swap(arr, first++, middle++);
+            } else if (arr[middle] == pivot_val) {
+                middle++;
+            } else if (arr[middle] > pivot_val) {
+                swap(arr, middle, last--);
+            }
+
+            i = first - 1;
+            j = middle;
+        }
+
+        return new int[]{i, j};
+    }
+
+    private static void quickSortInternal(int[] arr, int first, int last) {
+        if (first < last) {
+            var ret = quickSortPartition(arr, first, last);
+            quickSortInternal(arr, first, ret[0]);
+            quickSortInternal(arr, ret[1], last);
+        }
+    }
+
+    public static void quickSort(int[] arr) {
+        quickSortInternal(arr, 0, arr.length - 1);
     }
 }
