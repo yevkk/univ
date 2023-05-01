@@ -11,5 +11,15 @@ public class Main {
         // Level 2
         Utils.printTimeMeasurements(Sort.Type.SHELL);
         Utils.printTimeMeasurements(Sort.Type.SHELL_KNUTH);
+
+        // Level 3
+        Utils.printTimeMeasurements(Sort.Type.QUICK);
+
+        // Level 1
+        Utils.printTimeMeasurementsForPlot(Sort.Type.MERGE);
+
+        // Level 2
+        Utils.printTimeMeasurementsForPlot(Sort.Type.SHELL);
+        Utils.printTimeMeasurementsForPlot(Sort.Type.SHELL_KNUTH);
     }
 }
