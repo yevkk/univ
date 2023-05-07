@@ -40,6 +40,10 @@ public class BinaryTree {
 
     }
 
+    private enum Direction {
+        LEFT, RIGHT, NONE
+    }
+
     private Node root;
 
     public BinaryTree() {
@@ -47,18 +51,33 @@ public class BinaryTree {
     }
 
     private boolean insertInternal(Student data, Node sub_root, Node parent) {
+    private boolean insertInternal(Student data, Node sub_root, Node parent, Direction dir) {
         if (sub_root == null) {
             sub_root = new Node(data);
             sub_root.setParent(parent);
+            switch (dir) {
+                case RIGHT -> parent.setRight(sub_root);
+                case LEFT -> parent.setLeft(sub_root);
+            }
             return true;
         } else {
             if (data.getStudentCardNo() == sub_root.getData().getStudentCardNo()) {
                 return false;
             } else if (data.getStudentCardNo() > sub_root.getData().getStudentCardNo()) {
                 return insertInternal(data, sub_root.getRight(), sub_root);
+                return insertInternal(data, sub_root.getRight(), sub_root, Direction.RIGHT);
             } else {
                 return insertInternal(data, sub_root.getLeft(), sub_root);
+                return insertInternal(data, sub_root.getLeft(), sub_root, Direction.LEFT);
             }
         }
+    }
+
+    public boolean insert(Student data) {
+        if (root == null) {
+            root = new Node(data);
+            return true;
+        }
+        return insertInternal(data, root, null, Direction.NONE);
     }
 }
