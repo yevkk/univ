@@ -9,7 +9,7 @@ public class Sort {
 
     private static void bubbleSortInternal(Student[] arr, int first, int last) {
         for (int i = first; i < last - 1; i++) {
-            for (int j = first; j < last - i - 1; j++) {
+            for (int j = first; j < first + last - i - 1; j++) {
                 if (arr[j].getGroupNo() > arr[j + 1].getGroupNo()) {
                     swap(arr, j, j + 1);
                 }
