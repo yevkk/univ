@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.List;
+
 public class BinaryTree {
     public static class Node {
         private Node parent;
@@ -84,5 +87,22 @@ public class BinaryTree {
 
     public String toString() {
         return root != null ? toStringInternal(root) : "Empty\n";
+    }
+
+    private void lookupInternal(Node sub_root, List<Student> res_list) {
+        if (sub_root == null) {
+            return;
+        }
+        lookupInternal(sub_root.getLeft(), res_list);
+        if (sub_root.getData().meetsVariantConditions()) {
+            res_list.add(sub_root.getData());
+        }
+        lookupInternal(sub_root.getRight(), res_list);
+    }
+
+    public List<Student> lookup() {
+        var res = new LinkedList<Student>();
+        lookupInternal(root, res);
+        return res;
     }
 }

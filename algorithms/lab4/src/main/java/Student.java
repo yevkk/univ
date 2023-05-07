@@ -36,4 +36,8 @@ public class Student {
     public String toString() {
         return String.format("%d, %s %s, year: %d, does sports: %s", student_card_no, name, surname, year, does_sports);
     }
+
+    public boolean meetsVariantConditions() {
+        return (year == 2) && does_sports;
+    }
 }
