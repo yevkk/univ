@@ -29,6 +29,10 @@ public class BinaryTree {
             return right;
         }
 
+        public void setData(Student data) {
+            this.data = data;
+        }
+
         public void setParent(Node parent) {
             this.parent = parent;
         }
@@ -104,5 +108,45 @@ public class BinaryTree {
         var res = new LinkedList<Student>();
         lookupInternal(root, res);
         return res;
+    }
+
+    private Student min(Node sub_root) {
+        var res = sub_root.getData();
+        var node = sub_root;
+        while (node.getLeft() != null) {
+            res = sub_root.getLeft().getData();
+            node = node.getLeft();
+        }
+        return res;
+    }
+
+    private Node deleteByKeyInternal(Node sub_root, Student data) {
+        if (sub_root == null) {
+            return null;
+        }
+
+        if (data.getStudentCardNo() < sub_root.getData().getStudentCardNo()) {
+            sub_root.setLeft(deleteByKeyInternal(sub_root.getLeft(), data));
+        } else if (data.getStudentCardNo() > sub_root.getData().getStudentCardNo()) {
+            sub_root.setRight(deleteByKeyInternal(sub_root.getRight(), data));
+        } else {
+            if (sub_root.getLeft() == null) {
+                return sub_root.getRight();
+            } else if (sub_root.getRight() == null) {
+                return sub_root.getLeft();
+            }
+
+            sub_root.setData(min(sub_root.getRight()));
+            sub_root.setRight(deleteByKeyInternal(sub_root.getRight(), sub_root.getData()));
+        }
+
+        return sub_root;
+    }
+
+    public void delete() {
+        var del_list = lookup();
+        for (var e : del_list) {
+            root = deleteByKeyInternal(root, e);
+        }
     }
 }
