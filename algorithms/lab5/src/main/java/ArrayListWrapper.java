@@ -33,7 +33,7 @@ public class ArrayListWrapper {
 
     private void bubbleSort(int first, int last) {
         for (int i = first; i < last - 1; i++) {
-            for (int j = first; j < last - i - 1; j++) {
+            for (int j = first; j < first + last - i; j++) {
                 if (list.get(j).getStudentCardNo() > list.get(j + 1).getStudentCardNo()) {
                     swap(j, j + 1);
                 }
@@ -64,5 +64,13 @@ public class ArrayListWrapper {
 
     public boolean task(int student_card_no) {
         return interpolationSearch(false_counter, list.size() - 1, student_card_no) != null;
+    }
+
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+        for (var e : list) {
+            res.append(e.toString()).append("\n");
+        }
+        return res.toString();
     }
 }
