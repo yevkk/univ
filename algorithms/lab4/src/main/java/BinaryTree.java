@@ -50,7 +50,6 @@ public class BinaryTree {
         this.root = null;
     }
 
-    private boolean insertInternal(Student data, Node sub_root, Node parent) {
     private boolean insertInternal(Student data, Node sub_root, Node parent, Direction dir) {
         if (sub_root == null) {
             sub_root = new Node(data);
@@ -64,10 +63,8 @@ public class BinaryTree {
             if (data.getStudentCardNo() == sub_root.getData().getStudentCardNo()) {
                 return false;
             } else if (data.getStudentCardNo() > sub_root.getData().getStudentCardNo()) {
-                return insertInternal(data, sub_root.getRight(), sub_root);
                 return insertInternal(data, sub_root.getRight(), sub_root, Direction.RIGHT);
             } else {
-                return insertInternal(data, sub_root.getLeft(), sub_root);
                 return insertInternal(data, sub_root.getLeft(), sub_root, Direction.LEFT);
             }
         }
@@ -79,5 +76,13 @@ public class BinaryTree {
             return true;
         }
         return insertInternal(data, root, null, Direction.NONE);
+    }
+
+    private String toStringInternal(Node sub_root) {
+        return (sub_root != null) ? String.format("%s%s\n%s", toStringInternal(sub_root.getLeft()), sub_root.getData().toString(), toStringInternal(sub_root.getRight())) : "";
+    }
+
+    public String toString() {
+        return root != null ? toStringInternal(root) : "Empty\n";
     }
 }
