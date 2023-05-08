@@ -142,6 +142,22 @@ public class BinarySearchTree {
         return insertInternal(data, root, null, Direction.NONE);
     }
 
+    public Student search(String key) {
+        var node = root;
+
+        while (node != null) {
+            if (key.equals(node.getData().getName())) {
+                return node.getData();
+            } else if (key.compareTo(node.getData().getName()) > 0) {
+                node = node.getRight();
+            } else {
+                node = node.getLeft();
+            }
+        }
+
+        return null;
+    }
+
     private String toStringInternal(Node sub_root) {
         return (sub_root != null) ? String.format("%s%s%s\n%s", toStringInternal(sub_root.getLeft()), sub_root.getData().toString(), sub_root == root ? " (Root)" : "", toStringInternal(sub_root.getRight())) : "";
     }
