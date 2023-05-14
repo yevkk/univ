@@ -12,6 +12,7 @@ body {
 
 #main-canvas {
     --point-color: #4e3c85;
+    --point-color-completed: #156e4c;
     --point-text-color: #f5f2ff;
     --edge-color: #2d54b5;
     --special-point-color: #00c0bc;

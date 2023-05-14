@@ -4,7 +4,7 @@ const POINT_RADIUS = 15
 
 // 0 - drawing graph; 1 - setting start node; 2 - needs restart
 let stage = 0
-let proceedBtnText = ['Preprocessing', 'Run']
+let proceedBtnText = ['Proceed', 'Run']
 let selectedPoint = null
 let mainCanvas
 
@@ -16,12 +16,22 @@ function drawPoint(context, point, color, text, text_color) {
     context.fill()
 
     if (text != null) {
+        if (text == Infinity) {
+            text = 'x'
+        }
+        context.strokeStyle = color
         context.fillStyle = text_color
+        context.lineWidth = 4
         context.textAlign = 'center'
         context.font = '17px "Trebuchet MS", sans-serif'
+
         let metrics = context.measureText(text)
         let text_height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
-        context.fillText(text, point.x, point.y + text_height / 2);
+        let x = point.x
+        let y = point.y + text_height / 2
+
+        context.strokeText(text, x, y);
+        context.fillText(text, x, y);
     }
 }
 
@@ -84,7 +94,7 @@ function drawGraph(canvas, graph, specialPoint) {
     for (let point of graph.points) {
         drawPoint(context, 
                   point,
-                  window.getComputedStyle(canvas).getPropertyValue('--point-color'),
+                  window.getComputedStyle(canvas).getPropertyValue( stage != 2 ? '--point-color' : '--point-color-completed'),
                   point.value,
                   window.getComputedStyle(canvas).getPropertyValue('--point-text-color'))
     }
@@ -145,7 +155,15 @@ function onCanvasClick(e) {
             drawGraph(mainCanvas, graph)
             break
         case 1:
-            // TODO: implement point selection
+            if (point) {
+                selectedPoint = point
+                let proceedBtn = document.getElementById('proceed-button')
+                if (!proceedBtn.classList.contains('active-button')) {
+                    proceedBtn.classList.add('active-button')
+                }
+            }
+            drawGraph(mainCanvas, graph)
+            break
         default:
             break
     }
@@ -183,7 +201,7 @@ function proceed() {
     if (!proceedBtn.classList.contains('active-button')) {
         return
     }
-    // proceedBtn.classList.remove('active-button')
+    proceedBtn.classList.remove('active-button')
     switch (stage) {
         case 0:
             if (graph.containsCrossingEdges()) {
@@ -194,15 +212,17 @@ function proceed() {
             stage++
             proceedBtn.innerText = proceedBtnText[stage]
 
-            showMessage(`select point to localize and run`, `tip`)
+            showMessage(`select node to start algorithm`, `tip`)
             break
         case 1:
             stage++
 
             // TODO: fix
-            dijkstra(graph.points[0])
+            dijkstra(selectedPoint)
+            selectedPoint = null
 
             drawGraph(mainCanvas, graph)
+            showMessage(`algorithm executed`, `log`)
             showMessage(`reset to restart`, `tip`)
             break
         default:
@@ -221,7 +241,7 @@ function reset() {
     if (proceedBtn.classList.contains('active-button')) {
         proceedBtn.classList.remove('active-button')
     }
-    showMessage('Add at least 2 points', 'tip')
+    showMessage('add at least 2 points', 'tip')
 }
 
 function showMessage(msg, className) {
@@ -241,7 +261,7 @@ addEventListener('load', () => {
 
     document.getElementById('proceed-button').addEventListener('click', proceed)
     document.getElementById('reset-button').addEventListener('click', () => {
-        showMessage('Canvas cleared', 'info')
+        showMessage('canvas cleared', 'info')
         reset()
     })
     reset()
