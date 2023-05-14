@@ -2,7 +2,7 @@
 
 const POINT_RADIUS = 15
 
-// 0 - drawing graph; 1 - setting start node; 2 - animating result; 3 - needs restart
+// 0 - drawing graph; 1 - setting start node; 2 - needs restart
 let stage = 0
 let proceedBtnText = ['Preprocessing', 'Run']
 let selectedPoint = null
@@ -15,7 +15,7 @@ function drawPoint(context, point, color, text, text_color) {
     context.arc(point.x, point.y, POINT_RADIUS, 0, 2 * Math.PI)
     context.fill()
 
-    if (text) {
+    if (text != null) {
         context.fillStyle = text_color
         context.textAlign = 'center'
         context.font = '17px "Trebuchet MS", sans-serif'
@@ -33,7 +33,7 @@ function drawEdge(context, edge, color, text, text_color) {
     context.lineTo(edge.end.x, edge.end.y)
     context.stroke()
 
-    if (text) {
+    if (text != null) {
         context.strokeStyle = 'white'
         context.lineWidth = 4
         context.fillStyle = text_color
@@ -109,7 +109,7 @@ function onCanvasClick(e) {
                     if (selectedPoint === point) {
                         showMessage(`you should select another point`, `warning`)
                     } else if (!graph.edges.find(item => (item.start === point && item.end === selectedPoint) || (item.start === selectedPoint && item.end === point))) {
-                        let edge_val = prompt('Enter edge value')
+                        let edge_val = parseInt(prompt('Enter edge value'))
                         let edge = new Edge(selectedPoint, point, edge_val)
                         graph.edges.push(edge)
                         showMessage(`added edge (${edge.start.x}, ${edge.start.y}) - (${edge.end.x}, ${edge.end.y}), value: ${edge.value}`, `log`)
@@ -151,12 +151,39 @@ function onCanvasClick(e) {
     }
 }
 
+function dijkstra(start_point) {
+    let priority_queue = [];
+    for (let point of graph.points) {
+        point.value = Infinity;
+    }
+    start_point.value = 0
+    priority_queue.push([0, start_point])
+
+    while (priority_queue.length > 0) {
+        let u = priority_queue[0][1]
+        priority_queue.shift();
+
+        let adj = u.adj()
+        let adj_values = u.adj_values()
+        for (let i = 0; i < adj.length; i++) {
+            let v = adj[i];
+            let weight = adj_values[i]
+
+            if (v.value > u.value + weight) {
+                v.value = u.value + weight;
+                priority_queue.push([v.value, v])
+                priority_queue.sort((a, b) => a[0] - b[0]);
+            }
+        }
+    }
+}
+
 function proceed() {
     let proceedBtn = document.getElementById('proceed-button')
     if (!proceedBtn.classList.contains('active-button')) {
         return
     }
-    proceedBtn.classList.remove('active-button')
+    // proceedBtn.classList.remove('active-button')
     switch (stage) {
         case 0:
             if (graph.containsCrossingEdges()) {
@@ -172,8 +199,10 @@ function proceed() {
         case 1:
             stage++
 
-            // run algorithm
+            // TODO: fix
+            dijkstra(graph.points[0])
 
+            drawGraph(mainCanvas, graph)
             showMessage(`reset to restart`, `tip`)
             break
         default:

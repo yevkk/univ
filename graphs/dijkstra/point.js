@@ -42,6 +42,14 @@ class Point {
         return this.#in.concat(this.#out)
     }
 
+    adj() {
+        return this.#in.map(e => e.start).concat(this.#out.map(e => e.end))
+    }
+
+    adj_values() {
+        return this.#in.map(e => e.value).concat(this.#out.map(e => e.value))
+    }
+
     addEdge(edge) {
         if (edge.start === this) {
             this.#out.push(edge)
