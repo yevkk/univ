@@ -3,15 +3,12 @@
 class Edge {
     #start
     #end
+    #value = 0
 
-    constructor(point1, point2) {
-        if (point1.y > point2.y) {
-            this.#start = point1
-            this.#end = point2
-        } else {
-            this.#start = point2
-            this.#end = point1
-        }
+    constructor(point1, point2, value) {
+        this.#start = point1
+        this.#end = point2
+        this.#value = value
         point1.addEdge(this)
         point2.addEdge(this)
     }
@@ -22,6 +19,14 @@ class Edge {
 
     get end() {
         return this.#end
+    }
+
+    get value() {
+        return this.#value
+    }
+
+    set value(val) {
+        this.#value = val
     }
 
     cross(edge) {

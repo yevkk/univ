@@ -11,7 +11,8 @@ body {
 }
 
 #main-canvas {
-    --point-color: #603ccf;
+    --point-color: #4e3c85;
+    --point-text-color: #f5f2ff;
     --edge-color: #2d54b5;
     --special-point-color: #00c0bc;
     --highlight-color: #d8364b;

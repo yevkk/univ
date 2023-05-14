@@ -6,10 +6,12 @@ class Point {
     #y
     #in = []
     #out = []
+    #value = 0
 
-    constructor(x, y) {
+    constructor(x, y, value) {
         this.#x = x
         this.#y = y
+        this.#value = value
     }
 
     get x() {
@@ -26,6 +28,14 @@ class Point {
 
     get out() {
         return this.#out
+    }
+
+    get value() {
+        return this.#value
+    }
+
+    set value(val) {
+        this.#value = val
     }
 
     edges() {

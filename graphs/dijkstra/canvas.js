@@ -1,6 +1,6 @@
 'use strict'
 
-const POINT_RADIUS = 5
+const POINT_RADIUS = 15
 
 // 0 - drawing graph; 1 - setting start node; 2 - animating result; 3 - needs restart
 let stage = 0
@@ -9,20 +9,45 @@ let selectedPoint = null
 let mainCanvas
 
 
-function drawPoint(context, color, point) {
+function drawPoint(context, point, color, text, text_color) {
     context.fillStyle = color
     context.beginPath()
     context.arc(point.x, point.y, POINT_RADIUS, 0, 2 * Math.PI)
     context.fill()
+
+    if (text) {
+        context.fillStyle = text_color
+        context.textAlign = 'center'
+        context.font = '17px "Trebuchet MS", sans-serif'
+        let metrics = context.measureText(text)
+        let text_height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+        context.fillText(text, point.x, point.y + text_height / 2);
+    }
 }
 
-function drawEdge(context, color, edge) {
+function drawEdge(context, edge, color, text, text_color) {
     context.strokeStyle = color
     context.lineWidth = 2
     context.beginPath()
     context.moveTo(edge.start.x, edge.start.y)
     context.lineTo(edge.end.x, edge.end.y)
     context.stroke()
+
+    if (text) {
+        context.strokeStyle = 'white'
+        context.lineWidth = 4
+        context.fillStyle = text_color
+        context.textAlign = 'center'
+        context.font = 'bold 17px "Trebuchet MS", sans-serif'
+
+        let metrics = context.measureText(text)
+        let text_height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+        let x = (edge.start.x + edge.end.x) / 2
+        let y = (edge.start.y + edge.end.y + text_height) / 2
+
+        context.strokeText(text, x, y);
+        context.fillText(text, x, y);
+    }
 }
 
 function drawGrid(canvas) {
@@ -50,16 +75,25 @@ function drawGraph(canvas, graph, specialPoint) {
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
     drawGrid(canvas)
     for (let edge of graph.edges) {
-        drawEdge(context, window.getComputedStyle(canvas).getPropertyValue('--edge-color'), edge)
+        drawEdge(context,
+                 edge,
+                 window.getComputedStyle(canvas).getPropertyValue('--edge-color'),
+                 edge.value,
+                 window.getComputedStyle(canvas).getPropertyValue('--edge-color'))
     }
     for (let point of graph.points) {
-        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--point-color'), point)
+        drawPoint(context, 
+                  point,
+                  window.getComputedStyle(canvas).getPropertyValue('--point-color'),
+                  point.value,
+                  window.getComputedStyle(canvas).getPropertyValue('--point-text-color'))
     }
     if (selectedPoint) {
-        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--highlight-color'), selectedPoint)
-    }
-    if (specialPoint) {
-        drawPoint(context, window.getComputedStyle(canvas).getPropertyValue('--special-point-color'), specialPoint)
+        drawPoint(context, 
+                  selectedPoint,
+                  window.getComputedStyle(canvas).getPropertyValue('--highlight-color'),
+                  selectedPoint.value,
+                  window.getComputedStyle(canvas).getPropertyValue('--point-text-color'))
     }
 }
 
@@ -75,9 +109,10 @@ function onCanvasClick(e) {
                     if (selectedPoint === point) {
                         showMessage(`you should select another point`, `warning`)
                     } else if (!graph.edges.find(item => (item.start === point && item.end === selectedPoint) || (item.start === selectedPoint && item.end === point))) {
-                        let edge = new Edge(selectedPoint, point)
+                        let edge_val = prompt('Enter edge value')
+                        let edge = new Edge(selectedPoint, point, edge_val)
                         graph.edges.push(edge)
-                        showMessage(`added edge (${edge.start.x}, ${edge.start.y}) - (${edge.end.x}, ${edge.end.y})`, `log`)
+                        showMessage(`added edge (${edge.start.x}, ${edge.start.y}) - (${edge.end.x}, ${edge.end.y}), value: ${edge.value}`, `log`)
                         selectedPoint = null
                     } else {
                         showMessage(`edge already exists`, `info`)
@@ -95,7 +130,7 @@ function onCanvasClick(e) {
                 if (selectedPoint) {
                     showMessage(`you should select a point`, `warning`)
                 } else {
-                    point = new Point(x, y)
+                    point = new Point(x, y, graph.points.length + 1)
                     graph.points.push(point)
                     showMessage(`added point (${point.x}, ${point.y})`, `log`)
                 }
