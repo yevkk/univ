@@ -1,0 +1,30 @@
+﻿@model DDB_CW.Models.CheckIn
+
+@{
+    ViewData["Title"] = "Check-in details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CheckIn</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ts)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ts)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BookingId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Booking.Desc)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
