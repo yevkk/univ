@@ -1,0 +1,94 @@
+body {
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+#root {
+    min-height: 98vh;
+    max-width: 1000px;
+    align-items: flex-start;
+    display: flex;
+    margin: auto;
+}
+
+#main-canvas {
+    --point-color: #4e3c85;
+    --point-color-completed: #156e4c;
+    --point-text-color: #f5f2ff;
+    --edge-color: #2d54b5;
+    --special-point-color: #00c0bc;
+    --highlight-color: #d8364b;
+    --section-color: #ffed7c;
+    --grid-color: #d8dbdb;
+    border: 1px solid #637395;
+    border-radius: 5px;
+}
+
+#sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 5px;
+    flex: 1;
+}
+
+#console {
+    min-width: 100%;
+    max-height: 350px;
+    min-height: 350px;
+    padding: 4px 10px;
+    box-sizing: border-box;
+    border: 1px solid #637395;
+    border-radius: 5px;
+    overflow-y: scroll;
+    font-family: monospace;
+    font-weight: bold;
+    line-height: 1em;
+}
+
+#console p {
+    padding: 0 0 3px;
+    border-bottom: 1px solid lightgray;
+}
+
+#console .warning {
+    color: #cc3791
+}
+
+#console .info {
+    color: #1d7def;
+}
+
+#console .tip {
+    color: #7e00fd;
+}
+
+#console .log {
+    color: #9ea3b0;
+}
+
+.button {
+    width: 150px;
+    margin: 10px 0;
+    border: 2px solid #637395;
+    border-radius: 5px;
+    color: gray;
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height: 2em;
+    text-align: center;
+    user-select: none;
+}
+
+.active-button {
+    border-color: #0075ff;
+    color: #0075ff;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+
+.active-button:hover {
+    background-color: #0075ff;
+    color: #ffffff;
+    cursor: pointer;
+}
