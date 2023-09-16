@@ -7,10 +7,10 @@ class Course(models.Model):
     course_code   = models.CharField(max_length=16)
     course_name   = models.CharField(max_length=256)
     description   = models.TextField()
-    preconditions = models.ManyToManyField(to='self', symmetrical=False)
+    preconditions = models.ManyToManyField(to='self', symmetrical=False, blank=True)
 
     def __str__(self):
-        return f'{self.code}: {self.name}'
+        return f'{self.course_code}: {self.course_name}'
 
 
 class Lecture(models.Model):
@@ -20,21 +20,21 @@ class Lecture(models.Model):
     content        = models.TextField()
 
     def __str__(self):
-        return f'{self.course.code} | Lecture #{self.number} {self.name}'
+        return f'{self.course.course_code} | Lecture #{self.lecture_number} {self.lecture_name}'
 
 
 class Test(models.Model):
     course       = models.ForeignKey(Course, on_delete=models.CASCADE)
     test_number  = models.PositiveIntegerField(default=1)
     test_name    = models.CharField(max_length=256)
-    pass_score   = models.PositiveIntegerField(default=100, validators=[MaxValueValidator(100)])
+    pass_score   = models.PositiveIntegerField('pass score %', default=100, validators=[MaxValueValidator(100)])
     enabled      = models.BooleanField(default=False)
 
     stats_passed = models.PositiveIntegerField(default=0)
     stats_failed = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f'{self.course.code} | Test #{self.number} {self.name}'
+        return f'{self.course.course_code} | Test #{self.test_number} {self.test_name}'
 
 
 class Task(models.Model):
