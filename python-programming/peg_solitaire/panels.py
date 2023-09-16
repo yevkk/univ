@@ -4,6 +4,10 @@ from board import Board
 from constants import *
 
 
+def relative_mouse_pos(mouse_pos, offset):
+    return mouse_pos[0] - offset[0], mouse_pos[1] - offset[1]
+
+
 class Button(pygame.sprite.Sprite):
     def __init__(self, size, text):
         super(Button, self).__init__()
@@ -82,24 +86,61 @@ class GamePanel(pygame.sprite.Sprite):
         self.__board = BoardSurface(Board(template_name), 400, [BG_COLOR, WHITE, HIGHLIGHT_COLOR_1, HIGHLIGHT_COLOR_2])
 
     def mouse_click(self, mouse_pos):
-        self.__board.mouse_click(self.__board_mouse_pos(mouse_pos))
+        self.__board.mouse_click(relative_mouse_pos(mouse_pos, self.__BOARD_OFFSET))
         if self.__undo_button.is_mouse_over:
             self.__board.undo()
-
-    def __board_mouse_pos(self, mouse_position):
-        return mouse_position[0] - self.__BOARD_OFFSET[0], mouse_position[1] - self.__BOARD_OFFSET[1]
-
-    def __undo_button_pos(self, mouse_position):
-        return mouse_position[0] - self.__UNDO_BUTTON_OFFSET[0], mouse_position[1] - self.__UNDO_BUTTON_OFFSET[1]
-
-    def __menu_button_pos(self, mouse_position):
-        return mouse_position[0] - self.__MENU_BUTTON_OFFSET[0], mouse_position[1] - self.__MENU_BUTTON_OFFSET[1]
+        elif self.__menu_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(OPEN_MENU))
 
     def __mouse_over(self, mouse_pos):
-        self.__board.mouse_highlight(self.__board_mouse_pos(mouse_pos))
-        self.__undo_button.mouse_highlight(self.__undo_button_pos(mouse_pos))
-        self.__menu_button.mouse_highlight(self.__menu_button_pos(mouse_pos))
+        self.__board.mouse_highlight(relative_mouse_pos(mouse_pos, self.__BOARD_OFFSET))
+        self.__undo_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__UNDO_BUTTON_OFFSET))
+        self.__menu_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__MENU_BUTTON_OFFSET))
 
 
 class MenuPanel(pygame.sprite.Sprite):
-    pass
+    def __init__(self, size):
+        super(MenuPanel, self).__init__()
+        self.surf = pygame.Surface(size)
+
+        self.__min_button = Button((300, 80), 'Minimum')
+        self.__MIN_BUTTON_OFFSET = (150, 100)
+
+        self.__easy_pw_button = Button((300, 80), 'Easy Pinwheel')
+        self.__EASY_PW_BUTTON_OFFSET = (150, 200)
+
+        self.__eng_st_button = Button((300, 80), 'English Style')
+        self.__ENG_ST_BUTTON_OFFSET = (150, 300)
+
+        self.__eur_st_button = Button((300, 80), 'European Style')
+        self.__EUR_ST_BUTTON_OFFSET = (150, 400)
+
+    def update(self, mouse_pos):
+        self.surf.fill(BG_COLOR)
+        self.__mouse_over(mouse_pos)
+
+        self.__min_button.draw()
+        self.__easy_pw_button.draw()
+        self.__eng_st_button.draw()
+        self.__eur_st_button.draw()
+
+        self.surf.blit(self.__min_button.surf, self.__MIN_BUTTON_OFFSET)
+        self.surf.blit(self.__easy_pw_button.surf, self.__EASY_PW_BUTTON_OFFSET)
+        self.surf.blit(self.__eng_st_button.surf, self.__ENG_ST_BUTTON_OFFSET)
+        self.surf.blit(self.__eur_st_button.surf, self.__EUR_ST_BUTTON_OFFSET)
+
+    def mouse_click(self, mouse_pos):
+        if self.__min_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_MIN))
+        elif self.__easy_pw_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_EASY_PW))
+        elif self.__eng_st_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_ENG_STYLE))
+        elif self.__eur_st_button.is_mouse_over:
+            pygame.event.post(pygame.event.Event(START_EUR_STYLE))
+
+    def __mouse_over(self, mouse_pos):
+        self.__min_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__MIN_BUTTON_OFFSET))
+        self.__easy_pw_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__EASY_PW_BUTTON_OFFSET))
+        self.__eng_st_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__ENG_ST_BUTTON_OFFSET))
+        self.__eur_st_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__EUR_ST_BUTTON_OFFSET))
