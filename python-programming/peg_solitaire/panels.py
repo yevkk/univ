@@ -144,6 +144,3 @@ class MenuPanel(pygame.sprite.Sprite):
         self.__easy_pw_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__EASY_PW_BUTTON_OFFSET))
         self.__eng_st_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__ENG_ST_BUTTON_OFFSET))
         self.__eur_st_button.mouse_highlight(relative_mouse_pos(mouse_pos, self.__EUR_ST_BUTTON_OFFSET))
-
-
-

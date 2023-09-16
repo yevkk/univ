@@ -10,6 +10,7 @@ pygame.display.set_icon(pygame.image.load('src/icon.jpg'))
 
 clock = pygame.time.Clock()
 
+
 on_game = False
 
 game_panel = GamePanel(WINDOW_SIZE)

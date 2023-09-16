@@ -1,0 +1,78 @@
+﻿@model IEnumerable<DDBLab6.Models.Student>
+
+@{
+    ViewData["Title"] = "Students";
+}
+
+<h1>Students table</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PracticeHours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TheoryExamPass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PracticalExamAttempts)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PracticalExamPass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DedicatedInstructorId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            var str = item.Instructor != null ? item.Instructor.Desc : "null";
+            <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PracticeHours)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TheoryExamPass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PracticalExamAttempts)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PracticalExamPass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => str)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroupId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
