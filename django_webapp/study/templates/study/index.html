@@ -8,7 +8,16 @@
 <h1>Course list</h1>
 <ul>
 {% for course in course_list %}
-    <li>{{ course }}</li>
+    <li>
+    [ID: {{ course.e.id }}]    
+    {{ course.e }}
+    [copm: {{ course.completed }}]
+    [av: {{ course.available }}]
+    [PRE]:
+    {% for p in course.e.preconditions.all %}
+    {{ p.course_code }} 
+    {% endfor %}
+    </li>
 {% endfor %}
 </ul>
 <a href="{% url 'study:logout' %}">logout</a>
