@@ -1,0 +1,14 @@
+<table border="1">
+<tr><td>ID</td><td>{{ user.id }}</td></tr>
+<tr><td>username</td><td>{{ user.username }}</td></tr>
+<tr><td>first_name</td><td>{{ user.first_name }}</td></tr>
+<tr><td>last_name</td><td>{{ user.last_name }}</td></tr>
+<tr><td>email</td><td>{{ user.email }}</td></tr>
+</table>
+<h1>Course list</h1>
+<ul>
+{% for course in course_list %}
+    <li>{{ course }}</li>
+{% endfor %}
+</ul>
+<a href="{% url 'study:logout' %}">logout</a>
