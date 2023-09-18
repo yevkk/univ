@@ -1,10 +1,10 @@
 <h1>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</h1>
 <h3>Completed courses</h3>
 {% if completed_courses %}
-{% for course in completed_courses %}
+{% for c_course in completed_courses %}
     <li>
-    [ID: {{ corse.id }}]
-    {{ course }}
+    [ID: {{ c_course.course.id }}]
+    {{ c_course.course }}
     </li>
 {% endfor %}
 {% else %}
