@@ -37,8 +37,6 @@ def course(request, course_id):
 
     test_list = [{
         'e'      : test,
-        'passed' : any([t_res.score >= test.pass_score for t_res in TestResult.objects.filter(test=test.id, user=request.user.id)]),
-        'failed' : any([t_res.score <  test.pass_score for t_res in TestResult.objects.filter(test=test.id, user=request.user.id)])
         'passed' : any([t_res.passed() for t_res in TestResult.objects.filter(test=test.id, user=request.user.id)]),
         'failed' : any([not t_res.passed() for t_res in TestResult.objects.filter(test=test.id, user=request.user.id)])
         } for test in course_tests]
@@ -70,7 +68,6 @@ def account_info(request):
     context = {
         'user'              : request.user,
         'completed_courses' : completed_courses,
-        'test_results'      : test_results
         'test_results'      : test_results.order_by('-dt')
     }
     return render(request, 'study/account_info.html', context)
