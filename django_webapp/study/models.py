@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.contrib.auth.models import User
+from django.contrib import admin
 
 
 class Course(models.Model):
@@ -64,4 +65,10 @@ class TestResult(models.Model):
     test  = models.ForeignKey(Test, on_delete=models.CASCADE)
     score = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     dt    = models.DateTimeField('datetime')
+
+    @admin.display(
+        boolean=True,
+    )
+    def passed(self):
+        return self.score >= self.test.pass_score
     

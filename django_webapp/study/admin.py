@@ -43,8 +43,14 @@ class TestAdmin(NestedModelAdmin):
     list_filter   = ['course']
 
 
+class TestResultAdmin(admin.ModelAdmin):
+    list_display  = ['user', 'test', 'score', 'passed']
+    list_filter   = ['user']
+
+
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Lecture, LectureAdmin)
 admin.site.register(Test, TestAdmin)
+admin.site.register(TestResult, TestResultAdmin)
 
 admin.site.unregister(Group)
