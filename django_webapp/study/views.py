@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.db.models import F
+from django.db.models import F, Q
 
 from .models import *
 
@@ -112,7 +112,24 @@ def submit_test(request, test_id):
         c = CompletedCourses(user=request.user, course=test.course)
         c.save()
 
-    return HttpResponseRedirect(reverse('study:course', args=(test.course.id, )))
+    return HttpResponseRedirect(reverse('study:test_res', args=(res.id, )))
+
+
+@login_required(login_url="login/")
+def test_res(request, test_res_id):
+    test_res = get_object_or_404(TestResult, pk=test_res_id)
+
+    if test_res.user.id != request.user.id:
+        raise PermissionDenied()
+    
+    other_res = TestResult.objects.filter(~Q(id=test_res_id))
+    
+    context = {
+        'user'      : request.user,
+        'test_res'  : test_res,
+        'other_res' : other_res.order_by('-dt')
+    }
+    return render(request, 'study/test_res.html', context)
 
 
 @login_required(login_url="login/")

@@ -1,0 +1,16 @@
+<h1>{{ test_res.test }}</h1>
+Course {{ test_res.test.course }}
+<br>
+<br>
+{% if other_res %}
+{% for res in other_res %}
+    <li>
+    {{ res.score }}%, {{ res.dt }}
+    </li>
+{% endfor %}
+{% else %}
+No attempts
+{% endif %}
+
+<h3>{{ test_res.score }}% {{ test_res.passed }}</h3>
+
