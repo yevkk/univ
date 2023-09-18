@@ -59,3 +59,16 @@ def lecture(request, lecture_id):
     }
     return render(request, 'study/lecture.html', context)
 
+
+@login_required(login_url="login/")
+def account_info(request):
+    completed_courses = CompletedCourses.objects.filter(user=request.user.id)
+    test_results      = TestResult.objects.filter(user=request.user.id)
+    
+    context = {
+        'user'              : request.user,
+        'completed_courses' : completed_courses,
+        'test_results'      : test_results
+    }
+    return render(request, 'study/account_info.html', context)
+
