@@ -37,8 +37,8 @@ def course(request, course_id):
 
     test_list = [{
         'e'      : test,
-        'passed' : any([t_res.score >= test.pass_score for t_res in TestResult.objects.filter(test=test.id)]),
-        'failed' : any([t_res.score <  test.pass_score for t_res in TestResult.objects.filter(test=test.id)])
+        'passed' : any([t_res.score >= test.pass_score for t_res in TestResult.objects.filter(test=test.id, user=request.user.id)]),
+        'failed' : any([t_res.score <  test.pass_score for t_res in TestResult.objects.filter(test=test.id, user=request.user.id)])
         } for test in course_tests]
     
     context = {
