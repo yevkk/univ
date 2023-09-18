@@ -1,0 +1,28 @@
+<h1>{{ test }}</h1>
+Course {{ test.course }}
+<br>
+{% if results %}
+{% for res in results %}
+    <li>
+    {{ res.score }}, {{ res.dt }}
+    </li>
+{% endfor %}
+{% else %}
+No attempts
+{% endif %}
+
+<h3>Questions:</h3>
+<form action="{% url 'study:submit_test' test.id %}" method="post">
+    {% csrf_token %}
+    {% for task in test.task_set.all %}
+    <fieldset>
+        <legend>{{ task.task_text }}</legend>
+        {% for option in task.option_set.all %}
+            <input type="checkbox" name="opt-{{ option.id }}" id="opt-{{ option.id }}">
+            <label for="opt-{{ option.id }}">{{ option.option_text }} [{{ option.correct }}]</label><br>
+        {% endfor %}
+    </fieldset>
+    {% endfor %}
+    <input type="submit" value="Vote">
+</form>
+
