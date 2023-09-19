@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% comment %} <meta name="viewport" content="width=device-width, initial-scale=1"> {% endcomment %}
+    <title>{% block title %}Title{% endblock %}</title>
+   <link rel="stylesheet" href="{% static 'study/styles/reset.css' %}">
+   <link rel="stylesheet" href="{% static 'study/styles/main-styles.css' %}">
+   {% block styles %}{% endblock %}
+</head>
+<body>
+    <div id="wrapper">
+        <header id="main-header">
+            <div class="content-container" id="main-header-content">
+                <div id="header-title">Study Platform</div>
+                <div>
+                    <a href="{% url 'study:account_info' %}" id="account-info-link">
+                    {{ user.first_name }} {{ user.last_name }} ({{ user.username }})
+                    </a>
+                    &nbsp;&nbsp;
+                    <a href="{% url 'study:logout' %}">
+                        <div class="button">logout</div>
+                    </a>
+                </div>
+            </div>
+        </header>
+        <section id="main-section">
+            <div class="content-container" id="main-section-content">
+                {% block content %}{% endblock %}
+            </div>
+        </section>
+        <footer id="main-footer">
+            <div class="content-container" id="main-footer-content">
+                <div>@2023. Study Platform</div>
+                <div>Yevgeniy Kutsenko</div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        if (document.documentElement.clientHeight > document.getElementById('wrapper').clientHeight) {
+            let footer = document.getElementById('main-footer');
+            footer.style.position = 'fixed';
+            footer.style.bottom = '0';
+        }
+    </script>
+</body>
+</html>
