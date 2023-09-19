@@ -1,4 +1,20 @@
-<h1>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</h1>
+{% extends 'study/base.html' %}
+
+{% block title %}Account information ({{ user.username }}){% endblock %}
+
+{% block content-card-title %}
+Welcome, {{ user.first_name }}{% if user.last_name %} {{ user.last_name }}{% endif %}, to your pesonal page
+{% endblock %}
+
+{% block content %}
+<table border="1">
+    <tr><td>ID:</td><td>{{ user.id }}</td></tr>
+    <tr><td>username:</td><td>{{ user.username }}</td></tr>
+    <tr><td>first_name:</td><td>{{ user.first_name }}</td></tr>
+    <tr><td>last_name:</td><td>{{ user.last_name }}</td></tr>
+    <tr><td>email:</td><td>{{ user.email }}</td></tr>
+</table>
+<br><br>
 <h3>Completed courses</h3>
 {% if completed_courses %}
 {% for c_course in completed_courses %}
@@ -22,3 +38,4 @@ No completed courses
 {% else %}
 No tests
 {% endif %}
+{% endblock %}

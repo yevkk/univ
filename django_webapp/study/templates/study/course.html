@@ -1,4 +1,10 @@
-<h1>{{ course }}</h1>
+{% extends 'study/base.html' %}
+
+{% block title %}{{ course.course_code}} course details{% endblock %}
+
+{% block content-card-title %}{{ course }}{% endblock %}
+
+{% block content %}
 <h3>Lectures:</h3>
 <ul>
 {% for lec in course.lecture_set.all %}
@@ -20,3 +26,4 @@
     </li>
 {% endfor %}
 </ul>
+{% endblock %}

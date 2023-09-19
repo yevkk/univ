@@ -1,6 +1,12 @@
-<h1>{{ test }}</h1>
-Course {{ test.course }}
-<br>
+{% extends 'study/base.html' %}
+
+{% block title %}Test #{{ test.test_number }} ({{ test.course.course_code }}){% endblock %}
+
+{% block content-card-title %}Test #{{ test.test_number }} {{ test.test_name }}{% endblock %}
+
+{% block content-card-subtitle %}Course: {{ test.course }}{% endblock %}
+
+{% block content %}
 {% if results %}
 {% for res in results %}
     <li>
@@ -10,8 +16,9 @@ Course {{ test.course }}
 {% else %}
 No attempts
 {% endif %}
-
+<br><br>
 <h3>Questions:</h3>
+<br>
 <form action="{% url 'study:submit_test' test.id %}" method="post">
     {% csrf_token %}
     {% for task in test.task_set.all %}
@@ -22,7 +29,8 @@ No attempts
             <label for="opt-{{ option.id }}">{{ option.option_text }} [{{ option.correct }}]</label><br>
         {% endfor %}
     </fieldset>
+    <br>
     {% endfor %}
     <input type="submit" value="Vote">
 </form>
-
+{% endblock %}

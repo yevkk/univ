@@ -1,4 +1,12 @@
-<h1>{{ lecture }}</h1>
-Course {{ lecture.course }}
+{% extends 'study/base.html' %}
+
+{% block title %}Lecture #{{ lecture.lecture_number }} ({{ lecture.course.course_code }}){% endblock %}
+
+{% block content-card-title %}Lecture #{{ lecture.lecture_number }} {{ lecture.lecture_name }}{% endblock %}
+
+{% block content-card-subtitle %}Course: {{ lecture.course }}{% endblock %}
+
+{% block content %}
 <h3>Content:</h3>
 {{ lecture.content }}
+{% endblock %}

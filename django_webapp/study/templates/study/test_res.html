@@ -1,7 +1,12 @@
-<h1>{{ test_res.test }}</h1>
-Course {{ test_res.test.course }}
-<br>
-<br>
+{% extends 'study/base.html' %}
+
+{% block title %}Test results{% endblock %}
+
+{% block content-card-title %}Results for Test #{{ test_res.test.test_number }} {{ test_res.test.test_name }}{% endblock %}
+
+{% block content-card-subtitle %}Course: {{ test_res.test.course }}{% endblock %}
+
+{% block content %}
 {% if other_res %}
 {% for res in other_res %}
     <li>
@@ -11,6 +16,6 @@ Course {{ test_res.test.course }}
 {% else %}
 No attempts
 {% endif %}
-
+<br><br>
 <h3>{{ test_res.score }}% {{ test_res.passed }}</h3>
-
+{% endblock %}
