@@ -13,7 +13,9 @@
     <div id="wrapper">
         <header id="main-header">
             <div class="content-container" id="main-header-content">
-                <div id="header-title">Study Platform</div>
+                <div id="header-title">
+                    <a href="{% url 'study:index' %}">Study Platform</a>
+                </div>
                 <div>
                     <a href="{% url 'study:account_info' %}" id="account-info-link">
                     {{ user.first_name }} {{ user.last_name }} ({{ user.username }})
