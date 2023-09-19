@@ -18,7 +18,7 @@ def logout_view(request):
 @login_required(login_url="login/")
 def index(request):
     all_courses       = Course.objects.all()
-    completed_courses = CompletedCourses.objects.filter(user=request.user.id)
+    completed_courses = [comp.course for comp in CompletedCourses.objects.filter(user=request.user.id)]
 
     course_list = [{
         'e'         : course,
