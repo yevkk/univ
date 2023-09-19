@@ -35,7 +35,12 @@ def index(request):
 
 @login_required(login_url="login/")
 def course(request, course_id):
-    course       = get_object_or_404(Course, pk=course_id)
+    course            = get_object_or_404(Course, pk=course_id)
+
+    completed_courses = [comp.course for comp in CompletedCourses.objects.filter(user=request.user.id)]
+    if not all([prec in completed_courses for prec in course.preconditions.all()]):
+        raise PermissionDenied()
+
     course_tests = Test.objects.filter(course=course_id)
 
     test_list = [{
@@ -47,6 +52,7 @@ def course(request, course_id):
     context = {
         'user'      : request.user,
         'course'    : course,
+        'completed' : course in completed_courses,
         'test_list' : test_list
     }
     return render(request, 'study/course.html', context)
