@@ -108,7 +108,8 @@ def submit_test(request, test_id):
 
     # Complete course
     course_tests = Test.objects.filter(course=test.course.id)
-    if all([TestResult.objects.filter(user=request.user, test=t, score__gte=t.pass_score).exists() for t in course_tests]):
+    if not CompletedCourses.objects.filter(user=request.user, course=test.course).exists() \
+       and all([TestResult.objects.filter(user=request.user, test=t, score__gte=t.pass_score).exists() for t in course_tests]):
         c = CompletedCourses(user=request.user, course=test.course)
         c.save()
 
