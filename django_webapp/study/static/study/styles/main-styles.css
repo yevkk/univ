@@ -85,6 +85,10 @@ a:visited {
     box-shadow: 1px 1px 7px #bfbcce;
 }
 
+#content-card-subtitle {
+    padding-bottom: 50px;
+}
+
 #main-footer {
     display: block;
     width: 100%;

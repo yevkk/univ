@@ -30,6 +30,10 @@
         <section id="main-section">
             <div class="content-container" id="main-section-content">
                 <div id="content-card">
+                <h1>{% block content-card-title %}{% endblock %}</h1>
+                <hr>
+                <span id="content-card-subtitle">{% block content-card-subtitle %}{% endblock %}</span>
+                <br><br>
                 {% block content %}{% endblock %}
                 </div>
             </div>
