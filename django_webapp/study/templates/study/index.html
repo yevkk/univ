@@ -1,24 +1,44 @@
 {% extends 'study/base.html' %}
+{% load static %}
 
 {% block title %}Course list{% endblock %}
 
 {% block content-card-title %} Course list {% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{% static 'study/styles/index-styles.css' %}">
+{% endblock %}
+
 {% block content %}
-<div>
-    <ul style="list-style-position: inside;">
-    {% for course in course_list %}
-        <li>
-        [ID: {{ course.e.id }}]    
-        {{ course.e }}
-        [comp: {{ course.completed }}]
-        [av: {{ course.available }}]
-        [PRE]:
-        {% for p in course.e.preconditions.all %}
-        {{ p.course_code }} 
-        {% endfor %}
-        </li>
-    {% endfor %}
-    </ul>
+<div id="course-list">
+    <div id="course-list-headers">
+        <div>Name</div>
+        <div>Code</div>
+        <div>Lectures</div>
+        <div>Tests</div>
+        <div>Progress</div>
+    </div>
+{% for course in course_list %}
+    {% if course.available %}
+    <a href="{% url 'study:course' course.e.id %}" class="course-item">
+    {% else %}
+    <div class="course-item unavailable">
+    {% endif %}
+        <div>{{ course.e.course_name }}</div>
+        <div>{{ course.e.course_code }}</div>
+        <div>{{ course.e.lecture_set.all|length }}</div>
+        <div>{{ course.e.test_set.all|length }}</div>
+        <div>
+            {% if course.completed %}
+            <img src="{% static 'study/images/check-circle.svg' %}" alt="Completed" class="completed-icon">
+            {% endif %}
+        </div>
+    {% if course.available %}
+    </a>
+    {% else %}
+    </div>
+    {% endif %}
+    <br>
+{% endfor %}
 </div>
 {% endblock %}

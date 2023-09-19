@@ -1,0 +1,83 @@
+#course-list {
+    display: table;
+    width: 100%;
+}
+
+#course-list-headers {
+    display: table-row;
+}
+
+#course-list-headers div {
+    display: table-cell;
+
+    text-align: center;
+    text-indent: 10px;
+    font-weight: bold;
+}
+
+#course-list div:first-child {
+    width: 50%;
+    text-align: left;
+}
+
+#course-list div:nth-child(2) {
+    width: 20%;
+}
+
+#course-list div:nth-child(3) {
+    width: 10%;
+}
+
+#course-list div:nth-child(4) {
+    width: 10%;
+}
+
+#course-list div:nth-child(5) {
+    width: 10%;
+}
+
+.course-item {
+    display: table-row;
+    margin-bottom: 30px;
+
+    font-size: 16px;
+    color: inherit;
+
+    transition: background-color 0.15s 0s ease-in-out;
+}
+
+.course-item:not(.unavailable):hover {
+    color: white;
+    background-color: #4d6d9a;
+}
+
+.course-item div {
+    display: table-cell;
+    padding: 15px;
+
+    text-align: center;
+
+    border-top: 2px solid #4d6d9a;
+    border-bottom: 2px solid #4d6d9a;
+
+    transition: all 0.15s 0s ease-in-out;
+}
+
+.course-item:not(.unavailable):hover div {
+    border-top: 2px solid #edb5bf ;
+    border-bottom: 2px solid #edb5bf ;
+}
+
+.course-item .completed-icon {
+    height: 15px;
+}
+
+.course-item.unavailable {
+    color: #74737e;
+    background-color: #ececec;
+}
+
+.course-item.unavailable div {
+    border-top: 2px solid #74737e ;
+    border-bottom: 2px solid #74737e ;
+}
