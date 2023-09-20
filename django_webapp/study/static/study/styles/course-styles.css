@@ -1,0 +1,34 @@
+#content-card-subtitle .completed-note {
+    color: #1fa01f;
+    font-style: oblique;
+    text-transform: uppercase;
+}
+
+ul {
+    list-style: inside;
+}
+
+li {
+    margin: 5px;
+}
+
+li a {
+    color: #31363a;
+}
+
+.lecture-link:link, .test-link:link {
+    text-decoration: underline;
+}
+
+.lecture-link:hover, .test-link:hover {
+    color: #f1786c;
+}
+
+span.test-link-unavailable {
+    color: #74737e;
+}
+
+img.passed-icon, img.failed-icon {
+    height: 15px;
+    vertical-align: -3px;
+}
