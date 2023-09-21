@@ -1,41 +1,73 @@
 {% extends 'study/base.html' %}
+{% load static %}
 
 {% block title %}Account information ({{ user.username }}){% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'study/styles/account-info-styles.css' %}">
+{% endblock %}
 
 {% block content-card-title %}
 Welcome, {{ user.first_name }}{% if user.last_name %} {{ user.last_name }}{% endif %}, to your pesonal page
 {% endblock %}
 
 {% block content %}
-<table border="1">
-    <tr><td>ID:</td><td>{{ user.id }}</td></tr>
-    <tr><td>username:</td><td>{{ user.username }}</td></tr>
-    <tr><td>first_name:</td><td>{{ user.first_name }}</td></tr>
-    <tr><td>last_name:</td><td>{{ user.last_name }}</td></tr>
-    <tr><td>email:</td><td>{{ user.email }}</td></tr>
+<h3>Personal info</h3>
+<table id="info-table">
+    <tr>
+        <td>Username:</td>
+        <td>{{ user.username }}</td>
+    </tr>
+    <tr>
+        <td>First name:</td>
+        <td>{{ user.first_name }}</td>
+    </tr>
+    <tr>
+        <td>Last name:</td>
+        <td>{{ user.last_name }}</td>
+    </tr>
+    <tr>
+        <td>Email:</td>
+        <td>{{ user.email }}</td>
+    </tr>
 </table>
 <br><br>
 <h3>Completed courses</h3>
 {% if completed_courses %}
-{% for c_course in completed_courses %}
-    <li>
-    [ID: {{ c_course.course.id }}]
-    {{ c_course.course }}
-    </li>
-{% endfor %}
+<ul>
+    {% for c_course in completed_courses %}
+        <li>
+            <a href="{% url 'study:course' c_course.course.id %}" class="course-link">
+            {{ c_course.course }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
 {% else %}
 No completed courses
 {% endif %}
-
+<br><br>
 <h3>Tests taken</h3>
 {% if test_results %}
+<table id="results-table">
 {% for res in test_results %}
-    <li>
-    [ID: {{ res.test.id }}]
-    {{ res.test }}
-    </li>
+    <tr>
+        <td>{{ res.dt }}</td>
+        <td>{{ res.test }}%</td>
+        <td>{{ res.score }}% </td>
+        <td>
+            {% if res.passed %}
+            <img src="{% static 'study/images/check-circle.svg' %}" alt="Completed" class="passed-icon">
+            {% else %}
+            {% if not res.passsed %}
+            <img src="{% static 'study/images/cross-circle.svg' %}" alt="Failed" class="failed-icon">
+            {% endif %}
+            {% endif %}
+        </td>
+    </tr>
 {% endfor %}
+</table>
 {% else %}
-No tests
+No results
 {% endif %}
 {% endblock %}
