@@ -37,6 +37,10 @@
     width: 10%;
 }
 
+#course-list div:not(:first-child) {
+    vertical-align: middle;
+}
+
 .course-item {
     display: table-row;
     margin-bottom: 30px;
@@ -67,10 +71,16 @@
 }
 
 .course-item .completed-icon {
-    height: 15px;
+    height: 20px;
+    vertical-align: -3px;
 }
 
 .course-item.unavailable {
     color: #74737e;
     background-color: #ececec;
+}
+
+.note {
+    font-size: 12px;
+    font-style: oblique;
 }
