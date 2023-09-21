@@ -1,0 +1,9 @@
+#back-button {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+
+    width: 150px;
+    margin-top: 50px;;
+}
