@@ -28,10 +28,9 @@
 <table id="results-table">
 {% for res in other_res %}
     <tr>
-        <td>{{ res.score }}% </td>
         <td>{{ res.dt }}</td>
+        <td>{{ res.score }}% </td>
         <td>
-
             {% if res.passed %}
             <img src="{% static 'study/images/check-circle.svg' %}" alt="Completed" class="passed-icon">
             {% else %}
