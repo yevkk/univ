@@ -1,0 +1,36 @@
+#results-table {
+    margin-top: 10px;
+}
+
+#results-table td {
+    padding-right: 20px;
+    line-height: 30px;
+}
+
+img.passed-icon, img.failed-icon {
+    height: 15px;
+    vertical-align: -3px;
+}
+
+input[type=submit] {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-decoration: none;
+    color: white;
+
+    width: 175px;
+    border: none;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+#back-button {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+
+    width: 150px;
+    margin-top: 30px;
+}
