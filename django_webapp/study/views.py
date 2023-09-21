@@ -24,7 +24,7 @@ def index(request):
         'e'         : course,
         'completed' : (course in completed_courses),
         'available' : all([prec in completed_courses for prec in course.preconditions.all()])
-        } for course in all_courses]
+        } for course in all_courses.order_by('id')]
     
     context = {
         'user'        : request.user,

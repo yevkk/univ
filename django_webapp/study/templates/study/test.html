@@ -44,7 +44,7 @@ No attempts
         <legend>{{ forloop.counter }}) {{ task.task_text }}</legend>
         {% for option in task.option_set.all %}
             <input type="checkbox" name="opt-{{ option.id }}" id="opt-{{ option.id }}">
-            <label for="opt-{{ option.id }}">{{ option.option_text }} [{{ option.correct }}]</label><br>
+            <label for="opt-{{ option.id }}">{{ option.option_text }}</label><br>
         {% endfor %}
     </fieldset>
     <br>
