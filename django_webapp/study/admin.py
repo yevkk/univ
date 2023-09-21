@@ -48,9 +48,15 @@ class TestResultAdmin(admin.ModelAdmin):
     list_filter   = ['user']
 
 
+class CompletedCoursesAdmin(admin.ModelAdmin):
+    list_display  = ['user', 'course']
+    list_filter   = ['user']
+
+
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Lecture, LectureAdmin)
 admin.site.register(Test, TestAdmin)
 admin.site.register(TestResult, TestResultAdmin)
+admin.site.register(CompletedCourses, CompletedCoursesAdmin)
 
 admin.site.unregister(Group)
