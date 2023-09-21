@@ -34,3 +34,24 @@ input[type=submit] {
     width: 150px;
     margin-top: 30px;
 }
+
+#score {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 15%/40%; 
+}
+
+#score.passed {
+    color: #1fa01f;
+    border: 4px dashed #1fa01f;
+}
+
+#score.failed {
+    color: #a01010;
+    border: 4px dashed #a01010;
+}
+
+#score-dt {
+    font-style: oblique;
+    margin: 20px 0 50px;
+}

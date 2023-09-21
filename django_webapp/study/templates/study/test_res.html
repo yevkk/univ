@@ -1,21 +1,52 @@
 {% extends 'study/base.html' %}
+{% load static %}
 
 {% block title %}Test results{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'study/styles/test-styles.css' %}">
+{% endblock %}
 
 {% block content-card-title %}Results for Test #{{ test_res.test.test_number }} {{ test_res.test.test_name }}{% endblock %}
 
 {% block content-card-subtitle %}Course: {{ test_res.test.course }}{% endblock %}
 
 {% block content %}
+<div id="score" class="{% if test_res.passed %}passed{% else %}failed{% endif %}">
+    <h1>
+        {{ test_res.score }}%
+        {%if test_res.passed %}
+        PASSED
+        {% else %}
+        FAILED
+        {% endif %}
+    </h1>
+</div>
+<div id="score-dt">{{ test_res.dt }}</div>
+<h3>Previous attempts:</h3>
 {% if other_res %}
+<table id="results-table">
 {% for res in other_res %}
-    <li>
-    {{ res.score }}%, {{ res.dt }}
-    </li>
+    <tr>
+        <td>{{ res.score }}% </td>
+        <td>{{ res.dt }}</td>
+        <td>
+
+            {% if res.passed %}
+            <img src="{% static 'study/images/check-circle.svg' %}" alt="Completed" class="passed-icon">
+            {% else %}
+            {% if not res.passsed %}
+            <img src="{% static 'study/images/cross-circle.svg' %}" alt="Failed" class="failed-icon">
+            {% endif %}
+            {% endif %}
+        </td>
+    </tr>
 {% endfor %}
+</table>
 {% else %}
 No attempts
 {% endif %}
-<br><br>
-<h3>{{ test_res.score }}% {{ test_res.passed }}</h3>
+<a href="{% url 'study:course' test_res.test.course.id %}">
+    <div class="button" id="back-button">Back to course</div>
+</a>
 {% endblock %}
