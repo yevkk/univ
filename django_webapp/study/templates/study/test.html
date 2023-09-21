@@ -1,0 +1,57 @@
+{% extends 'study/base.html' %}
+{% load static %}
+
+{% block title %}Test #{{ test.test_number }} ({{ test.course.course_code }}){% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'study/styles/test-styles.css' %}">
+{% endblock %}
+
+{% block content-card-title %}Test #{{ test.test_number }} {{ test.test_name }}{% endblock %}
+
+{% block content-card-subtitle %}Course: {{ test.course }}{% endblock %}
+
+{% block content %}
+<h3>Previous attempts:</h3>
+{% if results %}
+<table id="results-table">
+{% for res in results %}
+    <tr>
+        <td>{{ res.dt }}</td>
+        <td>{{ res.score }}% </td>
+        <td>
+            {% if res.passed %}
+            <img src="{% static 'study/images/check-circle.svg' %}" alt="Completed" class="passed-icon">
+            {% else %}
+            {% if not res.passsed %}
+            <img src="{% static 'study/images/cross-circle.svg' %}" alt="Failed" class="failed-icon">
+            {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{% else %}
+No attempts
+{% endif %}
+<br><br>
+<h3>Questions:</h3>
+<br>
+<form action="{% url 'study:submit_test' test.id %}" method="post">
+    {% csrf_token %}
+    {% for task in test.task_set.all %}
+    <fieldset>
+        <legend>{{ forloop.counter }}) {{ task.task_text }}</legend>
+        {% for option in task.option_set.all %}
+            <input type="checkbox" name="opt-{{ option.id }}" id="opt-{{ option.id }}">
+            <label for="opt-{{ option.id }}">{{ option.option_text }}</label><br>
+        {% endfor %}
+    </fieldset>
+    <br>
+    {% endfor %}
+    <input type="submit" value="Submit" class="button">
+</form>
+<a href="{% url 'study:course' test.course.id %}">
+    <div class="button" id="back-button">Back to course</div>
+</a>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'study/base.html' %}
+{% load static %}
+
+{% block title %}Lecture #{{ lecture.lecture_number }} ({{ lecture.course.course_code }}){% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'study/styles/lecture-styles.css' %}">
+{% endblock %}
+
+{% block content-card-title %}Lecture #{{ lecture.lecture_number }} {{ lecture.lecture_name }}{% endblock %}
+
+{% block content-card-subtitle %}Course: {{ lecture.course }}{% endblock %}
+
+{% block content %}
+<h3>Content:</h3>
+{{ lecture.content }}
+
+<a href="{% url 'study:course' lecture.course.id %}">
+    <div class="button" id="back-button">Back to course</div>
+</a>
+{% endblock %}

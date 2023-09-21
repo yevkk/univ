@@ -1,0 +1,47 @@
+h3 {
+    margin-bottom: 10px;
+}
+
+#info-table td {
+    padding-right: 20px;
+    padding-bottom: 5px;
+}
+
+#info-table td:first-child {
+    font-weight: bolder;
+}
+
+ul {
+    list-style: inside;
+}
+
+li {
+    margin: 5px;
+}
+
+li a {
+    color: #31363a;
+}
+
+.course-link:link {
+    text-decoration: underline;
+}
+
+.course-link:hover {
+    color: #f1786c;
+}
+
+#results-table {
+    margin-top: 10px;
+}
+
+#results-table td {
+    padding-right: 30px;
+    line-height: 30px;
+}
+
+img.passed-icon, img.failed-icon {
+    height: 15px;
+    vertical-align: -3px;
+}
+

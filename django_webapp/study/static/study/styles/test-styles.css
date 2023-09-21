@@ -1,0 +1,57 @@
+#results-table {
+    margin-top: 10px;
+}
+
+#results-table td {
+    padding-right: 20px;
+    line-height: 30px;
+}
+
+img.passed-icon, img.failed-icon {
+    height: 15px;
+    vertical-align: -3px;
+}
+
+input[type=submit] {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-decoration: none;
+    color: white;
+
+    width: 175px;
+    border: none;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+#back-button {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+
+    width: 150px;
+    margin-top: 30px;
+}
+
+#score {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 15%/40%; 
+}
+
+#score.passed {
+    color: #1fa01f;
+    border: 4px dashed #1fa01f;
+}
+
+#score.failed {
+    color: #a01010;
+    border: 4px dashed #a01010;
+}
+
+#score-dt {
+    font-style: oblique;
+    margin: 20px 0 50px;
+}

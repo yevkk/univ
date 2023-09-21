@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" href="{% static 'registration/styles/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'registration/styles/login-styles.css' %}">
+</head>
+<body>
+  <div id="wrapper">
+    <section id="main-section">
+      <div class="content-container" id="main-section-content">
+        <div id="content-card">
+          <h2>Welcome to Study Platform</h2>
+          <hr>
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button">Log In</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
