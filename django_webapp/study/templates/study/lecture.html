@@ -13,7 +13,8 @@
 
 {% block content %}
 <h3>Content:</h3>
-{{ lecture.content }}
+<br>
+{{ lecture.content|linebreaks }}
 
 <a href="{% url 'study:course' lecture.course.id %}">
     <div class="button" id="back-button">Back to course</div>

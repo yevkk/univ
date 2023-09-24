@@ -39,7 +39,7 @@ class TestAdmin(NestedModelAdmin):
         ]
 
     inlines       = [TaskInline]
-    list_display  = ['test_name', 'test_number', 'course']
+    list_display  = ['test_name', 'test_number', 'course', 'enabled']
     list_filter   = ['course']
 
 
