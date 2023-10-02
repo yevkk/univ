@@ -129,7 +129,7 @@ def test_res(request, test_res_id):
     if test_res.user.id != request.user.id:
         raise PermissionDenied()
     
-    other_res = TestResult.objects.filter(~Q(id=test_res_id))
+    other_res = TestResult.objects.filter(~Q(id=test_res_id), test=test_res.test)
     
     context = {
         'user'      : request.user,
